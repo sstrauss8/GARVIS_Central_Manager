@@ -24,7 +24,10 @@ SOURCES += main.cpp\
     BlackLib/v2_0/BlackPWM.cpp \
     BlackLib/v2_0/BlackSPI.cpp \
     BlackLib/v2_0/BlackUART.cpp \
-    bb_uart.cpp
+    bb_uart.cpp \
+    commandcreator.cpp \
+    iomanager.cpp \
+    statusmonitor.cpp
 
 HEADERS  += mainwindow.h \
     BlackLib/v2_0/BlackADC.h \
@@ -37,7 +40,14 @@ HEADERS  += mainwindow.h \
     BlackLib/v2_0/BlackPWM.h \
     BlackLib/v2_0/BlackSPI.h \
     BlackLib/v2_0/BlackUART.h \
-    bb_uart.h
+    bb_uart.h \
+    commandcreator.h \
+    iomanager.h \
+    statusmonitor.h \
+    constants.h
 
 FORMS    += mainwindow.ui \
     tutorial.ui
+
+OTHER_FILES += \
+    jarvishead3.jpg

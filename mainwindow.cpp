@@ -5,22 +5,26 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     led1(BlackLib::GPIO_51,BlackLib::output, BlackLib::SecureMode),
     led2(BlackLib::GPIO_22,BlackLib::output, BlackLib::SecureMode),
-    uart(),
+    m_CommandCreator(),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->comboBox->addItem("Bedroom 1");
+    /*ui->comboBox->addItem("Bedroom 1");
     ui->comboBox->addItem("Bedroom 2");
     ui->comboBox->addItem("Bedroom 3");
     ui->comboBox->addItem("Bathroom");
-    ui->comboBox->addItem("Kitchen");
+    ui->comboBox->addItem("Kitchen");*/
 
     ledClicked = false;
+
+    m_CommandCreator.start();
+    p_IOControl = IOManager::Instance();
+    p_IOControl->startUART();
 }
 
 MainWindow::~MainWindow()
 {
-    uart.exit();
+    m_CommandCreator.exit();
     delete ui;
 }
 
@@ -29,7 +33,7 @@ void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
     ui->roomEdit->setText(ui->comboBox->currentText());
 }
 
-void MainWindow::on_helpTutorial_button_clicked()
+/*void MainWindow::on_helpTutorial_button_clicked()
 {
     if(!ledClicked)
     {
@@ -43,27 +47,23 @@ void MainWindow::on_helpTutorial_button_clicked()
     }
     led2.toggleValue();
     led1.toggleValue();
-    uart.start();
-}
+}*/
 
-void MainWindow::on_startUART_Button_clicked()
+void MainWindow::on_button_NewRoom_clicked()
 {
+    if(ui->textBox_newRoom->text().isEmpty())
+    {
+        return;
+    }
 
-    ui->UART_text->setText(uart.output);
-    /*bool isOpened = uart.open( BlackLib::ReadWrite | BlackLib::NonBlock );
+    if(p_IOControl->addRoom(ui->textBox_newRoom->text()))
+    {
+        //Populate necessary comboboxes with new room
+        ui->comboBox->addItem(ui->textBox_newRoom->text());
+        ui->comboBox_selectRoom1->addItem(ui->textBox_newRoom->text());
+        ui->comboBox_selectRoom2->addItem(ui->textBox_newRoom->text());
+    }
 
-
-    char readArr[22];
-    memset(readArr,0,sizeof(readArr));
-
-    uart.read(readArr, sizeof(readArr));
-
-    QString tempString = "";
-
-    tempString.sprintf("%s\n", readArr);
-
-    output.append(tempString);
-
-    ui->lineEdit->setText(output);*/
+    ui->textBox_newRoom->setText("");
 
 }

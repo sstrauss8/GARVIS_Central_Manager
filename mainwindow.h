@@ -5,7 +5,8 @@
 #include "BlackLib/v2_0/BlackCore.h"
 #include "BlackLib/v2_0/BlackUART.h"
 #include <QMainWindow>
-#include "bb_uart.h"
+#include "commandcreator.h"
+#include "iomanager.h"
 
 namespace Ui {
 class MainWindow;
@@ -22,9 +23,7 @@ public:
 private slots:
     void on_comboBox_currentIndexChanged(const QString &arg1);
 
-    void on_helpTutorial_button_clicked();
-
-    void on_startUART_Button_clicked();
+    void on_button_NewRoom_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -32,7 +31,9 @@ private:
     BlackLib::BlackGPIO   led1;
     BlackLib::BlackGPIO   led2;
 
-    BB_UART uart;
+    CommandCreator m_CommandCreator;
+    IOManager * p_IOControl;
+
     QString output;
     bool ledClicked;
 

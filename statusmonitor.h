@@ -3,8 +3,14 @@
 
 class StatusMonitor
 {
+
+private:
+    bool Initialize();
+
+
 public:
     StatusMonitor();
+
 };
 
 #endif // STATUSMONITOR_H

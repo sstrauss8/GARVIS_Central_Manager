@@ -1,0 +1,7 @@
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
+#define SLEEP_TIME_SECOND 1000000
+
+#endif // CONSTANTS_H
+

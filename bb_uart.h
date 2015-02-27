@@ -4,6 +4,7 @@
 #include "BlackLib/v2_0/BlackGPIO.h"
 #include "BlackLib/v2_0/BlackCore.h"
 #include "BlackLib/v2_0/BlackUART.h"
+#include "constants.h"
 
 class BB_UART: public QThread
 {

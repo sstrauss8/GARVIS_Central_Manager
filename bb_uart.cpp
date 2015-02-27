@@ -21,7 +21,7 @@ void BB_UART::run()
             output.append(tempString);
         }
 
-        usleep(500);
+        usleep(SLEEP_TIME_SECOND);
     }
     return;
 }

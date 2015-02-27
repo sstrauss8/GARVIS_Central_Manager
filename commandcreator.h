@@ -1,7 +1,10 @@
 #ifndef COMMANDCREATOR_H
 #define COMMANDCREATOR_H
 
-class CommandCreator
+#include <QThread>
+#include "constants.h"
+
+class CommandCreator: public QThread
 {
 private:
     int temperatureData[];
@@ -9,19 +12,20 @@ private:
     int currHumidity;
     int currTemp;
 
-    bool Initialize();
-    bool ProcessData();
-    bool ProcessTemperatureData();
-    bool ProcessHumidityData();
-    bool ProcessPIRData();
+    bool initialize();
+    bool processData();
+    bool processTemperatureData();
+    bool processHumidityData();
+    bool processPIRData();
+
+protected:
+    void run();
 
 public:
     CommandCreator();
-    bool SendHVACCommand();
-    bool SendDeviceControlCommand(int devID, int commandID);
-    bool SendHVACControlCommand(int commandID);
-    void SetTemperature();
-    void SetHumidity();
+    bool sendHVACCommand();
+    bool sendDeviceControlCommand(int devID, int commandID);
+    bool sendHVACControlCommand(int commandID);
 
 };
 
