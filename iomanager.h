@@ -2,6 +2,7 @@
 #define IOMANAGER_H
 
 #include "bb_uart.h"
+#include "commandcreator.h"
 
 struct device {
     QString deviceName;
@@ -29,6 +30,8 @@ private:
 
     bool initialize();
     bool updateConfigFile();
+
+    CommandCreator m_CommandCreator;
     int currentPIR;
     int currentTemp;
     int currentHumidity;
@@ -62,7 +65,7 @@ public:
     bool updatePIRDisplay();
 
     int receiveSmartSwitchData();
-    bool sendSmartSwitchData(int smartSwitchID, int pollBits);
+    bool sendSmartSwitchData(int smartSwitchID);
     bool sendLoadControlData(int loadControlID, char devType, char percentOn);
     bool sendVentControlData(int ventControlID, bool onOff);
 
@@ -74,9 +77,6 @@ public:
 
     bool setCurrentHumidity();
     int getCurrentHumidity();
-
-    bool setCurrentHVACCommand();
-    int getCurrentHVACCommand();
 
     bool ReadConfigFile();
     bool ClearConfigFile();

@@ -7,7 +7,6 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     led1(BlackLib::GPIO_51,BlackLib::output, BlackLib::SecureMode),
     led2(BlackLib::GPIO_22,BlackLib::output, BlackLib::SecureMode),
-    m_CommandCreator(),
     ui(new Ui::MainWindow)
 {
     p_IOControl = IOManager::Instance();
@@ -41,8 +40,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     output = "";
     ledClicked = false;
+    counter = 0;
 
-    m_CommandCreator.start();
     p_IOControl->startUART();
 
     populateRoomNames();
@@ -50,7 +49,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
-    m_CommandCreator.exit();
     delete ui;
 }
 
@@ -74,22 +72,6 @@ void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
     populateDevices(ui->comboBox->currentIndex(), ui->comboBox_2->currentIndex());
 }
 
-/*void MainWindow::on_helpTutorial_button_clicked()
-{
-    if(!ledClicked)
-    {
-        ui->lineEdit_10->setText("ON");
-        ledClicked = true;
-    }
-    else
-    {
-        ledClicked = false;
-        ui->lineEdit_10->setText("OFF");
-    }
-    led2.toggleValue();
-    led1.toggleValue();
-}*/
-
 void MainWindow::on_button_NewRoom_clicked()
 {
     if(ui->textBox_newRoom->text().isEmpty())
@@ -112,6 +94,10 @@ void MainWindow::on_button_NewRoom_clicked()
 
 void MainWindow::on_startUART_Button_clicked()
 {
+    p_IOControl->sendSmartSwitchData(1);
+    p_IOControl->sendVentControlData(1,1);
+    p_IOControl->sendLoadControlData(1,1,1);
+    usleep(10000);
     ui->UART_text->setText(p_IOControl->uartIn.output);
 }
 

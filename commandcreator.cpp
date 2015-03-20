@@ -15,13 +15,13 @@ void CommandCreator::run()
         if(newDataAvailFlag)
         {
             newDataAvailFlag = false;
-            processData();
+            processData(3);
         }
         msleep(1);
     }
 }
 
-void setNewDataAvail(bool flag)
+void CommandCreator::setNewDataAvail(bool flag)
 {
     newDataAvailFlag = flag;
 }

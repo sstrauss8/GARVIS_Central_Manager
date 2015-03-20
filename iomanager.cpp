@@ -8,7 +8,8 @@ IOManager* IOManager::m_pInstance = NULL;
 
 IOManager::IOManager():
     uartIn(2),
-    uartOut(1)
+    uartOut(1),
+    m_CommandCreator()
 {
     numRooms = 0;
     initialize();
@@ -18,6 +19,7 @@ IOManager::~IOManager()
 {
     uartIn.exit();
     uartOut.exit();
+    m_CommandCreator.exit();
 }
 
 bool IOManager::initialize()
@@ -31,6 +33,8 @@ bool IOManager::initialize()
     roomList->devices->deviceID = 0;
     roomList->devices->deviceName = "";
     roomList->devices->next = 0;
+
+    m_CommandCreator.start();
 
     return true;
 }
@@ -315,23 +319,87 @@ bool IOManager::updateConfigFile()
     return true;
 }
 
-bool IOManager::sendSmartSwitchData(int smartSwitchID, int pollBits)
+bool IOManager::sendSmartSwitchData(int smartSwitchID)
 {
-    char smartSwitchData[100];
-    uartOut->sendData(smartSwitchData);
+    //ID Code->Device Type 3 Bits, 0b001
+    //Number of Device     3 Bits, smartSwitchID
+    //Poll                 1 Bit,  1
+    //Spare               21 Bits  ------
+    //Checksum             4 Bits
+
+    char smartSwitchData[4];
+    char checksum = 0;
+
+    smartSwitchData[0] = (1 << 5) + ((smartSwitchID & 0x07) << 2) + (1 << 1);
+    smartSwitchData[1] = 0;
+    smartSwitchData[2] = 0;
+
+    for(int i = 0; i < 3; i++)
+    {
+        checksum = checksum ^ ((smartSwitchData[i] & 0xF0) >> 4);
+        checksum = checksum ^ (smartSwitchData[i] & 0x0F);
+    }
+
+    smartSwitchData[3] = 0;
+    smartSwitchData[3] = checksum ^ (smartSwitchData[3] & 0xF0 >> 4);
+
+    uartOut.sendData(smartSwitchData);
     return true;
 }
 
-bool IOManager::sendLoadControlData(int loadControlID, char devType, char percentOn)
+bool IOManager::sendLoadControlData(int loadControlID, char devNum, char percentOn)
 {
-    char loadControlData[100];
-    uartOut->sendData(loadControlData);
+    //ID Code->Device Type 3 Bits, 0b010
+    //Number of Device     3 Bits
+    //Fan/Light ID         2 Bits
+    //Percentage           4 Bits
+    //Spare               16 Bits
+    //Checksum             4 Bits
+
+    char loadControlData[4];
+    char checksum = 0;
+
+    loadControlData[0] = (2 << 5) + ((loadControlID & 0x07) << 2) + (devNum & 0x03);
+    loadControlData[1] = (percentOn & 0x0F << 4);
+    loadControlData[2] = 0;
+
+    for(int i = 0; i < 3; i++)
+    {
+        checksum = checksum ^ ((loadControlData[i] & 0xF0) >> 4);
+        checksum = checksum ^ (loadControlData[i] & 0x0F);
+    }
+
+    loadControlData[3] = 0;
+    loadControlData[3] = checksum ^ (loadControlData[3] & 0xF0 >> 4);
+
+    uartOut.sendData(loadControlData);
     return true;
 }
 
 bool IOManager::sendVentControlData(int ventControlID, bool onOff)
 {
-    char ventControlData[100];
-    uartOut->sendData(ventControlData);
+    //ID Code->Device Type 3 Bits, 0b011
+    //Number of Device     3 Bits
+    //On/Off               1 Bit
+    //Spare               21 Bits
+    //Checksum             4 Bits
+
+    char ventControlData[4];
+    char checksum = 0;
+
+    ventControlData[0] = (3 << 5) + ((ventControlID & 0x07) << 2) + (onOff << 1);
+    ventControlData[1] = 0;
+    ventControlData[2] = 0;
+
+    for(int i = 0; i < 3; i++)
+    {
+        checksum = checksum ^ ((ventControlData[i] & 0xF0) >> 4);
+        checksum = checksum ^ (ventControlData[i] & 0x0F);
+    }
+
+    ventControlData[3] = 0;
+    ventControlData[3] = checksum ^ (ventControlData[3] & 0xF0 >> 4);
+
+    uartOut.sendData(ventControlData);
     return true;
 }

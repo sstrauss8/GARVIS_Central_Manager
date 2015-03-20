@@ -39,11 +39,11 @@ private:
     BlackLib::BlackGPIO   led1;
     BlackLib::BlackGPIO   led2;
 
-    CommandCreator m_CommandCreator;
     IOManager * p_IOControl;
 
     QString output;
     bool ledClicked;
+    int counter;
 
 };
 
