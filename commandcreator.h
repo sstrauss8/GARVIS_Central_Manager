@@ -13,10 +13,13 @@ private:
     int currTemp;
 
     bool initialize();
-    bool processData();
-    bool processTemperatureData();
+    bool processData(int dataType);
+    bool processCapTouchData();
     bool processHumidityData();
+    bool processLightData();
     bool processPIRData();
+    bool processTemperatureData();
+    bool newDataAvailFlag;
 
 protected:
     void run();
@@ -24,6 +27,7 @@ protected:
 public:
     CommandCreator();
     bool sendHVACCommand();
+    void setNewDataAvail(bool flag);
     bool sendDeviceControlCommand(int devID, int commandID);
     bool sendHVACControlCommand(int commandID);
 

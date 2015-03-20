@@ -10,13 +10,17 @@ class BB_UART: public QThread
 {
     public:
         QString output;
+        BB_UART(int type);
         BB_UART();
+
+        bool BB_UART::sendData(char writeArr[]);
+        int myType;
 
     protected:
         void run();
 
     private:
-        BlackLib::BlackUART uart;
+
 };
 
 #endif // BB_UART_H

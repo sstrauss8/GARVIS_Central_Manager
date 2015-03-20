@@ -22,8 +22,16 @@ public:
 
 private slots:
     void on_comboBox_currentIndexChanged(const QString &arg1);
-
     void on_button_NewRoom_clicked();
+    void on_startUART_Button_clicked();
+
+    void on_button_deleteRoom_clicked();
+    void populateRoomNames();
+    void populateDevices(int currentIndex, int loadControllerIndex);
+
+    void on_pushButton_addDevice_clicked();
+
+    void on_pushButton_4_clicked();
 
 private:
     Ui::MainWindow *ui;
