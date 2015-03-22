@@ -33,17 +33,26 @@ private slots:
 
     void on_pushButton_4_clicked();
 
+    void on_pushbutton_setThreshold3_2_clicked();
+
+    void on_pushbutton_set1_clicked();
+
+    void on_pushbutton_set2_clicked();
+
+    void on_pushbutton_set3_clicked();
+
+    void on_helpTutorial_button_clicked();
+
 private:
     Ui::MainWindow *ui;
 
-    BlackLib::BlackGPIO   led1;
-    BlackLib::BlackGPIO   led2;
-
     IOManager * p_IOControl;
+    CommandCreator m_CommandCreator;
 
     QString output;
-    bool ledClicked;
     int counter;
+
+    void triggerThresholdDialog(int smartSwitchID);
 
 };
 

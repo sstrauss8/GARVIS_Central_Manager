@@ -3,6 +3,7 @@
 
 #include <QThread>
 #include "constants.h"
+#include "iomanager.h"
 
 class CommandCreator: public QThread
 {
@@ -11,15 +12,15 @@ private:
     int humidityData[];
     int currHumidity;
     int currTemp;
+    IOManager * p_IOControl;
 
     bool initialize();
-    bool processData(int dataType);
-    bool processCapTouchData();
-    bool processHumidityData();
-    bool processLightData();
-    bool processPIRData();
-    bool processTemperatureData();
-    bool newDataAvailFlag;
+    bool processData(char data[]);
+    bool processCapTouchData(char smartSwitchID, short rawData);
+    bool processHumidityData(char smartSwitchID, short rawData);
+    bool processLightData(char smartSwitchID, short rawData);
+    bool processPIRData(char smartSwitchID, short rawData);
+    bool processTemperatureData(char smartSwitchID, short rawData);
 
 protected:
     void run();
@@ -27,7 +28,6 @@ protected:
 public:
     CommandCreator();
     bool sendHVACCommand();
-    void setNewDataAvail(bool flag);
     bool sendDeviceControlCommand(int devID, int commandID);
     bool sendHVACControlCommand(int commandID);
 

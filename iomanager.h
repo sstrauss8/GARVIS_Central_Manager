@@ -2,7 +2,6 @@
 #define IOMANAGER_H
 
 #include "bb_uart.h"
-#include "commandcreator.h"
 
 struct device {
     QString deviceName;
@@ -13,6 +12,16 @@ struct device {
 
 struct room {
   QString roomName;
+  int minTemp;
+  int maxTemp;
+  int minHum;
+  int maxHum;
+  int minLight;
+  int maxLight;
+  int smartSwitchID;
+  float smartSwitchTemperature;
+  float smartSwitchHumidity;
+  float smartSwitchLighting;
   room *next;
   device *devices;
 };
@@ -31,7 +40,6 @@ private:
     bool initialize();
     bool updateConfigFile();
 
-    CommandCreator m_CommandCreator;
     int currentPIR;
     int currentTemp;
     int currentHumidity;
@@ -44,6 +52,7 @@ public:
     int numRooms;
     room *roomList;
     room *lastRoom;
+    room *currentRoomManagerRoom;
 
     void startUART(){uartIn.start();
                      uartOut.start();}
@@ -51,6 +60,7 @@ public:
     bool addRoom(QString roomName);
     bool deleteRoom(int index);
 
+    void setCurrentRoomManagerRoom(int roomIndex);
     int getNumRooms();
     QString getRoom(int index);
 
@@ -68,6 +78,9 @@ public:
     bool sendSmartSwitchData(int smartSwitchID);
     bool sendLoadControlData(int loadControlID, char devType, char percentOn);
     bool sendVentControlData(int ventControlID, bool onOff);
+
+    bool setThresholds(int tempLow, int tempHigh, int humLow, int humHigh,
+                       int lightLow, int lightHigh);
 
     bool setCurrentPIR();
     int getCurrentPIR();

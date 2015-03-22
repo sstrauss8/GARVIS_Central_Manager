@@ -2,14 +2,16 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 #include <iostream>
+#include "setthresholds.h"
+#include "helpdialog.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    led1(BlackLib::GPIO_51,BlackLib::output, BlackLib::SecureMode),
-    led2(BlackLib::GPIO_22,BlackLib::output, BlackLib::SecureMode),
-    ui(new Ui::MainWindow)
+    ui(new Ui::MainWindow),
+    m_CommandCreator()
 {
     p_IOControl = IOManager::Instance();
+    m_CommandCreator.start();
 
     QMessageBox msgBox;
     //ui->comboBox_deleteroomlist
@@ -39,7 +41,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
     output = "";
-    ledClicked = false;
     counter = 0;
 
     p_IOControl->startUART();
@@ -49,12 +50,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    m_CommandCreator.exit();
     delete ui;
 }
 
 void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
 {
     ui->roomEdit->setText(ui->comboBox->currentText());
+
+    p_IOControl->setCurrentRoomManagerRoom(ui->comboBox->currentIndex());
 
     if(QString::compare("", p_IOControl->getDeviceName(ui->comboBox->currentIndex(),0), Qt::CaseInsensitive) == 0)
     {
@@ -69,7 +73,7 @@ void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
         ui->groupbox_dev1_3->setDisabled(false);
     }
 
-    populateDevices(ui->comboBox->currentIndex(), ui->comboBox_2->currentIndex());
+    populateDevices(ui->comboBox->currentIndex(), ui->comboBox_loadController->currentIndex());
 }
 
 void MainWindow::on_button_NewRoom_clicked()
@@ -202,4 +206,50 @@ void MainWindow::on_pushButton_4_clicked()
     ui->tableWidget->setItem(1,-1,new QTableWidgetItem("Load Controller 1"));
     ui->tableWidget->setItem(1,0,new QTableWidgetItem("Load Controller 2"));
     ui->tableWidget->setItem(1,1,new QTableWidgetItem("Smart Switch 1"));
+}
+
+void MainWindow::triggerThresholdDialog(int smartControlID)
+{
+    if(p_IOControl->numRooms != 0)
+    {
+        SetThresholds setThresholddialog;
+        setThresholddialog.setModal(true);
+        setThresholddialog.exec();
+    }
+    else
+    {
+        QMessageBox::warning(this, tr("Warning"), "There is no room to set thresholds for.");
+    }
+    return;
+}
+
+void MainWindow::on_pushbutton_setThreshold3_2_clicked()
+{
+    triggerThresholdDialog(ui->comboBox->currentIndex());
+}
+
+void MainWindow::on_pushbutton_set1_clicked()
+{
+    int  deviceID = (p_IOControl->getDevice(ui->comboBox->currentIndex(),
+                                            ui->comboBox_loadController->currentIndex())).toInt(0,10);
+}
+
+void MainWindow::on_pushbutton_set2_clicked()
+{
+    int  deviceID = (p_IOControl->getDevice(ui->comboBox->currentIndex(),
+                                            ui->comboBox_loadController->currentIndex())).toInt(0,10);
+}
+
+void MainWindow::on_pushbutton_set3_clicked()
+{
+    int  deviceID = (p_IOControl->getDevice(ui->comboBox->currentIndex(),
+                                            ui->comboBox_loadController->currentIndex())).toInt(0,10);
+}
+
+void MainWindow::on_helpTutorial_button_clicked()
+{
+    HelpDialog helpDialog;
+    helpDialog.setModal(true);
+    helpDialog.exec();
+    return;
 }

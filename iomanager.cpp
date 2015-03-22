@@ -8,8 +8,7 @@ IOManager* IOManager::m_pInstance = NULL;
 
 IOManager::IOManager():
     uartIn(2),
-    uartOut(1),
-    m_CommandCreator()
+    uartOut(1)
 {
     numRooms = 0;
     initialize();
@@ -19,7 +18,6 @@ IOManager::~IOManager()
 {
     uartIn.exit();
     uartOut.exit();
-    m_CommandCreator.exit();
 }
 
 bool IOManager::initialize()
@@ -33,8 +31,17 @@ bool IOManager::initialize()
     roomList->devices->deviceID = 0;
     roomList->devices->deviceName = "";
     roomList->devices->next = 0;
+    roomList->minTemp = 32;
+    roomList->maxTemp = 120;
+    roomList->minHum = 0;
+    roomList->maxHum = 100;
+    roomList->minLight = 0;
+    roomList->maxLight = 100;
+    roomList->smartSwitchTemperature = 0;
+    roomList->smartSwitchHumidity = 0;
+    roomList->smartSwitchLighting = 0;
 
-    m_CommandCreator.start();
+    currentRoomManagerRoom = NULL;
 
     return true;
 }
@@ -71,6 +78,15 @@ bool IOManager::addRoom(QString name)
         list->devices->deviceID = 0;
         list->devices->deviceName = "";
         list->devices->next = 0;
+        list->minTemp = 32;
+        list->maxTemp = 120;
+        list->minHum = 0;
+        list->maxHum = 100;
+        list->minLight = 0;
+        list->maxLight = 100;
+        list->smartSwitchTemperature = 0;
+        list->smartSwitchHumidity = 0;
+        list->smartSwitchLighting = 0;
     }
 
     numRooms++;
@@ -402,4 +418,32 @@ bool IOManager::sendVentControlData(int ventControlID, bool onOff)
 
     uartOut.sendData(ventControlData);
     return true;
+}
+
+bool IOManager::setThresholds(int tempLow, int tempHigh, int humLow, int humHigh,
+                              int lightLow, int lightHigh)
+{
+    currentRoomManagerRoom->minTemp = tempLow;
+    currentRoomManagerRoom->maxTemp = tempHigh;
+    currentRoomManagerRoom->minHum = humLow;
+    currentRoomManagerRoom->maxHum = humHigh;
+    currentRoomManagerRoom->minLight = lightLow;
+    currentRoomManagerRoom->maxLight = lightHigh;
+    return true;
+
+}
+
+void IOManager::setCurrentRoomManagerRoom(int roomIndex)
+{
+    room *list = roomList;
+
+    if(roomIndex >= numRooms)
+        return;
+
+    for(int i = 0; i < roomIndex; i++)
+    {
+        list = list->next;
+    }
+
+    currentRoomManagerRoom = list;
 }

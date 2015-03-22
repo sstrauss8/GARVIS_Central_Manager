@@ -15,6 +15,8 @@ class BB_UART: public QThread
 
         bool sendData(char writeArr[]);
         int myType;
+        bool receivedMessage;
+        char data[4];
 
     protected:
         void run();

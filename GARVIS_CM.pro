@@ -27,7 +27,9 @@ SOURCES += main.cpp\
     bb_uart.cpp \
     commandcreator.cpp \
     iomanager.cpp \
-    statusmonitor.cpp
+    statusmonitor.cpp \
+    setthresholds.cpp \
+    helpdialog.cpp
 
 HEADERS  += mainwindow.h \
     BlackLib/v2_0/BlackADC.h \
@@ -44,10 +46,13 @@ HEADERS  += mainwindow.h \
     commandcreator.h \
     iomanager.h \
     statusmonitor.h \
-    constants.h
+    constants.h \
+    setthresholds.h \
+    helpdialog.h
 
 FORMS    += mainwindow.ui \
-    tutorial.ui
+    setthresholds.ui \
+    helpdialog.ui
 
 OTHER_FILES += \
     jarvishead3.jpg

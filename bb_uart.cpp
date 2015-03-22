@@ -7,6 +7,7 @@ BB_UART::BB_UART(int type) :
     uart.open( BlackLib::ReadWrite | BlackLib::NonBlock );
     uart.flush( BlackLib::bothDirection );
     myType = type;
+    receivedMessage = false;
     output = "";
 }
 
@@ -36,6 +37,16 @@ void BB_UART::run()
             QString tempString = "";
             tempString.sprintf("%s", readArr);
             output.append(tempString);
+
+            if(readArr[0] != 0)
+            {
+                receivedMessage = true;
+                data[0] = readArr[0];
+                data[1] = readArr[1];
+                data[2] = readArr[2];
+                data[3] = readArr[3];
+            }
+
             msleep(1);
         }
     }
