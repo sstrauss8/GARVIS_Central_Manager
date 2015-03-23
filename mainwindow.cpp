@@ -98,9 +98,20 @@ void MainWindow::on_button_NewRoom_clicked()
 
 void MainWindow::on_startUART_Button_clicked()
 {
-    p_IOControl->sendSmartSwitchData(1);
-    p_IOControl->sendVentControlData(1,1);
-    p_IOControl->sendLoadControlData(1,1,1);
+    if(!p_IOControl->sendSmartSwitchData(1))
+    {
+        QMessageBox::warning(this, tr("Warning"), "SMART SWITCH DATA COULD NOT BE SENT");
+    }
+
+    if(!p_IOControl->sendVentControlData(1,1))
+    {
+        QMessageBox::warning(this, tr("Warning"), "VENT CONTROL DATA COULD NOT BE SENT");
+    }
+    if(!p_IOControl->sendLoadControlData(1,1,1))
+    {
+        QMessageBox::warning(this, tr("Warning"), "LOAD CONTROL DATA COULD NOT BE SENT");
+    }
+
     usleep(10000);
     ui->UART_text->setText(p_IOControl->uartIn.output);
 }

@@ -10,6 +10,7 @@ class BB_UART: public QThread
 {
     public:
         QString output;
+        char readArr[10];
         BB_UART(int type);
         BB_UART();
 
@@ -23,6 +24,8 @@ class BB_UART: public QThread
 
     private:
         BlackLib::BlackUART uart;
+        BlackLib::BlackGPIO rts;
+        BlackLib::BlackGPIO cts;
 
 };
 

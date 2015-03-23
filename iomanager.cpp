@@ -359,8 +359,7 @@ bool IOManager::sendSmartSwitchData(int smartSwitchID)
     smartSwitchData[3] = 0;
     smartSwitchData[3] = checksum ^ (smartSwitchData[3] & 0xF0 >> 4);
 
-    uartOut.sendData(smartSwitchData);
-    return true;
+    return uartOut.sendData(smartSwitchData);
 }
 
 bool IOManager::sendLoadControlData(int loadControlID, char devNum, char percentOn)
@@ -388,8 +387,7 @@ bool IOManager::sendLoadControlData(int loadControlID, char devNum, char percent
     loadControlData[3] = 0;
     loadControlData[3] = checksum ^ (loadControlData[3] & 0xF0 >> 4);
 
-    uartOut.sendData(loadControlData);
-    return true;
+    return uartOut.sendData(loadControlData);
 }
 
 bool IOManager::sendVentControlData(int ventControlID, bool onOff)
@@ -416,8 +414,7 @@ bool IOManager::sendVentControlData(int ventControlID, bool onOff)
     ventControlData[3] = 0;
     ventControlData[3] = checksum ^ (ventControlData[3] & 0xF0 >> 4);
 
-    uartOut.sendData(ventControlData);
-    return true;
+    return uartOut.sendData(ventControlData);
 }
 
 bool IOManager::setThresholds(int tempLow, int tempHigh, int humLow, int humHigh,

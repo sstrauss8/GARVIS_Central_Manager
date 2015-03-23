@@ -2,7 +2,9 @@
 #include <iostream>
 
 BB_UART::BB_UART(int type) :
-    uart(BlackLib::UART4,BlackLib::Baud9600,BlackLib::ParityNo,BlackLib::StopOne,BlackLib::Char8)
+    uart(BlackLib::UART4,BlackLib::Baud9600,BlackLib::ParityNo,BlackLib::StopOne,BlackLib::Char8),
+    rts(BlackLib::GPIO_33,BlackLib::bothDirection),
+    cts(BlackLib::GPIO_35, BlackLib::bothDirection)
 {
     uart.open( BlackLib::ReadWrite | BlackLib::NonBlock );
     uart.flush( BlackLib::bothDirection );
@@ -30,16 +32,41 @@ void BB_UART::run()
     {
         while(1)
         {
-            char readArr[10];
             memset(readArr,0,sizeof(readArr));
 
-            uart.read(readArr, sizeof(readArr));
-            QString tempString = "";
-            tempString.sprintf("%s", readArr);
-            output.append(tempString);
+            int count = 0;
 
-            if(readArr[0] != 0)
+            while(!cts.isHigh())
             {
+                msleep(1);
+            }
+
+            rts.setValue(BlackLib::high);
+
+            while(readArr[0] == 0)
+            {
+                uart.read(readArr, sizeof(readArr));
+                msleep(1);
+            }
+
+            bool flag = true;
+            while(cts.isHigh() && flag)
+            {
+                if(count++ > 500)
+                {
+                    flag == false;
+                }
+                msleep(1);
+            }
+
+            rts.setValue(BlackLib::low);
+
+            if(flag)
+            {
+                QString tempString = "";
+                tempString.sprintf("%s", readArr);
+                output.append(tempString);
+
                 receivedMessage = true;
                 data[0] = readArr[0];
                 data[1] = readArr[1];
@@ -56,6 +83,28 @@ void BB_UART::run()
 
 bool BB_UART::sendData(char writeArr[])
 {
-    uart.write(writeArr, sizeof(writeArr));
-    return true;
+    rts.setValue(BlackLib::high);
+
+    for(int i = 0; i < 3; i++)
+    {
+        int count = 0;
+        bool flag = true;
+        while(!cts.isHigh() && flag)
+        {
+            if(count++ > 500)
+            {
+                flag = false;
+            }
+            msleep(1);
+        }
+
+        if(flag)
+        {
+            uart.write(writeArr, sizeof(writeArr));
+            rts.setValue(BlackLib::low);
+            return true;
+        }
+    }
+    return false;
+
 }
