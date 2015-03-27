@@ -22,7 +22,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      13,   14, // methods
+      14,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -43,6 +43,7 @@ static const uint qt_meta_data_MainWindow[] = {
      354,   11,   11,   11, 0x08,
      383,   11,   11,   11, 0x08,
      412,   11,   11,   11, 0x08,
+     451,  445,   11,   11, 0x08,
 
        0        // eod
 };
@@ -62,7 +63,8 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "on_pushbutton_set1_clicked()\0"
     "on_pushbutton_set2_clicked()\0"
     "on_pushbutton_set3_clicked()\0"
-    "on_helpTutorial_button_clicked()\0"
+    "on_helpTutorial_button_clicked()\0index\0"
+    "on_tabWidget_currentChanged(int)\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -84,6 +86,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 10: _t->on_pushbutton_set2_clicked(); break;
         case 11: _t->on_pushbutton_set3_clicked(); break;
         case 12: _t->on_helpTutorial_button_clicked(); break;
+        case 13: _t->on_tabWidget_currentChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         default: ;
         }
     }
@@ -121,9 +124,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 13)
+        if (_id < 14)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 13;
+        _id -= 14;
     }
     return _id;
 }

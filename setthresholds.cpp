@@ -36,6 +36,7 @@ SetThresholds::SetThresholds(QWidget *parent) :
     ui->lineEdit_5->setValidator(validator);
     ui->lineEdit_6->setValidator(validator);
     ui->lineEdit_7->setValidator(validator);
+
 }
 
 SetThresholds::~SetThresholds()
@@ -437,6 +438,9 @@ void SetThresholds::CheckForValidity()
 
 void SetThresholds::on_buttonBox_accepted()
 {
+
+    p_IOControl->updateConfigFile();
+
     QMessageBox msgBox;
     msgBox.setText("Only applied changes will be saved");
     msgBox.setStandardButtons(QMessageBox::Ok);

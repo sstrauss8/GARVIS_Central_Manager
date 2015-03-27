@@ -7,6 +7,7 @@ IOManager* IOManager::m_pInstance = NULL;
 
 
 IOManager::IOManager():
+    uartGlove(3),
     uartIn(2),
     uartOut(1)
 {
@@ -16,6 +17,7 @@ IOManager::IOManager():
 
 IOManager::~IOManager()
 {
+    uartGlove.exit();
     uartIn.exit();
     uartOut.exit();
 }
@@ -37,6 +39,7 @@ bool IOManager::initialize()
     roomList->maxHum = 100;
     roomList->minLight = 0;
     roomList->maxLight = 100;
+    roomList->smartSwitchID = 0;
     roomList->smartSwitchTemperature = 0;
     roomList->smartSwitchHumidity = 0;
     roomList->smartSwitchLighting = 0;
@@ -87,6 +90,77 @@ bool IOManager::addRoom(QString name)
         list->smartSwitchTemperature = 0;
         list->smartSwitchHumidity = 0;
         list->smartSwitchLighting = 0;
+    }
+
+    numRooms++;
+
+    updateConfigFile();
+
+    return true;
+}
+
+bool IOManager::addRoom(QString name, int minTemp, int maxTemp, int minHum, int maxHum,
+                        int minLight, int maxLight, int smartSwitchID, int smartSwitchTemp,
+                        int smartSwitchHum, int smartSwitchLight, int loadControllers[])
+{
+    bool flag = true;
+    room *list = roomList;
+    while(flag)
+    {
+        //Check if user is trying to enter name that already exists
+        if(QString::compare(list->roomName, name, Qt::CaseInsensitive) == 0)
+            return false;
+
+        if(list->next == 0)
+            flag = false;
+        else
+            list = list->next;
+
+    }
+
+    if(numRooms == 0)
+    {
+        roomList->roomName = name;
+        roomList->minTemp = minTemp;
+        roomList->maxTemp = maxTemp;
+        roomList->minHum = minHum;
+        roomList->maxHum = maxHum;
+        roomList->minLight = minLight;
+        roomList->maxLight = maxLight;
+        roomList->smartSwitchTemperature = smartSwitchTemp;
+        roomList->smartSwitchHumidity = smartSwitchHum;
+        roomList->smartSwitchLighting = smartSwitchLight;
+        roomList->loadControllers[0] = loadControllers[0];
+        roomList->loadControllers[1] = loadControllers[1];
+        roomList->loadControllers[2] = loadControllers[2];
+        roomList->loadControllers[3] = loadControllers[3];
+        roomList->loadControllers[4] = loadControllers[4];
+    }
+    else
+    {
+        list->next = new room;
+        list = list->next;
+        list->next = 0;
+        list->roomName = name;
+        list->devices = new device;
+        list->devices->currState = 0;
+        list->devices->deviceID = 0;
+        list->devices->deviceName = "";
+        list->devices->next = 0;
+        list->minTemp = minTemp;
+        list->maxTemp = maxTemp;
+        list->minHum = minHum;
+        list->maxHum = maxHum;
+        list->minLight = minLight;
+        list->maxLight = maxLight;
+        list->smartSwitchTemperature = smartSwitchTemp;
+        list->smartSwitchHumidity = smartSwitchHum;
+        list->smartSwitchLighting = smartSwitchLight;
+        list->loadControllers[0] = loadControllers[0];
+        list->loadControllers[1] = loadControllers[1];
+        list->loadControllers[2] = loadControllers[2];
+        list->loadControllers[3] = loadControllers[3];
+        list->loadControllers[4] = loadControllers[4];
     }
 
     numRooms++;
@@ -155,6 +229,9 @@ bool IOManager::ReadConfigFile()
     FILE * ifp;
     int rooms;
     char c[100];
+    int arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12;
+    int arg13, arg14, arg15;
+    int lc[5] = {0,0,0,0,0};
 
     ifp = fopen("config.conf", "r");
 
@@ -162,9 +239,23 @@ bool IOManager::ReadConfigFile()
 
     for(int i = 0; i < rooms; i++)
     {
-        fscanf(ifp,"\n%[^\n]",c);
+        //fscanf(ifp,"\n%[^\n]",c);
+        fscanf(ifp,"%s",c);
         QString currRoomName(c);
-        addRoom(currRoomName);
+
+        fscanf(ifp, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d", &arg1, &arg2, &arg3,
+               &arg4, &arg5, &arg6, &arg7, &arg8, &arg9, &arg10, &arg11, &arg12, &arg13,
+               &arg14, &arg15);
+
+        lc[0] = arg11;
+        lc[1] = arg12;
+        lc[2] = arg13;
+        lc[3] = arg14;
+        lc[4] = arg15;
+
+
+        addRoom(currRoomName, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
+                arg10, lc);
     }
 
     fclose(ifp);
@@ -312,6 +403,55 @@ bool IOManager::removeDevice(int devID, int index)
     return true;
 }
 
+bool IOManager::addLoadController(int loadControllerID, int roomNum)
+{
+    room *list = roomList;
+
+    if(numRooms < roomNum)
+        return false;
+
+    for(int i = 0; i < roomNum; i++)
+    {
+        list = list->next;
+    }
+
+    for(int i = 0; i < 5; i++)
+    {
+        if(list->loadControllers[i] == 0)
+        {
+            list->loadControllers[i] = loadControllerID;
+            list->numLoadControllers++;
+            return true;
+        }
+    }
+    return false;
+
+}
+
+bool IOManager::getLoadControllers(int roomID, int lc[])
+{
+    room *list = roomList;
+
+    if(numRooms < roomID)
+        return false;
+
+    for(int i = 0; i < roomID; i++)
+    {
+        list = list->next;
+    }
+
+    for(int i = 0; i < 5; i++)
+    {
+        if(list->loadControllers[i] == 0)
+        {
+            return true;
+        }
+        lc[i] = list->loadControllers[i];
+    }
+    return false;
+
+}
+
 bool IOManager::updateConfigFile()
 {
     FILE * ofp = fopen("config.conf", "w");
@@ -327,7 +467,27 @@ bool IOManager::updateConfigFile()
     {
         unsigned char roomName[50];
         memcpy( roomName, list->roomName.toStdString().c_str() , 50);
-        fprintf(ofp, "%s\n", roomName);
+        fprintf(ofp, "%s ", roomName);
+        fprintf(ofp, "%d ", list->minTemp);
+        fprintf(ofp, "%d ", list->maxTemp);
+        fprintf(ofp, "%d ", list->minHum);
+        fprintf(ofp, "%d ", list->maxHum);
+        fprintf(ofp, "%d ", list->minLight);
+        fprintf(ofp, "%d ", list->maxLight);
+        fprintf(ofp, "%d ", list->smartSwitchID);
+        fprintf(ofp, "%d ", list->smartSwitchTemperature);
+        fprintf(ofp, "%d ", list->smartSwitchHumidity);
+        fprintf(ofp, "%d ", list->smartSwitchLighting);
+        fprintf(ofp, "%d %d %d %d %d ", list->loadControllers[0], list->loadControllers[1],
+                list->loadControllers[2], list->loadControllers[3], list->loadControllers[4] );
+        /*fprintf(ofp, "%d", )
+
+                QString deviceName;
+                int loadControllerID;
+                int deviceID;
+                bool incremental;
+                int currState;*/
+        fprintf(ofp, "\n");
         list = list->next;
     }
     fclose(ofp);

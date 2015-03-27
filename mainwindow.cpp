@@ -1,17 +1,21 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
+#include <QApplication>
 #include <iostream>
 #include "setthresholds.h"
 #include "helpdialog.h"
+#include "tutorialwizard.h"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    m_CommandCreator()
+    m_CommandCreator(),
+    m_GloveAPI()
 {
     p_IOControl = IOManager::Instance();
     m_CommandCreator.start();
+    m_GloveAPI.start();
 
     QMessageBox msgBox;
     //ui->comboBox_deleteroomlist
@@ -51,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     m_CommandCreator.exit();
+    m_GloveAPI.exit();
     delete ui;
 }
 
@@ -58,9 +63,12 @@ void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
 {
     ui->roomEdit->setText(ui->comboBox->currentText());
 
+    changeLoadControllers();
+
     p_IOControl->setCurrentRoomManagerRoom(ui->comboBox->currentIndex());
 
-    if(QString::compare("", p_IOControl->getDeviceName(ui->comboBox->currentIndex(),0), Qt::CaseInsensitive) == 0)
+    //QString::compare("", p_IOControl->getDeviceName(ui->comboBox->currentIndex(),0), Qt::CaseInsensitive) == 0)
+    if(ui->comboBox_loadController->count() == 0)
     {
         ui->groupbox_dev1->setDisabled(true);
         ui->groupbox_dev1_2->setDisabled(true);
@@ -98,7 +106,7 @@ void MainWindow::on_button_NewRoom_clicked()
 
 void MainWindow::on_startUART_Button_clicked()
 {
-    if(!p_IOControl->sendSmartSwitchData(1))
+    /*if(!p_IOControl->sendSmartSwitchData(1))
     {
         QMessageBox::warning(this, tr("Warning"), "SMART SWITCH DATA COULD NOT BE SENT");
     }
@@ -110,10 +118,14 @@ void MainWindow::on_startUART_Button_clicked()
     if(!p_IOControl->sendLoadControlData(1,1,1))
     {
         QMessageBox::warning(this, tr("Warning"), "LOAD CONTROL DATA COULD NOT BE SENT");
-    }
+    }*/
 
-    usleep(10000);
-    ui->UART_text->setText(p_IOControl->uartIn.output);
+    //p_IOControl->uartGlove.sendDataGlove();
+
+    ui->UART_text->setText(m_GloveAPI.output);
+
+   /* usleep(10000);
+    ui->UART_text->setText(p_IOControl->uartIn.output);*/
 }
 
 void MainWindow::on_button_deleteRoom_clicked()
@@ -146,6 +158,7 @@ void MainWindow::on_button_deleteRoom_clicked()
             // should never be reached
             break;
       }
+
 }
 
 void MainWindow::populateRoomNames()
@@ -185,7 +198,16 @@ void MainWindow::populateDevices(int roomIndex, int loadControllerIndex)
 void MainWindow::on_pushButton_addDevice_clicked()
 {
     int fakeDeviceID = 11;
-    p_IOControl->addDevice(fakeDeviceID, ui->comboBox_selectRoom1->currentIndex());
+    bool loadController = true;
+    QString temp = "";
+
+    if(loadController)
+    {
+        p_IOControl->addLoadController(fakeDeviceID, ui->comboBox_selectRoom1->currentIndex());
+        p_IOControl->updateConfigFile();
+    }
+
+    //p_IOControl->addDevice(fakeDeviceID, ui->comboBox_selectRoom1->currentIndex());
     ui->tableWidget->setItem(ui->tableWidget->currentColumn(),ui->tableWidget->currentRow(),new QTableWidgetItem(""));
 }
 
@@ -259,8 +281,42 @@ void MainWindow::on_pushbutton_set3_clicked()
 
 void MainWindow::on_helpTutorial_button_clicked()
 {
-    HelpDialog helpDialog;
+    //TutorialWizard wizard;
+
+    //wizard.setVisible(true);
+    /*HelpDialog helpDialog;d
     helpDialog.setModal(true);
     helpDialog.exec();
-    return;
+    return;*/
+    /*QApplication app = QtGui;
+    TutorialWizard wizard;
+    wizard.show();*/
+
+
+}
+
+void MainWindow::on_tabWidget_currentChanged(int index)
+{
+    if(index == 1)
+        changeLoadControllers();
+
+}
+
+void MainWindow::changeLoadControllers()
+{
+    ui->comboBox_loadController->clear();
+
+    int myLoadControllers[5] = {0,0,0,0,0};
+    QString tempString = "";
+
+    p_IOControl->getLoadControllers(ui->comboBox->currentIndex(), myLoadControllers);
+
+    for(int i = 0; i < 5; i++)
+    {
+        if(myLoadControllers[i] != 0)
+        {
+            tempString.sprintf("LC %d ", myLoadControllers[i]);
+            ui->comboBox_loadController->addItem(tempString);
+        }
+    }
 }

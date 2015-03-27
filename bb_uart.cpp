@@ -1,15 +1,21 @@
 #include "bb_uart.h"
-#include <iostream>
+#include <stdio.h>
+
+using namespace std;
 
 BB_UART::BB_UART(int type) :
+    gloveUART(BlackLib::UART1,BlackLib::Baud38400,BlackLib::ParityNo,BlackLib::StopOne,BlackLib::Char8),
     uart(BlackLib::UART4,BlackLib::Baud9600,BlackLib::ParityNo,BlackLib::StopOne,BlackLib::Char8),
     rts(BlackLib::GPIO_33,BlackLib::bothDirection),
     cts(BlackLib::GPIO_35, BlackLib::bothDirection)
 {
     uart.open( BlackLib::ReadWrite | BlackLib::NonBlock );
+    gloveUART.open( BlackLib::ReadWrite | BlackLib::NonBlock);
+    uart.flush( BlackLib::bothDirection );
     uart.flush( BlackLib::bothDirection );
     myType = type;
     receivedMessage = false;
+    receivedGloveData = false;
     output = "";
 }
 
@@ -78,6 +84,36 @@ void BB_UART::run()
         }
     }
 
+    if(myType == 3)
+    {
+        std::cout << "Trying to read glove data" << std::endl;
+        while(1)
+        {
+            memset(gloveData,0,sizeof(gloveData));
+
+            while(gloveData[0] == 0)
+            {
+                gloveUART.read(gloveData, 5);
+                msleep(1);
+            }
+            receivedGloveData = true;
+
+            for(int i = 0; i < 36; i++)
+            {
+                printf("%c ", gloveData[i]);
+            }
+            printf("\n");
+            for(int i = 0; i < 36; i++)
+            {
+                printf("%d ", gloveData[i]);
+            }
+            printf("\n");
+            //cout << "START " << gloveData[0] << gloveData[1] << endl;
+            //cout << "Received glove data" << endl;
+        }
+
+    }
+
     return;
 }
 
@@ -85,7 +121,7 @@ bool BB_UART::sendData(char writeArr[])
 {
     rts.setValue(BlackLib::high);
 
-    for(int i = 0; i < 3; i++)
+    for(int i  = 0; i < 3; i++)
     {
         int count = 0;
         bool flag = true;
@@ -106,5 +142,14 @@ bool BB_UART::sendData(char writeArr[])
         }
     }
     return false;
+
+}
+
+bool BB_UART::sendDataGlove()
+{
+
+            gloveUART.write("TEST", 4);
+            return true;
+
 
 }

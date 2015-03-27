@@ -7,6 +7,7 @@
 #include <QMainWindow>
 #include "commandcreator.h"
 #include "iomanager.h"
+#include "gloveapi.h"
 
 namespace Ui {
 class MainWindow;
@@ -43,16 +44,20 @@ private slots:
 
     void on_helpTutorial_button_clicked();
 
+    void on_tabWidget_currentChanged(int index);
+
 private:
     Ui::MainWindow *ui;
 
     IOManager * p_IOControl;
     CommandCreator m_CommandCreator;
+    GloveAPI m_GloveAPI;
 
     QString output;
     int counter;
 
     void triggerThresholdDialog(int smartSwitchID);
+    void changeLoadControllers();
 
 };
 
