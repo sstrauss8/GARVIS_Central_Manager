@@ -35,6 +35,7 @@ bool CommandCreator::processData(char data[])
     //Spare                8 Bits
     //Checksum             4 Bits
 
+    std::cout << "In Process Data" << std::endl;
     char checksum = 0;
     for(int i = 0; i < 4; i++)
     {
@@ -44,44 +45,49 @@ bool CommandCreator::processData(char data[])
 
     //Throw out messages with invalid checksums
     if(checksum != 0)
+    {
+        std::cout << "INVALID CHECKSUM" << std::endl;
         return false;
+    }
 
     int deviceType = 0;
     deviceType = ((data[0] & 0xE0) >> 5);
 
-    //Throw out message that isn't meant for Central Manager
-    if(deviceType != 0)
+    //Throw out message that isn't from a smart switch for the central manager
+    if(deviceType != 1)
         return false;
 
-    //Data type = 0, Capacitive Touch
+    //Data type = 0, Temperature
     //          = 1, Humidity
     //          = 2, Light
     //          = 3, PIR
-    //          = 4, Temperature
+    //          = 4, Capacitive Touch
 
     int dataType = 0;
-    dataType = ((data[0] & 0x03) << 2) + (data[1] & 0xC0 >> 6);
+    dataType = ((data[0] & 0x03) << 2) + ((data[1] & 0xC0) >> 6);
 
-    char deviceNum = ((data[0] & 0x1C) >> 2);
+    char smartSwitchNum = ((data[0] & 0x1C) >> 2);
 
     short rawData = ((data[1] & 0x3F) << 4) + ((data[2] & 0xF0) >> 4);
 
+    std::cout << "Data Type " << dataType << std::endl;
+
     switch(dataType)
     {
-        case 0:        //Capacitive Touch
-            processCapTouchData(deviceNum, rawData);
+        case 0:        //Temperature
+            processTemperatureData(smartSwitchNum, rawData);
             break;
         case 1:        //Humidity
-            processHumidityData(deviceNum, rawData);
+            processHumidityData(smartSwitchNum, rawData);
             break;
         case 2:        //Light
-            processLightData(deviceNum, rawData);
+            processLightData(smartSwitchNum, rawData);
             break;
         case 3:        //PIR
-            processPIRData(deviceNum, rawData);
+            processPIRData(smartSwitchNum, rawData);
             break;
-        case 4:        //Temperature
-            processTemperatureData(deviceNum, rawData);
+        case 4:        //Capacitive Touch
+            processCapTouchData(smartSwitchNum, rawData);
             break;
         default:
             return false;
@@ -93,16 +99,29 @@ bool CommandCreator::processData(char data[])
 
 bool CommandCreator::processCapTouchData(char smartSwitchID, short rawData)
 {
+    int deviceSelected;
+    char event, percentOn = 0;
+
+    deviceSelected = (rawData & 0xE000) >> 13;
+    event = (rawData & 0x1C00) >> 10;
+
+    if(event == 0)
+    {
+        percentOn = 10;
+    }
+    p_IOControl->sendLoadControlData(smartSwitchID, deviceSelected, percentOn);
     return true;
 }
 
 bool CommandCreator::processHumidityData(char smartSwitchID, short rawData)
 {
+    p_IOControl->updateHumidityDisplay(smartSwitchID, rawData);
     return true;
 }
 
 bool CommandCreator::processLightData(char smartSwitchID, short rawData)
 {
+    p_IOControl->updateLightDisplay(smartSwitchID, rawData);
     return true;
 }
 
@@ -113,5 +132,6 @@ bool CommandCreator::processPIRData(char smartSwitchID, short rawData)
 
 bool CommandCreator::processTemperatureData(char smartSwitchID, short rawData)
 {
+    p_IOControl->updateTemperatureDisplay(smartSwitchID, rawData);
     return true;
 }

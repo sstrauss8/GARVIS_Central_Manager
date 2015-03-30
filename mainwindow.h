@@ -24,7 +24,6 @@ public:
 private slots:
     void on_comboBox_currentIndexChanged(const QString &arg1);
     void on_button_NewRoom_clicked();
-    void on_startUART_Button_clicked();
 
     void on_button_deleteRoom_clicked();
     void populateRoomNames();
@@ -46,6 +45,12 @@ private slots:
 
     void on_tabWidget_currentChanged(int index);
 
+    void on_comboBox_loadController_currentIndexChanged(int index);
+
+    void on_pushButton_clicked();
+
+    void on_pushButton_2_clicked();
+
 private:
     Ui::MainWindow *ui;
 
@@ -55,6 +60,7 @@ private:
 
     QString output;
     int counter;
+    int fakeDeviceID;
 
     void triggerThresholdDialog(int smartSwitchID);
     void changeLoadControllers();

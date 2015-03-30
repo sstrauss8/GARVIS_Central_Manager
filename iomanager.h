@@ -26,8 +26,9 @@ struct room {
   int smartSwitchLighting;
   room *next;
   device *devices;
-  int numLoadControllers = 0;
-  int loadControllers[5] = {0,0,0,0,0};
+  int numLoadControllers;
+  int numDevices;
+  int loadControllers[5];
 };
 
 
@@ -57,6 +58,7 @@ public:
     room *roomList;
     room *lastRoom;
     room *currentRoomManagerRoom;
+    int humData, tempData, lightData;
 
     void startUART(){uartIn.start();
                      uartOut.start();
@@ -72,35 +74,43 @@ public:
     int getNumRooms();
     QString getRoom(int index);
 
-    bool addDevice(int devID, int index);
+    bool addDevice(int devID, int index, int loadControllerID, QString devName);
     bool removeDevice(int devID, int index);
 
     bool addLoadController(int loadControllerID, int index);
     bool getLoadControllers(int roomID, int lc[]);
 
-    QString getDevice(int currRoomIndex, int deviceIndex);
-    QString getDeviceName(int currRoomIndex, int deviceIndex);
+    QString getDevice(int currRoomIndex, int deviceIndex, int lc);
+    QString getDeviceName(int currRoomIndex, int deviceIndex, int lc);
+    int getDevicePercent(int currRoomIndex, int deviceIndex, int lc);
 
-    bool updateTemperatureDisplay();
-    bool updateHumidityDisplay();
-    bool updatePIRDisplay();
+    bool updateTemperatureDisplay(int smartSwitchID, short data);
+    bool updateHumidityDisplay(int smartSwitchID, short data);
+    bool updateLightDisplay(int smartSwitchID, short data);
 
     int receiveSmartSwitchData();
     bool sendSmartSwitchData(int smartSwitchID);
-    bool sendLoadControlData(int loadControlID, char devType, char percentOn);
+    bool sendLoadControlData(int smartSwitchID, char devType, char percentOn);
     bool sendVentControlData(int ventControlID, bool onOff);
 
     bool setThresholds(int tempLow, int tempHigh, int humLow, int humHigh,
                        int lightLow, int lightHigh);
 
+    bool setIncremental(bool setIncr, int devID, int index, int loadControllerID, QString devName);
+
+
     bool setCurrentPIR();
-    int getCurrentPIR();
+    int getCurrentPIR(int roomIndex);
 
     bool setCurrentTemperature();
-    int getCurrentTemperature();
+    int getCurrentTemperature(int roomIndex);
 
     bool setCurrentHumidity();
-    int getCurrentHumidity();
+    int getCurrentHumidity(int roomIndex);
+
+    int getCurrentLighting(int roomIndex);
+
+    int getCurrentSmartSwitchID(int roomIndex);
 
     bool ReadConfigFile();
     bool updateConfigFile();

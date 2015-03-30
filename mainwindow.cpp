@@ -17,6 +17,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_CommandCreator.start();
     m_GloveAPI.start();
 
+    fakeDeviceID = 0;
+
     QMessageBox msgBox;
     //ui->comboBox_deleteroomlist
     msgBox.setText("Previous Configuration");
@@ -81,7 +83,7 @@ void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
         ui->groupbox_dev1_3->setDisabled(false);
     }
 
-    populateDevices(ui->comboBox->currentIndex(), ui->comboBox_loadController->currentIndex());
+    populateDevices(ui->comboBox->currentIndex(), ui->comboBox_loadController->currentText().toInt(0,10));
 }
 
 void MainWindow::on_button_NewRoom_clicked()
@@ -102,30 +104,6 @@ void MainWindow::on_button_NewRoom_clicked()
 
     ui->textBox_newRoom->setText("");
 
-}
-
-void MainWindow::on_startUART_Button_clicked()
-{
-    /*if(!p_IOControl->sendSmartSwitchData(1))
-    {
-        QMessageBox::warning(this, tr("Warning"), "SMART SWITCH DATA COULD NOT BE SENT");
-    }
-
-    if(!p_IOControl->sendVentControlData(1,1))
-    {
-        QMessageBox::warning(this, tr("Warning"), "VENT CONTROL DATA COULD NOT BE SENT");
-    }
-    if(!p_IOControl->sendLoadControlData(1,1,1))
-    {
-        QMessageBox::warning(this, tr("Warning"), "LOAD CONTROL DATA COULD NOT BE SENT");
-    }*/
-
-    //p_IOControl->uartGlove.sendDataGlove();
-
-    ui->UART_text->setText(m_GloveAPI.output);
-
-   /* usleep(10000);
-    ui->UART_text->setText(p_IOControl->uartIn.output);*/
 }
 
 void MainWindow::on_button_deleteRoom_clicked()
@@ -183,31 +161,47 @@ void MainWindow::populateRoomNames()
 
 void MainWindow::populateDevices(int roomIndex, int loadControllerIndex)
 {
+    ui->device1Name->setText(p_IOControl->getDeviceName(roomIndex, 0, loadControllerIndex));
+    ui->device1ID->setText(p_IOControl->getDevice(roomIndex, 0, loadControllerIndex));
+    ui->dev1_slider->setValue(p_IOControl->getDevicePercent(roomIndex, 0, loadControllerIndex));
+
+    ui->device2Name->setText(p_IOControl->getDeviceName(roomIndex, 1, loadControllerIndex));
+    ui->device2ID->setText(p_IOControl->getDevice(roomIndex, 1, loadControllerIndex));
+    ui->dev2_slider->setValue(p_IOControl->getDevicePercent(roomIndex, 1, loadControllerIndex));
+
+    ui->device3Name->setText(p_IOControl->getDeviceName(roomIndex, 2, loadControllerIndex));
+    ui->device3ID->setText(p_IOControl->getDevice(roomIndex, 2, loadControllerIndex));
+    ui->dev3_slider->setValue(p_IOControl->getDevicePercent(roomIndex, 2, loadControllerIndex));
+
+    QString temp = "";
+
+    temp.sprintf("%d", p_IOControl->getCurrentSmartSwitchID(roomIndex));
+    ui->smartSwitchID->setText(temp);
+
+    temp.sprintf("%d", p_IOControl->getCurrentHumidity(roomIndex));
+    ui->smartSwitchHum->setText(temp);
+
+    temp.sprintf("%d", p_IOControl->getCurrentTemperature(roomIndex));
+    ui->smartSwitchTemp->setText(temp);
+
+    temp.sprintf("%d", p_IOControl->getCurrentLighting(roomIndex));
+    ui->smartSwitchLighting->setText(temp);
 
 
-    ui->device1Name->setText(p_IOControl->getDeviceName(roomIndex, 0));
-    ui->device1ID->setText(p_IOControl->getDevice(roomIndex, 0));
-
-    ui->device2Name->setText(p_IOControl->getDeviceName(roomIndex, 1));
-    ui->device2ID->setText(p_IOControl->getDevice(roomIndex, 1));
-
-    ui->device3Name->setText(p_IOControl->getDeviceName(roomIndex, 2));
-    ui->device3ID->setText(p_IOControl->getDevice(roomIndex, 2));
 }
 
 void MainWindow::on_pushButton_addDevice_clicked()
 {
-    int fakeDeviceID = 11;
     bool loadController = true;
     QString temp = "";
 
     if(loadController)
     {
+        fakeDeviceID++;
         p_IOControl->addLoadController(fakeDeviceID, ui->comboBox_selectRoom1->currentIndex());
         p_IOControl->updateConfigFile();
     }
 
-    //p_IOControl->addDevice(fakeDeviceID, ui->comboBox_selectRoom1->currentIndex());
     ui->tableWidget->setItem(ui->tableWidget->currentColumn(),ui->tableWidget->currentRow(),new QTableWidgetItem(""));
 }
 
@@ -263,21 +257,55 @@ void MainWindow::on_pushbutton_setThreshold3_2_clicked()
 
 void MainWindow::on_pushbutton_set1_clicked()
 {
-    int  deviceID = (p_IOControl->getDevice(ui->comboBox->currentIndex(),
-                                            ui->comboBox_loadController->currentIndex())).toInt(0,10);
-}
+    p_IOControl->addDevice(0, ui->comboBox->currentIndex(),
+                           ui->comboBox_loadController->currentText().toInt(0,10),
+                           ui->device1Name->text());
+
+    bool setIncremental = false;
+
+    if(ui->checkBox_dev1->isChecked())
+        setIncremental = true;
+    else
+        setIncremental = false;
+
+    p_IOControl->setIncremental(setIncremental, 0, ui->comboBox->currentIndex(),
+                                ui->comboBox_loadController->currentText().toInt(0,10),
+                                ui->device2Name->text());}
 
 void MainWindow::on_pushbutton_set2_clicked()
 {
-    int  deviceID = (p_IOControl->getDevice(ui->comboBox->currentIndex(),
-                                            ui->comboBox_loadController->currentIndex())).toInt(0,10);
+    p_IOControl->addDevice(1, ui->comboBox->currentIndex(),
+                           ui->comboBox_loadController->currentText().toInt(0,10),
+                           ui->device2Name->text());
+
+    bool setIncremental = false;
+
+    if(ui->checkBox_dev2->isChecked())
+        setIncremental = true;
+    else
+        setIncremental = false;
+
+    p_IOControl->setIncremental(setIncremental, 1, ui->comboBox->currentIndex(),
+                                ui->comboBox_loadController->currentText().toInt(0,10),
+                                ui->device2Name->text());
 }
 
 void MainWindow::on_pushbutton_set3_clicked()
 {
-    int  deviceID = (p_IOControl->getDevice(ui->comboBox->currentIndex(),
-                                            ui->comboBox_loadController->currentIndex())).toInt(0,10);
-}
+    p_IOControl->addDevice(2, ui->comboBox->currentIndex(),
+                           ui->comboBox_loadController->currentText().toInt(0,10),
+                           ui->device3Name->text());
+
+    bool setIncremental = false;
+
+    if(ui->checkBox_dev3->isChecked())
+        setIncremental = true;
+    else
+        setIncremental = false;
+
+    p_IOControl->setIncremental(setIncremental, 2, ui->comboBox->currentIndex(),
+                                ui->comboBox_loadController->currentText().toInt(0,10),
+                                ui->device2Name->text());}
 
 void MainWindow::on_helpTutorial_button_clicked()
 {
@@ -298,7 +326,10 @@ void MainWindow::on_helpTutorial_button_clicked()
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
     if(index == 1)
+    {
         changeLoadControllers();
+        populateDevices(ui->comboBox->currentIndex(), ui->comboBox_loadController->currentText().toInt(0,10));
+    }
 
 }
 
@@ -315,8 +346,33 @@ void MainWindow::changeLoadControllers()
     {
         if(myLoadControllers[i] != 0)
         {
-            tempString.sprintf("LC %d ", myLoadControllers[i]);
+            tempString.sprintf("%d ", myLoadControllers[i]);
             ui->comboBox_loadController->addItem(tempString);
         }
     }
+}
+
+void MainWindow::on_comboBox_loadController_currentIndexChanged(int index)
+{
+    ui->groupbox_dev1->setDisabled(false);
+    ui->groupbox_dev1_2->setDisabled(false);
+    ui->groupbox_dev1_3->setDisabled(false);
+
+    populateDevices(ui->comboBox->currentIndex(), ui->comboBox_loadController->currentText().toInt(0,10));
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    char pollData[4] = {0x23,0xFF,0x00,0x01};
+    std::cout << "Sending poll message" << std::endl;
+    p_IOControl->uartOut.sendData(pollData);
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    QString temp = "";
+    ui->lineEdit_avgtemp->setText(temp.sprintf("%d RAW", p_IOControl->tempData));
+    ui->lineEdit_avghum->setText(temp.sprintf("%d RAW", p_IOControl->humData));
+    ui->lineEdit_avglight->setText(temp.sprintf("%d RAW", p_IOControl->lightData));
+
 }

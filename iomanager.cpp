@@ -1,10 +1,10 @@
 #include <stddef.h>
 #include "iomanager.h"
+#include <iostream>
 
 
 // Global static pointer used to ensure a single instance of the class.
 IOManager* IOManager::m_pInstance = NULL;
-
 
 IOManager::IOManager():
     uartGlove(3),
@@ -28,21 +28,32 @@ bool IOManager::initialize()
     roomList->next = 0;
     roomList->roomName = "";
     roomList->devices = 0;
-    roomList->devices = new device;
-    roomList->devices->currState = 0;
-    roomList->devices->deviceID = 0;
-    roomList->devices->deviceName = "";
-    roomList->devices->next = 0;
+    //roomList->devices = new device;
+    //roomList->devices->currState = 0;
+    //roomList->devices->deviceID = -1;
+    //roomList->devices->deviceName = "";
+    //roomList->devices->next = 0;
     roomList->minTemp = 32;
     roomList->maxTemp = 120;
     roomList->minHum = 0;
     roomList->maxHum = 100;
     roomList->minLight = 0;
     roomList->maxLight = 100;
-    roomList->smartSwitchID = 0;
+    roomList->smartSwitchID = numRooms;
+    roomList->numDevices = 0;
     roomList->smartSwitchTemperature = 0;
     roomList->smartSwitchHumidity = 0;
     roomList->smartSwitchLighting = 0;
+    roomList->loadControllers[0] = 0;
+    roomList->loadControllers[1] = 0;
+    roomList->loadControllers[2] = 0;
+    roomList->loadControllers[3] = 0;
+    roomList->loadControllers[4] = 0;
+
+    humData = 0;
+    tempData = 0;
+    lightData = 0;
+
 
     currentRoomManagerRoom = NULL;
 
@@ -78,18 +89,26 @@ bool IOManager::addRoom(QString name)
         list->roomName = name;
         list->devices = new device;
         list->devices->currState = 0;
-        list->devices->deviceID = 0;
+        list->devices->deviceID = -1;
         list->devices->deviceName = "";
         list->devices->next = 0;
+        list->devices->incremental = 0;
         list->minTemp = 32;
         list->maxTemp = 120;
         list->minHum = 0;
         list->maxHum = 100;
         list->minLight = 0;
         list->maxLight = 100;
+        list->smartSwitchID = numRooms;
+        list->numDevices = 0;
         list->smartSwitchTemperature = 0;
         list->smartSwitchHumidity = 0;
         list->smartSwitchLighting = 0;
+        list->loadControllers[0] = 0;
+        list->loadControllers[1] = 0;
+        list->loadControllers[2] = 0;
+        list->loadControllers[3] = 0;
+        list->loadControllers[4] = 0;
     }
 
     numRooms++;
@@ -127,6 +146,8 @@ bool IOManager::addRoom(QString name, int minTemp, int maxTemp, int minHum, int 
         roomList->maxHum = maxHum;
         roomList->minLight = minLight;
         roomList->maxLight = maxLight;
+        roomList->smartSwitchID = numRooms;
+        roomList->numDevices = 0;
         roomList->smartSwitchTemperature = smartSwitchTemp;
         roomList->smartSwitchHumidity = smartSwitchHum;
         roomList->smartSwitchLighting = smartSwitchLight;
@@ -144,15 +165,18 @@ bool IOManager::addRoom(QString name, int minTemp, int maxTemp, int minHum, int 
         list->roomName = name;
         list->devices = new device;
         list->devices->currState = 0;
-        list->devices->deviceID = 0;
+        list->devices->deviceID = -1;
         list->devices->deviceName = "";
         list->devices->next = 0;
+        list->devices->incremental = 0;
         list->minTemp = minTemp;
         list->maxTemp = maxTemp;
         list->minHum = minHum;
         list->maxHum = maxHum;
         list->minLight = minLight;
         list->maxLight = maxLight;
+        list->smartSwitchID = numRooms;
+        list->numDevices = 0;
         list->smartSwitchTemperature = smartSwitchTemp;
         list->smartSwitchHumidity = smartSwitchHum;
         list->smartSwitchLighting = smartSwitchLight;
@@ -239,8 +263,8 @@ bool IOManager::ReadConfigFile()
 
     for(int i = 0; i < rooms; i++)
     {
-        //fscanf(ifp,"\n%[^\n]",c);
-        fscanf(ifp,"%s",c);
+        fscanf(ifp,"\n%[^\n]",c);
+        //fscanf(ifp,"%s",c);
         QString currRoomName(c);
 
         fscanf(ifp, "%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d", &arg1, &arg2, &arg3,
@@ -283,10 +307,12 @@ QString IOManager::getRoom(int index)
     return list->roomName;
 }
 
-QString IOManager::getDevice(int currRoomIndex, int deviceIndex)
+QString IOManager::getDevice(int currRoomIndex, int deviceIndex, int lc)
 {
     room *list = roomList;
     device *devList;
+    int maxDevices = 18; //Assume max number of lcs in a room is 6
+    int count = 0;
 
     if(currRoomIndex >= numRooms)
         return "";
@@ -301,22 +327,78 @@ QString IOManager::getDevice(int currRoomIndex, int deviceIndex)
     if(devList == NULL)
         return "";
 
-    for(int i = 0; i < deviceIndex; i++)
+    for(int i = 0; i < maxDevices; i++)
     {
+        if(devList->loadControllerID == lc)
+        {
+            if(count == deviceIndex)
+            {
+                return QString::number(devList->deviceID);
+            }
+            count++;
+        }
         if(devList->next != NULL)
+        {
             devList = devList->next;
+        }
         else
+        {
             return "";
+        }
     }
 
-    QString devID =  QString::number(devList->deviceID);
-    return devID;
+    return "";
 }
 
-QString IOManager::getDeviceName(int currRoomIndex, int deviceIndex)
+int IOManager::getDevicePercent(int currRoomIndex, int deviceIndex, int lc)
 {
     room *list = roomList;
     device *devList;
+    int maxDevices = 18; //Assume max number of lcs in a room is 6
+    int count = 0;
+
+    if(currRoomIndex >= numRooms)
+        return 0;
+
+    for(int i = 0; i < currRoomIndex; i++)
+    {
+        list = list->next;
+    }
+
+    devList = list->devices;
+
+    if(devList == NULL)
+        return 0;
+
+    for(int i = 0; i < maxDevices; i++)
+    {
+        if(devList->loadControllerID == lc)
+        {
+            if(count == deviceIndex)
+            {
+                return devList->currState;
+            }
+            count++;
+        }
+        if(devList->next != NULL)
+        {
+            devList = devList->next;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    return 0;
+}
+
+QString IOManager::getDeviceName(int currRoomIndex, int deviceIndex, int lc)
+{
+    room *list = roomList;
+    device *devList;
+    int maxDevices = 18; //Assume max number of lcs in a room is 6
+    int count = 0;
 
     if(currRoomIndex >= numRooms)
         return "";
@@ -331,15 +413,27 @@ QString IOManager::getDeviceName(int currRoomIndex, int deviceIndex)
     if(devList == NULL)
         return "";
 
-    for(int i = 0; i < deviceIndex; i++)
+    for(int i = 0; i < maxDevices; i++)
     {
+        if(devList->loadControllerID == lc)
+        {
+            if(count == deviceIndex)
+            {
+                return devList->deviceName;
+            }
+            count++;
+        }
         if(devList->next != NULL)
+        {
             devList = devList->next;
+        }
         else
+        {
             return "";
+        }
     }
 
-    return devList->deviceName;
+    return "";
 }
 
 
@@ -348,9 +442,11 @@ int IOManager::getNumRooms()
     return numRooms;
 }
 
-bool IOManager::addDevice(int devID, int index)
+bool IOManager::addDevice(int devID, int index, int loadControllerID, QString devName)
 {
     room *list = roomList;
+
+    int numDevs = 0;
 
     if(numRooms < index)
         return false;
@@ -362,23 +458,26 @@ bool IOManager::addDevice(int devID, int index)
 
     bool flag = true;
 
+    numDevs = list->numDevices;
     device *devList = list->devices;
 
-    if(devList->deviceID == 0)
+    if(numDevs == 0)
     {
+
+        list->devices = new device;
+        devList = list->devices;
         devList->currState = 0;
-        devList->deviceID = devID;
+        devList->deviceID = 0;
         devList->next = 0;
-        devList->deviceName = "Stuff";
+        devList->deviceName = devName;
+        devList->incremental = 0;
+        devList->loadControllerID = loadControllerID;
+        list->numDevices++;
         return true;
     }
 
     while(flag)
     {
-        //Check if user is trying to enter name that already exists
-        if(devList->deviceID == devID)
-            return false;
-
         if(devList->next == NULL)
             flag = false;
         else
@@ -389,11 +488,52 @@ bool IOManager::addDevice(int devID, int index)
     devList->next = new device;
     devList = devList->next;
     devList->next = 0;
-    devList->deviceID = devID;
-    devList->deviceName = "Things";
+    devList->deviceID = list->numDevices;
+    devList->deviceName = devName;
     devList->currState = 0;
+    devList->loadControllerID = loadControllerID;
+    list->numDevices++;
 
     updateConfigFile();
+
+    return true;
+}
+
+
+bool IOManager::setIncremental(bool setIncr, int devID, int index, int loadControllerID, QString devName)
+{
+    room *list = roomList;
+
+    int numDevs = 0;
+
+    if(numRooms < index)
+        return false;
+
+    for(int i = 0; i < index; i++)
+    {
+        list = list->next;
+    }
+
+    bool flag = true;
+
+    numDevs = list->numDevices;
+    device *devList = list->devices;
+
+    if(numDevs == 0)
+    {
+        return false;
+    }
+
+    while(flag)
+    {
+        if(devList->next == NULL)
+            flag = false;
+        else
+            devList = devList->next;
+
+    }
+
+    devList->incremental = setIncr;
 
     return true;
 }
@@ -467,7 +607,7 @@ bool IOManager::updateConfigFile()
     {
         unsigned char roomName[50];
         memcpy( roomName, list->roomName.toStdString().c_str() , 50);
-        fprintf(ofp, "%s ", roomName);
+        fprintf(ofp, "%s\n ", roomName);
         fprintf(ofp, "%d ", list->minTemp);
         fprintf(ofp, "%d ", list->maxTemp);
         fprintf(ofp, "%d ", list->minHum);
@@ -522,7 +662,7 @@ bool IOManager::sendSmartSwitchData(int smartSwitchID)
     return uartOut.sendData(smartSwitchData);
 }
 
-bool IOManager::sendLoadControlData(int loadControlID, char devNum, char percentOn)
+bool IOManager::sendLoadControlData(int smartSwitchID, char devNum, char percentOn)
 {
     //ID Code->Device Type 3 Bits, 0b010
     //Number of Device     3 Bits
@@ -531,11 +671,50 @@ bool IOManager::sendLoadControlData(int loadControlID, char devNum, char percent
     //Spare               16 Bits
     //Checksum             4 Bits
 
+    char loadControllerCounts[6] = {0,0,0,0,0,0};
+    printf("Id code = 2, ");
+
+    bool flag = true;
+    room *list = roomList;
+    device *devList = list->devices;
+    char loadController = 0;
+
+    while(flag)
+    {
+        if(list->smartSwitchID == smartSwitchID)
+        {
+            if(list->numDevices == 0)
+                return false;
+
+            devList = list->devices;
+            for(int i = 0; i < (int)devNum; i++)
+            {
+                loadControllerCounts[devList->loadControllerID]++;
+                if(devList->next != NULL)
+                    devList = devList->next;
+
+            }
+
+            loadController = devList->loadControllerID;
+            if(devList->incremental == 0 && devList->currState == 10)
+                percentOn = 0;
+            printf("Num Device = %d ", loadControllerCounts[loadController]);
+            printf("Fan/Light ID = %d ", devNum);
+            printf("Percentage = %d ", percentOn);
+            devList->currState = percentOn;
+            flag = false;
+        }
+        if(list->next == 0)
+            flag = false;
+        else
+            list = list->next;
+    }
+
     char loadControlData[4];
     char checksum = 0;
 
-    loadControlData[0] = (2 << 5) + ((loadControlID & 0x07) << 2) + (devNum & 0x03);
-    loadControlData[1] = (percentOn & 0x0F << 4);
+    loadControlData[0] = (2 << 5) + ((loadControllerCounts[loadController] & 0x07) << 2) + (devNum & 0x03);
+    loadControlData[1] = ((percentOn & 0x0F) << 4);
     loadControlData[2] = 0;
 
     for(int i = 0; i < 3; i++)
@@ -546,6 +725,8 @@ bool IOManager::sendLoadControlData(int loadControlID, char devNum, char percent
 
     loadControlData[3] = 0;
     loadControlData[3] = checksum ^ (loadControlData[3] & 0xF0 >> 4);
+
+    printf("Load Controller Message = %d %d %d %d\n", loadControlData[0], loadControlData[1], loadControlData[2], loadControlData[3]);
 
     return uartOut.sendData(loadControlData);
 }
@@ -603,4 +784,131 @@ void IOManager::setCurrentRoomManagerRoom(int roomIndex)
     }
 
     currentRoomManagerRoom = list;
+}
+
+int IOManager::getCurrentTemperature(int roomIndex)
+{
+    room *list = roomList;
+
+    if(roomIndex >= numRooms)
+        return 0;
+
+    for(int i = 0; i < roomIndex; i++)
+    {
+        list = list->next;
+    }
+
+    return list->smartSwitchTemperature;
+}
+
+int IOManager::getCurrentHumidity(int roomIndex)
+{
+    room *list = roomList;
+
+    if(roomIndex >= numRooms)
+        return 0;
+
+    for(int i = 0; i < roomIndex; i++)
+    {
+        list = list->next;
+    }
+
+    return list->smartSwitchHumidity;
+}
+
+int IOManager::getCurrentLighting(int roomIndex)
+{
+    room *list = roomList;
+
+    if(roomIndex >= numRooms)
+        return 0;
+
+    for(int i = 0; i < roomIndex; i++)
+    {
+        list = list->next;
+    }
+
+    return list->smartSwitchLighting;
+}
+
+int IOManager::getCurrentSmartSwitchID(int roomIndex)
+{
+    room *list = roomList;
+
+    if(roomIndex >= numRooms)
+        return 0;
+
+    for(int i = 0; i < roomIndex; i++)
+    {
+        list = list->next;
+    }
+
+    return list->smartSwitchID;
+}
+
+bool IOManager::updateLightDisplay(int smartSwitchID, short data)
+{
+    bool flag = true;
+    room *list = roomList;
+
+    while(flag)
+    {
+        if(list->smartSwitchID == smartSwitchID)
+        {
+            list->smartSwitchLighting = data;
+            lightData = data;
+            return true;
+        }
+        if(list->next == 0)
+            return false;
+        else
+            list = list->next;
+    }
+
+    return false;
+}
+
+bool IOManager::updateTemperatureDisplay(int smartSwitchID, short data)
+{
+    bool flag = true;
+    room *list = roomList;
+
+    std::cout << " TEMPERATURE RAW = " << data << std::endl;
+    while(flag)
+    {
+        if(list->smartSwitchID == smartSwitchID)
+        {
+            list->smartSwitchLighting = data;
+            tempData = data;
+            return true;
+        }
+        if(list->next == 0)
+            return false;
+        else
+            list = list->next;
+    }
+
+    return false;
+}
+
+bool IOManager::updateHumidityDisplay(int smartSwitchID, short data)
+{
+    bool flag = true;
+    room *list = roomList;
+
+    while(flag)
+    {
+        if(list->smartSwitchID == smartSwitchID)
+        {
+            list->smartSwitchLighting = data;
+            humData = data;
+            return true;
+        }
+        if(list->next == 0)
+            return false;
+        else
+            list = list->next;
+    }
+
+    return false;
 }
