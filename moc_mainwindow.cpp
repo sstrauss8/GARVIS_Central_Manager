@@ -22,7 +22,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      16,   14, // methods
+      17,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -45,7 +45,8 @@ static const uint qt_meta_data_MainWindow[] = {
      421,  415,   11,   11, 0x08,
      454,  415,   11,   11, 0x08,
      506,   11,   11,   11, 0x08,
-     530,   11,   11,   11, 0x08,
+     532,   11,   11,   11, 0x08,
+     556,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -67,8 +68,9 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "on_helpTutorial_button_clicked()\0index\0"
     "on_tabWidget_currentChanged(int)\0"
     "on_comboBox_loadController_currentIndexChanged(int)\0"
-    "on_pushButton_clicked()\0"
     "on_pushButton_2_clicked()\0"
+    "on_checkBox_5_clicked()\0"
+    "on_dateTimeEdit_editingFinished()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -91,8 +93,9 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 11: _t->on_helpTutorial_button_clicked(); break;
         case 12: _t->on_tabWidget_currentChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 13: _t->on_comboBox_loadController_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 14: _t->on_pushButton_clicked(); break;
-        case 15: _t->on_pushButton_2_clicked(); break;
+        case 14: _t->on_pushButton_2_clicked(); break;
+        case 15: _t->on_checkBox_5_clicked(); break;
+        case 16: _t->on_dateTimeEdit_editingFinished(); break;
         default: ;
         }
     }
@@ -130,9 +133,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 16)
+        if (_id < 17)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 16;
+        _id -= 17;
     }
     return _id;
 }

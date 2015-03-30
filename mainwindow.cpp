@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 #include <QApplication>
+#include <QDateTime>
 #include <iostream>
 #include "setthresholds.h"
 #include "helpdialog.h"
@@ -17,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     m_CommandCreator.start();
     m_GloveAPI.start();
 
+    smartDecisionMode = false;
     fakeDeviceID = 0;
 
     QMessageBox msgBox;
@@ -48,6 +50,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
     output = "";
     counter = 0;
+
+    ui->dateEdit->setDate(QDate::currentDate());
 
     p_IOControl->startUART();
 
@@ -175,16 +179,16 @@ void MainWindow::populateDevices(int roomIndex, int loadControllerIndex)
 
     QString temp = "";
 
-    temp.sprintf("%d", p_IOControl->getCurrentSmartSwitchID(roomIndex));
+    temp.sprintf("SS %d", p_IOControl->getCurrentSmartSwitchID(roomIndex));
     ui->smartSwitchID->setText(temp);
 
-    temp.sprintf("%d", p_IOControl->getCurrentHumidity(roomIndex));
+    temp.sprintf("%d RAW", p_IOControl->getCurrentHumidity(roomIndex));
     ui->smartSwitchHum->setText(temp);
 
-    temp.sprintf("%d", p_IOControl->getCurrentTemperature(roomIndex));
+    temp.sprintf("%d RAW", p_IOControl->getCurrentTemperature(roomIndex));
     ui->smartSwitchTemp->setText(temp);
 
-    temp.sprintf("%d", p_IOControl->getCurrentLighting(roomIndex));
+    temp.sprintf("%d RAW", p_IOControl->getCurrentLighting(roomIndex));
     ui->smartSwitchLighting->setText(temp);
 
 
@@ -235,13 +239,21 @@ void MainWindow::on_pushButton_4_clicked()
     ui->tableWidget->setItem(1,1,new QTableWidgetItem("Smart Switch 1"));
 }
 
+//If the set threshold button is pressed, launch the threshold dialog
 void MainWindow::triggerThresholdDialog(int smartControlID)
 {
     if(p_IOControl->numRooms != 0)
     {
-        SetThresholds setThresholddialog;
-        setThresholddialog.setModal(true);
-        setThresholddialog.exec();
+        if(smartDecisionMode)
+        {
+            SetThresholds setThresholddialog;
+            setThresholddialog.setModal(true);
+            setThresholddialog.exec();
+        }
+        else
+        {
+            QMessageBox::warning(this, tr("Warning"), "Smart Decision Mode is disabled.");
+        }
     }
     else
     {
@@ -255,6 +267,7 @@ void MainWindow::on_pushbutton_setThreshold3_2_clicked()
     triggerThresholdDialog(ui->comboBox->currentIndex());
 }
 
+//For room manager mode, if set1 button is clicked then add the device to the room
 void MainWindow::on_pushbutton_set1_clicked()
 {
     p_IOControl->addDevice(0, ui->comboBox->currentIndex(),
@@ -272,6 +285,7 @@ void MainWindow::on_pushbutton_set1_clicked()
                                 ui->comboBox_loadController->currentText().toInt(0,10),
                                 ui->device2Name->text());}
 
+//For room manager mode, if set2 button is clicked then add the device to the room
 void MainWindow::on_pushbutton_set2_clicked()
 {
     p_IOControl->addDevice(1, ui->comboBox->currentIndex(),
@@ -290,6 +304,7 @@ void MainWindow::on_pushbutton_set2_clicked()
                                 ui->device2Name->text());
 }
 
+//For room manager mode, if set3 button is clicked then add the device to the room
 void MainWindow::on_pushbutton_set3_clicked()
 {
     p_IOControl->addDevice(2, ui->comboBox->currentIndex(),
@@ -331,6 +346,12 @@ void MainWindow::on_tabWidget_currentChanged(int index)
         populateDevices(ui->comboBox->currentIndex(), ui->comboBox_loadController->currentText().toInt(0,10));
     }
 
+    if(index == 0)
+    {
+        QDate setDate = ui->dateEdit->date();
+        ui->calendarWidget->setSelectedDate(setDate);
+    }
+
 }
 
 void MainWindow::changeLoadControllers()
@@ -361,18 +382,21 @@ void MainWindow::on_comboBox_loadController_currentIndexChanged(int index)
     populateDevices(ui->comboBox->currentIndex(), ui->comboBox_loadController->currentText().toInt(0,10));
 }
 
-void MainWindow::on_pushButton_clicked()
-{
-    char pollData[4] = {0x23,0xFF,0x00,0x01};
-    std::cout << "Sending poll message" << std::endl;
-    p_IOControl->uartOut.sendData(pollData);
-}
-
 void MainWindow::on_pushButton_2_clicked()
 {
     QString temp = "";
     ui->lineEdit_avgtemp->setText(temp.sprintf("%d RAW", p_IOControl->tempData));
     ui->lineEdit_avghum->setText(temp.sprintf("%d RAW", p_IOControl->humData));
     ui->lineEdit_avglight->setText(temp.sprintf("%d RAW", p_IOControl->lightData));
+
+}
+
+void MainWindow::on_checkBox_5_clicked()
+{
+    smartDecisionMode = !smartDecisionMode;
+}
+
+void MainWindow::on_dateTimeEdit_editingFinished()
+{
 
 }

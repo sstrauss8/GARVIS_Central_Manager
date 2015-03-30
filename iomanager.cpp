@@ -873,12 +873,11 @@ bool IOManager::updateTemperatureDisplay(int smartSwitchID, short data)
     bool flag = true;
     room *list = roomList;
 
-    std::cout << " TEMPERATURE RAW = " << data << std::endl;
     while(flag)
     {
         if(list->smartSwitchID == smartSwitchID)
         {
-            list->smartSwitchLighting = data;
+            list->smartSwitchTemperature = data;
             tempData = data;
             return true;
         }

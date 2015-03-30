@@ -47,9 +47,11 @@ private slots:
 
     void on_comboBox_loadController_currentIndexChanged(int index);
 
-    void on_pushButton_clicked();
-
     void on_pushButton_2_clicked();
+
+    void on_checkBox_5_clicked();
+
+    void on_dateTimeEdit_editingFinished();
 
 private:
     Ui::MainWindow *ui;
@@ -61,6 +63,7 @@ private:
     QString output;
     int counter;
     int fakeDeviceID;
+    bool smartDecisionMode;
 
     void triggerThresholdDialog(int smartSwitchID);
     void changeLoadControllers();

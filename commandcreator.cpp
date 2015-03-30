@@ -10,6 +10,8 @@ CommandCreator::CommandCreator()
 
 void CommandCreator::run()
 {
+    int pollCounter = 0;
+
     while(1)
     {
         if(p_IOControl->uartIn.receivedMessage)
@@ -18,6 +20,14 @@ void CommandCreator::run()
             p_IOControl->uartIn.receivedMessage = false;
         }
         msleep(1);
+
+        if(++pollCounter > 60000)
+        {
+            pollCounter = 0;
+            char pollData[4] = {0x23,0xFF,0x00,0x01};
+            std::cout << "Sending poll message" << std::endl;
+            p_IOControl->uartOut.sendData(pollData);
+        }
     }
 }
 

@@ -16,6 +16,7 @@
 #include <QtGui/QCalendarWidget>
 #include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
+#include <QtGui/QDateEdit>
 #include <QtGui/QFrame>
 #include <QtGui/QGroupBox>
 #include <QtGui/QHeaderView>
@@ -48,7 +49,6 @@ public:
     QLineEdit *lineEdit_avghum;
     QLineEdit *lineEdit_avgtemp;
     QLineEdit *lineEdit_avglight;
-    QPushButton *pushButton;
     QPushButton *pushButton_2;
     QWidget *tab_roommgr;
     QLabel *label_room;
@@ -92,10 +92,6 @@ public:
     QLineEdit *smartSwitchID;
     QLineEdit *smartSwitchTemp;
     QLineEdit *smartSwitchHum;
-    QCheckBox *checkBox;
-    QCheckBox *checkBox_2;
-    QCheckBox *checkBox_3;
-    QCheckBox *checkBox_4;
     QPushButton *pushbutton_setThreshold3_2;
     QLineEdit *smartSwitchLighting;
     QLabel *label_room_2;
@@ -114,7 +110,7 @@ public:
     QTableWidget *tableWidget_2;
     QPushButton *pushButton_7;
     QGroupBox *groupBox_4;
-    QCheckBox *checkBox_5;
+    QCheckBox *checkBox_smartDM;
     QLabel *label_8;
     QGroupBox *groupBox_5;
     QLineEdit *textBox_newRoom;
@@ -122,6 +118,8 @@ public:
     QGroupBox *groupBox_6;
     QPushButton *button_deleteRoom;
     QComboBox *comboBox_deleteroomlist;
+    QDateEdit *dateEdit;
+    QLabel *label_15;
     QWidget *tab_help;
     QGroupBox *groupBox_7;
     QPushButton *helpTutorial_button;
@@ -192,18 +190,18 @@ public:
         lineEdit_avghum = new QLineEdit(groupBox_9);
         lineEdit_avghum->setObjectName(QString::fromUtf8("lineEdit_avghum"));
         lineEdit_avghum->setGeometry(QRect(150, 70, 113, 27));
+        lineEdit_avghum->setReadOnly(true);
         lineEdit_avgtemp = new QLineEdit(groupBox_9);
         lineEdit_avgtemp->setObjectName(QString::fromUtf8("lineEdit_avgtemp"));
         lineEdit_avgtemp->setGeometry(QRect(150, 30, 113, 27));
+        lineEdit_avgtemp->setReadOnly(true);
         lineEdit_avglight = new QLineEdit(groupBox_9);
         lineEdit_avglight->setObjectName(QString::fromUtf8("lineEdit_avglight"));
         lineEdit_avglight->setGeometry(QRect(150, 110, 113, 27));
-        pushButton = new QPushButton(tab_home);
-        pushButton->setObjectName(QString::fromUtf8("pushButton"));
-        pushButton->setGeometry(QRect(20, 80, 141, 27));
+        lineEdit_avglight->setReadOnly(true);
         pushButton_2 = new QPushButton(tab_home);
         pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
-        pushButton_2->setGeometry(QRect(180, 80, 141, 27));
+        pushButton_2->setGeometry(QRect(90, 80, 141, 27));
         tabWidget->addTab(tab_home, QString());
         tab_roommgr = new QWidget();
         tab_roommgr->setObjectName(QString::fromUtf8("tab_roommgr"));
@@ -229,7 +227,7 @@ public:
         comboBox->setGeometry(QRect(180, 50, 191, 27));
         roomEdit = new QLineEdit(tab_roommgr);
         roomEdit->setObjectName(QString::fromUtf8("roomEdit"));
-        roomEdit->setGeometry(QRect(242, 10, 151, 31));
+        roomEdit->setGeometry(QRect(172, 10, 221, 31));
         QFont font1;
         font1.setPointSize(16);
         roomEdit->setFont(font1);
@@ -472,18 +470,6 @@ public:
         smartSwitchHum = new QLineEdit(groupBox);
         smartSwitchHum->setObjectName(QString::fromUtf8("smartSwitchHum"));
         smartSwitchHum->setGeometry(QRect(100, 90, 71, 27));
-        checkBox = new QCheckBox(groupBox);
-        checkBox->setObjectName(QString::fromUtf8("checkBox"));
-        checkBox->setGeometry(QRect(180, 120, 21, 22));
-        checkBox_2 = new QCheckBox(groupBox);
-        checkBox_2->setObjectName(QString::fromUtf8("checkBox_2"));
-        checkBox_2->setGeometry(QRect(180, 90, 21, 22));
-        checkBox_3 = new QCheckBox(groupBox);
-        checkBox_3->setObjectName(QString::fromUtf8("checkBox_3"));
-        checkBox_3->setGeometry(QRect(180, 60, 21, 22));
-        checkBox_4 = new QCheckBox(groupBox);
-        checkBox_4->setObjectName(QString::fromUtf8("checkBox_4"));
-        checkBox_4->setGeometry(QRect(180, 30, 21, 22));
         pushbutton_setThreshold3_2 = new QPushButton(groupBox);
         pushbutton_setThreshold3_2->setObjectName(QString::fromUtf8("pushbutton_setThreshold3_2"));
         pushbutton_setThreshold3_2->setGeometry(QRect(20, 160, 161, 27));
@@ -608,7 +594,7 @@ public:
         pushButton_7->setGeometry(QRect(60, 230, 171, 27));
         groupBox_4 = new QGroupBox(tab_setupconfig);
         groupBox_4->setObjectName(QString::fromUtf8("groupBox_4"));
-        groupBox_4->setGeometry(QRect(600, 10, 171, 51));
+        groupBox_4->setGeometry(QRect(560, 10, 171, 51));
         QPalette palette25;
         palette25.setBrush(QPalette::Active, QPalette::WindowText, brush1);
         palette25.setBrush(QPalette::Active, QPalette::Text, brush1);
@@ -625,9 +611,9 @@ public:
         palette25.setBrush(QPalette::Disabled, QPalette::BrightText, brush3);
         palette25.setBrush(QPalette::Disabled, QPalette::Base, brush1);
         groupBox_4->setPalette(palette25);
-        checkBox_5 = new QCheckBox(groupBox_4);
-        checkBox_5->setObjectName(QString::fromUtf8("checkBox_5"));
-        checkBox_5->setGeometry(QRect(90, 20, 21, 22));
+        checkBox_smartDM = new QCheckBox(groupBox_4);
+        checkBox_smartDM->setObjectName(QString::fromUtf8("checkBox_smartDM"));
+        checkBox_smartDM->setGeometry(QRect(90, 20, 21, 22));
         label_8 = new QLabel(groupBox_4);
         label_8->setObjectName(QString::fromUtf8("label_8"));
         label_8->setGeometry(QRect(30, 20, 61, 20));
@@ -641,7 +627,7 @@ public:
         label_8->setPalette(palette26);
         groupBox_5 = new QGroupBox(tab_setupconfig);
         groupBox_5->setObjectName(QString::fromUtf8("groupBox_5"));
-        groupBox_5->setGeometry(QRect(560, 90, 191, 101));
+        groupBox_5->setGeometry(QRect(560, 70, 191, 81));
         QPalette palette27;
         palette27.setBrush(QPalette::Active, QPalette::WindowText, brush1);
         palette27.setBrush(QPalette::Active, QPalette::Text, brush1);
@@ -652,13 +638,13 @@ public:
         groupBox_5->setPalette(palette27);
         textBox_newRoom = new QLineEdit(groupBox_5);
         textBox_newRoom->setObjectName(QString::fromUtf8("textBox_newRoom"));
-        textBox_newRoom->setGeometry(QRect(10, 30, 161, 27));
+        textBox_newRoom->setGeometry(QRect(10, 20, 161, 27));
         button_NewRoom = new QPushButton(groupBox_5);
         button_NewRoom->setObjectName(QString::fromUtf8("button_NewRoom"));
-        button_NewRoom->setGeometry(QRect(40, 60, 99, 27));
+        button_NewRoom->setGeometry(QRect(40, 50, 99, 27));
         groupBox_6 = new QGroupBox(tab_setupconfig);
         groupBox_6->setObjectName(QString::fromUtf8("groupBox_6"));
-        groupBox_6->setGeometry(QRect(560, 190, 191, 101));
+        groupBox_6->setGeometry(QRect(560, 160, 191, 81));
         QPalette palette28;
         palette28.setBrush(QPalette::Active, QPalette::WindowText, brush1);
         palette28.setBrush(QPalette::Active, QPalette::Text, brush1);
@@ -669,31 +655,27 @@ public:
         groupBox_6->setPalette(palette28);
         button_deleteRoom = new QPushButton(groupBox_6);
         button_deleteRoom->setObjectName(QString::fromUtf8("button_deleteRoom"));
-        button_deleteRoom->setGeometry(QRect(40, 60, 99, 27));
+        button_deleteRoom->setGeometry(QRect(40, 50, 99, 27));
         comboBox_deleteroomlist = new QComboBox(groupBox_6);
         comboBox_deleteroomlist->setObjectName(QString::fromUtf8("comboBox_deleteroomlist"));
-        comboBox_deleteroomlist->setGeometry(QRect(10, 30, 151, 27));
+        comboBox_deleteroomlist->setGeometry(QRect(10, 20, 151, 27));
+        dateEdit = new QDateEdit(tab_setupconfig);
+        dateEdit->setObjectName(QString::fromUtf8("dateEdit"));
+        dateEdit->setGeometry(QRect(650, 260, 110, 27));
+        label_15 = new QLabel(tab_setupconfig);
+        label_15->setObjectName(QString::fromUtf8("label_15"));
+        label_15->setGeometry(QRect(580, 260, 91, 17));
+        QPalette palette29;
+        palette29.setBrush(QPalette::Active, QPalette::WindowText, brush1);
+        palette29.setBrush(QPalette::Inactive, QPalette::WindowText, brush1);
+        palette29.setBrush(QPalette::Disabled, QPalette::WindowText, brush2);
+        label_15->setPalette(palette29);
         tabWidget->addTab(tab_setupconfig, QString());
         tab_help = new QWidget();
         tab_help->setObjectName(QString::fromUtf8("tab_help"));
         groupBox_7 = new QGroupBox(tab_help);
         groupBox_7->setObjectName(QString::fromUtf8("groupBox_7"));
         groupBox_7->setGeometry(QRect(10, 30, 251, 241));
-        QPalette palette29;
-        palette29.setBrush(QPalette::Active, QPalette::WindowText, brush);
-        palette29.setBrush(QPalette::Active, QPalette::Text, brush1);
-        palette29.setBrush(QPalette::Inactive, QPalette::WindowText, brush);
-        palette29.setBrush(QPalette::Inactive, QPalette::Text, brush1);
-        palette29.setBrush(QPalette::Disabled, QPalette::WindowText, brush2);
-        palette29.setBrush(QPalette::Disabled, QPalette::Text, brush2);
-        groupBox_7->setPalette(palette29);
-        groupBox_7->setStyleSheet(QString::fromUtf8("font: 11pt \"Ubuntu\";"));
-        helpTutorial_button = new QPushButton(groupBox_7);
-        helpTutorial_button->setObjectName(QString::fromUtf8("helpTutorial_button"));
-        helpTutorial_button->setGeometry(QRect(40, 160, 181, 61));
-        dev1_id_5 = new QLabel(groupBox_7);
-        dev1_id_5->setObjectName(QString::fromUtf8("dev1_id_5"));
-        dev1_id_5->setGeometry(QRect(10, 50, 221, 17));
         QPalette palette30;
         palette30.setBrush(QPalette::Active, QPalette::WindowText, brush);
         palette30.setBrush(QPalette::Active, QPalette::Text, brush1);
@@ -701,10 +683,14 @@ public:
         palette30.setBrush(QPalette::Inactive, QPalette::Text, brush1);
         palette30.setBrush(QPalette::Disabled, QPalette::WindowText, brush2);
         palette30.setBrush(QPalette::Disabled, QPalette::Text, brush2);
-        dev1_id_5->setPalette(palette30);
-        dev1_id_6 = new QLabel(groupBox_7);
-        dev1_id_6->setObjectName(QString::fromUtf8("dev1_id_6"));
-        dev1_id_6->setGeometry(QRect(10, 80, 231, 17));
+        groupBox_7->setPalette(palette30);
+        groupBox_7->setStyleSheet(QString::fromUtf8("font: 11pt \"Ubuntu\";"));
+        helpTutorial_button = new QPushButton(groupBox_7);
+        helpTutorial_button->setObjectName(QString::fromUtf8("helpTutorial_button"));
+        helpTutorial_button->setGeometry(QRect(40, 160, 181, 61));
+        dev1_id_5 = new QLabel(groupBox_7);
+        dev1_id_5->setObjectName(QString::fromUtf8("dev1_id_5"));
+        dev1_id_5->setGeometry(QRect(10, 50, 221, 17));
         QPalette palette31;
         palette31.setBrush(QPalette::Active, QPalette::WindowText, brush);
         palette31.setBrush(QPalette::Active, QPalette::Text, brush1);
@@ -712,10 +698,10 @@ public:
         palette31.setBrush(QPalette::Inactive, QPalette::Text, brush1);
         palette31.setBrush(QPalette::Disabled, QPalette::WindowText, brush2);
         palette31.setBrush(QPalette::Disabled, QPalette::Text, brush2);
-        dev1_id_6->setPalette(palette31);
-        dev1_id_7 = new QLabel(groupBox_7);
-        dev1_id_7->setObjectName(QString::fromUtf8("dev1_id_7"));
-        dev1_id_7->setGeometry(QRect(10, 110, 231, 17));
+        dev1_id_5->setPalette(palette31);
+        dev1_id_6 = new QLabel(groupBox_7);
+        dev1_id_6->setObjectName(QString::fromUtf8("dev1_id_6"));
+        dev1_id_6->setGeometry(QRect(10, 80, 231, 17));
         QPalette palette32;
         palette32.setBrush(QPalette::Active, QPalette::WindowText, brush);
         palette32.setBrush(QPalette::Active, QPalette::Text, brush1);
@@ -723,26 +709,21 @@ public:
         palette32.setBrush(QPalette::Inactive, QPalette::Text, brush1);
         palette32.setBrush(QPalette::Disabled, QPalette::WindowText, brush2);
         palette32.setBrush(QPalette::Disabled, QPalette::Text, brush2);
-        dev1_id_7->setPalette(palette32);
+        dev1_id_6->setPalette(palette32);
+        dev1_id_7 = new QLabel(groupBox_7);
+        dev1_id_7->setObjectName(QString::fromUtf8("dev1_id_7"));
+        dev1_id_7->setGeometry(QRect(10, 110, 231, 17));
+        QPalette palette33;
+        palette33.setBrush(QPalette::Active, QPalette::WindowText, brush);
+        palette33.setBrush(QPalette::Active, QPalette::Text, brush1);
+        palette33.setBrush(QPalette::Inactive, QPalette::WindowText, brush);
+        palette33.setBrush(QPalette::Inactive, QPalette::Text, brush1);
+        palette33.setBrush(QPalette::Disabled, QPalette::WindowText, brush2);
+        palette33.setBrush(QPalette::Disabled, QPalette::Text, brush2);
+        dev1_id_7->setPalette(palette33);
         groupBox_8 = new QGroupBox(tab_help);
         groupBox_8->setObjectName(QString::fromUtf8("groupBox_8"));
         groupBox_8->setGeometry(QRect(270, 30, 501, 241));
-        QPalette palette33;
-        palette33.setBrush(QPalette::Active, QPalette::WindowText, brush1);
-        palette33.setBrush(QPalette::Active, QPalette::Text, brush1);
-        palette33.setBrush(QPalette::Active, QPalette::ButtonText, brush1);
-        palette33.setBrush(QPalette::Inactive, QPalette::WindowText, brush1);
-        palette33.setBrush(QPalette::Inactive, QPalette::Text, brush1);
-        palette33.setBrush(QPalette::Inactive, QPalette::ButtonText, brush1);
-        palette33.setBrush(QPalette::Disabled, QPalette::WindowText, brush1);
-        palette33.setBrush(QPalette::Disabled, QPalette::Text, brush1);
-        palette33.setBrush(QPalette::Disabled, QPalette::ButtonText, brush1);
-        groupBox_8->setPalette(palette33);
-        groupBox_8->setStyleSheet(QString::fromUtf8("color: rgb(255, 255, 255);\n"
-"font: 11pt \"Ubuntu\";"));
-        dev1_id_8 = new QLabel(groupBox_8);
-        dev1_id_8->setObjectName(QString::fromUtf8("dev1_id_8"));
-        dev1_id_8->setGeometry(QRect(20, 40, 461, 17));
         QPalette palette34;
         palette34.setBrush(QPalette::Active, QPalette::WindowText, brush1);
         palette34.setBrush(QPalette::Active, QPalette::Text, brush1);
@@ -753,10 +734,12 @@ public:
         palette34.setBrush(QPalette::Disabled, QPalette::WindowText, brush1);
         palette34.setBrush(QPalette::Disabled, QPalette::Text, brush1);
         palette34.setBrush(QPalette::Disabled, QPalette::ButtonText, brush1);
-        dev1_id_8->setPalette(palette34);
-        dev1_id_9 = new QLabel(groupBox_8);
-        dev1_id_9->setObjectName(QString::fromUtf8("dev1_id_9"));
-        dev1_id_9->setGeometry(QRect(30, 60, 461, 17));
+        groupBox_8->setPalette(palette34);
+        groupBox_8->setStyleSheet(QString::fromUtf8("color: rgb(255, 255, 255);\n"
+"font: 11pt \"Ubuntu\";"));
+        dev1_id_8 = new QLabel(groupBox_8);
+        dev1_id_8->setObjectName(QString::fromUtf8("dev1_id_8"));
+        dev1_id_8->setGeometry(QRect(20, 40, 461, 17));
         QPalette palette35;
         palette35.setBrush(QPalette::Active, QPalette::WindowText, brush1);
         palette35.setBrush(QPalette::Active, QPalette::Text, brush1);
@@ -767,10 +750,10 @@ public:
         palette35.setBrush(QPalette::Disabled, QPalette::WindowText, brush1);
         palette35.setBrush(QPalette::Disabled, QPalette::Text, brush1);
         palette35.setBrush(QPalette::Disabled, QPalette::ButtonText, brush1);
-        dev1_id_9->setPalette(palette35);
-        dev1_id_10 = new QLabel(groupBox_8);
-        dev1_id_10->setObjectName(QString::fromUtf8("dev1_id_10"));
-        dev1_id_10->setGeometry(QRect(20, 100, 461, 17));
+        dev1_id_8->setPalette(palette35);
+        dev1_id_9 = new QLabel(groupBox_8);
+        dev1_id_9->setObjectName(QString::fromUtf8("dev1_id_9"));
+        dev1_id_9->setGeometry(QRect(30, 60, 461, 17));
         QPalette palette36;
         palette36.setBrush(QPalette::Active, QPalette::WindowText, brush1);
         palette36.setBrush(QPalette::Active, QPalette::Text, brush1);
@@ -781,10 +764,10 @@ public:
         palette36.setBrush(QPalette::Disabled, QPalette::WindowText, brush1);
         palette36.setBrush(QPalette::Disabled, QPalette::Text, brush1);
         palette36.setBrush(QPalette::Disabled, QPalette::ButtonText, brush1);
-        dev1_id_10->setPalette(palette36);
-        dev1_id_11 = new QLabel(groupBox_8);
-        dev1_id_11->setObjectName(QString::fromUtf8("dev1_id_11"));
-        dev1_id_11->setGeometry(QRect(30, 120, 461, 17));
+        dev1_id_9->setPalette(palette36);
+        dev1_id_10 = new QLabel(groupBox_8);
+        dev1_id_10->setObjectName(QString::fromUtf8("dev1_id_10"));
+        dev1_id_10->setGeometry(QRect(20, 100, 461, 17));
         QPalette palette37;
         palette37.setBrush(QPalette::Active, QPalette::WindowText, brush1);
         palette37.setBrush(QPalette::Active, QPalette::Text, brush1);
@@ -795,7 +778,21 @@ public:
         palette37.setBrush(QPalette::Disabled, QPalette::WindowText, brush1);
         palette37.setBrush(QPalette::Disabled, QPalette::Text, brush1);
         palette37.setBrush(QPalette::Disabled, QPalette::ButtonText, brush1);
-        dev1_id_11->setPalette(palette37);
+        dev1_id_10->setPalette(palette37);
+        dev1_id_11 = new QLabel(groupBox_8);
+        dev1_id_11->setObjectName(QString::fromUtf8("dev1_id_11"));
+        dev1_id_11->setGeometry(QRect(30, 120, 461, 17));
+        QPalette palette38;
+        palette38.setBrush(QPalette::Active, QPalette::WindowText, brush1);
+        palette38.setBrush(QPalette::Active, QPalette::Text, brush1);
+        palette38.setBrush(QPalette::Active, QPalette::ButtonText, brush1);
+        palette38.setBrush(QPalette::Inactive, QPalette::WindowText, brush1);
+        palette38.setBrush(QPalette::Inactive, QPalette::Text, brush1);
+        palette38.setBrush(QPalette::Inactive, QPalette::ButtonText, brush1);
+        palette38.setBrush(QPalette::Disabled, QPalette::WindowText, brush1);
+        palette38.setBrush(QPalette::Disabled, QPalette::Text, brush1);
+        palette38.setBrush(QPalette::Disabled, QPalette::ButtonText, brush1);
+        dev1_id_11->setPalette(palette38);
         tabWidget->addTab(tab_help, QString());
         label = new QLabel(centralWidget);
         label->setObjectName(QString::fromUtf8("label"));
@@ -804,11 +801,11 @@ public:
         label_11 = new QLabel(centralWidget);
         label_11->setObjectName(QString::fromUtf8("label_11"));
         label_11->setGeometry(QRect(630, 410, 161, 20));
-        QPalette palette38;
-        palette38.setBrush(QPalette::Active, QPalette::WindowText, brush1);
-        palette38.setBrush(QPalette::Inactive, QPalette::WindowText, brush1);
-        palette38.setBrush(QPalette::Disabled, QPalette::WindowText, brush2);
-        label_11->setPalette(palette38);
+        QPalette palette39;
+        palette39.setBrush(QPalette::Active, QPalette::WindowText, brush1);
+        palette39.setBrush(QPalette::Inactive, QPalette::WindowText, brush1);
+        palette39.setBrush(QPalette::Disabled, QPalette::WindowText, brush2);
+        label_11->setPalette(palette39);
         label_6 = new QLabel(centralWidget);
         label_6->setObjectName(QString::fromUtf8("label_6"));
         label_6->setGeometry(QRect(0, -330, 771, 851));
@@ -828,7 +825,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidget->setCurrentIndex(1);
+        tabWidget->setCurrentIndex(2);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -842,7 +839,6 @@ public:
         label_10->setText(QApplication::translate("MainWindow", "Home Temperature", 0, QApplication::UnicodeUTF8));
         label_13->setText(QApplication::translate("MainWindow", "Home Humidity", 0, QApplication::UnicodeUTF8));
         label_14->setText(QApplication::translate("MainWindow", "Home Lighting", 0, QApplication::UnicodeUTF8));
-        pushButton->setText(QApplication::translate("MainWindow", "Send Poll Msg", 0, QApplication::UnicodeUTF8));
         pushButton_2->setText(QApplication::translate("MainWindow", "Display Data", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_home), QApplication::translate("MainWindow", "Home", 0, QApplication::UnicodeUTF8));
         label_room->setText(QApplication::translate("MainWindow", "Select Room", 0, QApplication::UnicodeUTF8));
@@ -872,10 +868,6 @@ public:
         label_3->setText(QApplication::translate("MainWindow", "Temperature", 0, QApplication::UnicodeUTF8));
         label_4->setText(QApplication::translate("MainWindow", "Humidity", 0, QApplication::UnicodeUTF8));
         label_5->setText(QApplication::translate("MainWindow", "Lighting", 0, QApplication::UnicodeUTF8));
-        checkBox->setText(QString());
-        checkBox_2->setText(QString());
-        checkBox_3->setText(QString());
-        checkBox_4->setText(QString());
         pushbutton_setThreshold3_2->setText(QApplication::translate("MainWindow", "Set Room Thresholds", 0, QApplication::UnicodeUTF8));
         label_room_2->setText(QApplication::translate("MainWindow", "Select Load Controller", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_roommgr), QApplication::translate("MainWindow", "Room Manager", 0, QApplication::UnicodeUTF8));
@@ -913,13 +905,14 @@ public:
 
         pushButton_7->setText(QApplication::translate("MainWindow", "Delete Selected Device", 0, QApplication::UnicodeUTF8));
         groupBox_4->setTitle(QApplication::translate("MainWindow", "Smart Decision Mode", 0, QApplication::UnicodeUTF8));
-        checkBox_5->setText(QString());
+        checkBox_smartDM->setText(QString());
         label_8->setText(QApplication::translate("MainWindow", "Enabled", 0, QApplication::UnicodeUTF8));
         groupBox_5->setTitle(QApplication::translate("MainWindow", "Add New Room", 0, QApplication::UnicodeUTF8));
         textBox_newRoom->setPlaceholderText(QApplication::translate("MainWindow", "<Enter Room Name>", 0, QApplication::UnicodeUTF8));
         button_NewRoom->setText(QApplication::translate("MainWindow", "Add", 0, QApplication::UnicodeUTF8));
         groupBox_6->setTitle(QApplication::translate("MainWindow", "Delete Room", 0, QApplication::UnicodeUTF8));
         button_deleteRoom->setText(QApplication::translate("MainWindow", "Delete", 0, QApplication::UnicodeUTF8));
+        label_15->setText(QApplication::translate("MainWindow", "Set Date", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_setupconfig), QApplication::translate("MainWindow", "Setup and Configuration", 0, QApplication::UnicodeUTF8));
         groupBox_7->setTitle(QApplication::translate("MainWindow", "How to Use", 0, QApplication::UnicodeUTF8));
         helpTutorial_button->setText(QApplication::translate("MainWindow", "Launch Tutorial", 0, QApplication::UnicodeUTF8));
