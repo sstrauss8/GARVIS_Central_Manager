@@ -59,6 +59,9 @@ public:
     room *lastRoom;
     room *currentRoomManagerRoom;
     int humData, tempData, lightData;
+    int numStartUpDevices;
+    char devNum[8];
+    char devType[8];
 
     void startUART(){uartIn.start();
                      uartOut.start();
@@ -92,6 +95,13 @@ public:
     bool sendSmartSwitchData(int smartSwitchID);
     bool sendLoadControlData(int smartSwitchID, char devType, char percentOn);
     bool sendVentControlData(int ventControlID, bool onOff);
+
+
+    bool sendDevStartup();
+    bool sendDeviceDetect();
+    void addPossibleDevice(char devType, char devNum);
+    void clearPossibleDeviceList();
+    bool addSmartSwitch(char devNum, char roomNum);
 
     bool setThresholds(int tempLow, int tempHigh, int humLow, int humHigh,
                        int lightLow, int lightHigh);

@@ -6,6 +6,8 @@ using namespace std;
 CommandCreator::CommandCreator()
 {
     p_IOControl = IOManager::Instance();
+    currStartupDevice = 0;
+    timeout = 0;
 }
 
 void CommandCreator::run()
@@ -14,19 +16,43 @@ void CommandCreator::run()
 
     while(1)
     {
-        if(p_IOControl->uartIn.receivedMessage)
+        //Deal with startup if we are in startup and waiting for device
+        //responses
+        if(p_IOControl->uartIn.discoveryModeOn)
         {
-            processData(p_IOControl->uartIn.data);
-            p_IOControl->uartIn.receivedMessage = false;
-        }
-        msleep(1);
+            if(++timeout > 10000)
+            {
+                cout << "Exiting discoverymode" << endl;
+                p_IOControl->uartIn.discoveryModeOn = false;
+            }
 
-        if(++pollCounter > 60000)
+            if(p_IOControl->uartIn.receivedMessage)
+            {
+                processStartup(p_IOControl->uartIn.startup);
+                p_IOControl->uartIn.receivedMessage = false;
+                timeout = 0;
+                cout << "Received Message in CommandCreator" << endl;
+            }
+            msleep(1);
+        }
+
+        //Deal with regular smart switch input
+        else
         {
-            pollCounter = 0;
-            char pollData[4] = {0x23,0xFF,0x00,0x01};
-            std::cout << "Sending poll message" << std::endl;
-            p_IOControl->uartOut.sendData(pollData);
+            if(p_IOControl->uartIn.receivedMessage)
+            {
+                processData(p_IOControl->uartIn.data);
+                p_IOControl->uartIn.receivedMessage = false;
+            }
+            msleep(1);
+
+            if(++pollCounter > 60000)
+            {
+                pollCounter = 0;
+                char pollData[4] = {0x23,0xFF,0x00,0x01};
+                std::cout << "Sending poll message" << std::endl;
+                p_IOControl->uartOut.sendData(pollData);
+            }
         }
     }
 }
@@ -34,6 +60,16 @@ void CommandCreator::run()
 bool CommandCreator::sendDeviceControlCommand(int devID, int commandID)
 {
     return false;
+}
+
+bool CommandCreator::processStartup(char data)
+{
+    char deviceType = (data & 0xE0) >> 5;
+    char deviceNum = (data & 0x07);
+
+    currStartupDevice++;
+
+    p_IOControl->addPossibleDevice(deviceType, deviceNum);
 }
 
 bool CommandCreator::processData(char data[])
@@ -110,16 +146,14 @@ bool CommandCreator::processData(char data[])
 bool CommandCreator::processCapTouchData(char smartSwitchID, short rawData)
 {
     int deviceSelected;
-    char event, percentOn = 0;
+    int event = 0;
 
-    deviceSelected = (rawData & 0xE000) >> 13;
-    event = (rawData & 0x1C00) >> 10;
+    deviceSelected = (rawData & 0x3800) >> 7;
+    event = (rawData & 0x0070) >> 4;
 
-    if(event == 0)
-    {
-        percentOn = 10;
-    }
-    p_IOControl->sendLoadControlData(smartSwitchID, deviceSelected, percentOn);
+    std::cout << "Raw data = " << rawData << std::endl;
+    std::cout << "Event = " << event << std::endl;
+    p_IOControl->sendLoadControlData(smartSwitchID, deviceSelected, (char)event);
     return true;
 }
 

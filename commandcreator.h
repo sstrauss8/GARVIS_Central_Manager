@@ -14,8 +14,12 @@ private:
     int currTemp;
     IOManager * p_IOControl;
 
+    int currStartupDevice;
+    int timeout;
+
     bool initialize();
     bool processData(char data[]);
+    bool processStartup(char data);
     bool processCapTouchData(char smartSwitchID, short rawData);
     bool processHumidityData(char smartSwitchID, short rawData);
     bool processLightData(char smartSwitchID, short rawData);

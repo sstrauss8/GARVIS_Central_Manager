@@ -1,6 +1,7 @@
 #include <stddef.h>
 #include "iomanager.h"
 #include <iostream>
+#include <stdio.h>
 
 
 // Global static pointer used to ensure a single instance of the class.
@@ -28,18 +29,13 @@ bool IOManager::initialize()
     roomList->next = 0;
     roomList->roomName = "";
     roomList->devices = 0;
-    //roomList->devices = new device;
-    //roomList->devices->currState = 0;
-    //roomList->devices->deviceID = -1;
-    //roomList->devices->deviceName = "";
-    //roomList->devices->next = 0;
     roomList->minTemp = 32;
     roomList->maxTemp = 120;
     roomList->minHum = 0;
     roomList->maxHum = 100;
     roomList->minLight = 0;
     roomList->maxLight = 100;
-    roomList->smartSwitchID = numRooms;
+    roomList->smartSwitchID = -1;
     roomList->numDevices = 0;
     roomList->smartSwitchTemperature = 0;
     roomList->smartSwitchHumidity = 0;
@@ -49,6 +45,11 @@ bool IOManager::initialize()
     roomList->loadControllers[2] = 0;
     roomList->loadControllers[3] = 0;
     roomList->loadControllers[4] = 0;
+    roomList->numLoadControllers = 0;
+
+    memset(devNum, 0, sizeof(devNum));
+    memset(devType, 0, sizeof(devNum));
+    numStartUpDevices = 0;
 
     humData = 0;
     tempData = 0;
@@ -99,7 +100,7 @@ bool IOManager::addRoom(QString name)
         list->maxHum = 100;
         list->minLight = 0;
         list->maxLight = 100;
-        list->smartSwitchID = numRooms;
+        list->smartSwitchID = -1;
         list->numDevices = 0;
         list->smartSwitchTemperature = 0;
         list->smartSwitchHumidity = 0;
@@ -109,6 +110,7 @@ bool IOManager::addRoom(QString name)
         list->loadControllers[2] = 0;
         list->loadControllers[3] = 0;
         list->loadControllers[4] = 0;
+        list->numLoadControllers = 0;
     }
 
     numRooms++;
@@ -146,7 +148,7 @@ bool IOManager::addRoom(QString name, int minTemp, int maxTemp, int minHum, int 
         roomList->maxHum = maxHum;
         roomList->minLight = minLight;
         roomList->maxLight = maxLight;
-        roomList->smartSwitchID = numRooms;
+        roomList->smartSwitchID = -1;
         roomList->numDevices = 0;
         roomList->smartSwitchTemperature = smartSwitchTemp;
         roomList->smartSwitchHumidity = smartSwitchHum;
@@ -156,6 +158,7 @@ bool IOManager::addRoom(QString name, int minTemp, int maxTemp, int minHum, int 
         roomList->loadControllers[2] = loadControllers[2];
         roomList->loadControllers[3] = loadControllers[3];
         roomList->loadControllers[4] = loadControllers[4];
+        roomList->numLoadControllers = 0;
     }
     else
     {
@@ -175,7 +178,7 @@ bool IOManager::addRoom(QString name, int minTemp, int maxTemp, int minHum, int 
         list->maxHum = maxHum;
         list->minLight = minLight;
         list->maxLight = maxLight;
-        list->smartSwitchID = numRooms;
+        list->smartSwitchID = -1;
         list->numDevices = 0;
         list->smartSwitchTemperature = smartSwitchTemp;
         list->smartSwitchHumidity = smartSwitchHum;
@@ -185,6 +188,7 @@ bool IOManager::addRoom(QString name, int minTemp, int maxTemp, int minHum, int 
         list->loadControllers[2] = loadControllers[2];
         list->loadControllers[3] = loadControllers[3];
         list->loadControllers[4] = loadControllers[4];
+        list->numLoadControllers = 0;
     }
 
     numRooms++;
@@ -657,7 +661,7 @@ bool IOManager::sendSmartSwitchData(int smartSwitchID)
     }
 
     smartSwitchData[3] = 0;
-    smartSwitchData[3] = checksum ^ (smartSwitchData[3] & 0xF0 >> 4);
+    smartSwitchData[3] = checksum ^ ((smartSwitchData[3] & 0xF0) >> 4);
 
     return uartOut.sendData(smartSwitchData);
 }
@@ -672,7 +676,6 @@ bool IOManager::sendLoadControlData(int smartSwitchID, char devNum, char percent
     //Checksum             4 Bits
 
     char loadControllerCounts[6] = {0,0,0,0,0,0};
-    printf("Id code = 2, ");
 
     bool flag = true;
     room *list = roomList;
@@ -695,13 +698,52 @@ bool IOManager::sendLoadControlData(int smartSwitchID, char devNum, char percent
 
             }
 
+            std::cout << "state = " << percentOn << std::endl;
             loadController = devList->loadControllerID;
-            if(devList->incremental == 0 && devList->currState == 10)
-                percentOn = 0;
+            if(devList->incremental)
+            {
+                if(devList->currState == 0)
+                    devList->currState = 4;
+                else
+                    devList->currState = 0;
+            }
+            else
+            {
+                switch(percentOn)
+                {
+                //1: 25% increase event
+                case 1:
+                    if(devList->currState <= 3)
+                        devList->currState++;
+                    break;
+                //2: 50% increase event
+                case 2:
+                    if(devList->currState <= 2)
+                        devList->currState += 2;
+                //3: 75% increase event
+                case 3:
+                    if(devList->currState <= 1)
+                        devList->currState += 3;
+                //4: 25% decrease event
+                case 4:
+                    if(devList->currState >= 1)
+                        devList->currState--;
+                    break;
+                //5: 50% decrease event
+                case 5:
+                    if(devList->currState >= 2)
+                        devList->currState -= 2;
+                //6: 75% decrease event
+                case 6:
+                    if(devList->currState >= 3)
+                        devList->currState -= 3;
+                default:
+                    break;
+                }
+            }
+
             printf("Num Device = %d ", loadControllerCounts[loadController]);
             printf("Fan/Light ID = %d ", devNum);
-            printf("Percentage = %d ", percentOn);
-            devList->currState = percentOn;
             flag = false;
         }
         if(list->next == 0)
@@ -724,7 +766,7 @@ bool IOManager::sendLoadControlData(int smartSwitchID, char devNum, char percent
     }
 
     loadControlData[3] = 0;
-    loadControlData[3] = checksum ^ (loadControlData[3] & 0xF0 >> 4);
+    loadControlData[3] = checksum ^ ((loadControlData[3] & 0xF0) >> 4);
 
     printf("Load Controller Message = %d %d %d %d\n", loadControlData[0], loadControlData[1], loadControlData[2], loadControlData[3]);
 
@@ -753,7 +795,7 @@ bool IOManager::sendVentControlData(int ventControlID, bool onOff)
     }
 
     ventControlData[3] = 0;
-    ventControlData[3] = checksum ^ (ventControlData[3] & 0xF0 >> 4);
+    ventControlData[3] = checksum ^ ((ventControlData[3] & 0xF0) >> 4);
 
     return uartOut.sendData(ventControlData);
 }
@@ -907,6 +949,85 @@ bool IOManager::updateHumidityDisplay(int smartSwitchID, short data)
             return false;
         else
             list = list->next;
+    }
+
+    return false;
+}
+
+bool IOManager::sendDeviceDetect()
+{
+    std::cout << "Sending device detect " << std::endl;
+    char write[4] = {0x12,0x34,0xAB,0xCD};
+    uartOut.sendData(write);
+    uartOut.setDiscoveryMode(true);
+    uartIn.setDiscoveryMode(true);
+}
+
+void IOManager::addPossibleDevice(char type, char num)
+{
+    std::cout << "Adding a possible device : " << (int)type << " : " << (int)num << std::endl;
+    devType[numStartUpDevices] = type;
+    devNum[numStartUpDevices] = num;
+    numStartUpDevices++;
+}
+
+bool IOManager::sendDevStartup()
+{
+    for(int i = 0; i < numStartUpDevices; i++)
+    {
+        char write[4] = {0,0,0,0};
+        char checksum = 0;
+
+        write[0] = ((devType[i] & 0x07) << 5) + ((devNum[i] & 0x07) << 2) + 0x03;
+        write[1] = 0xC0;
+        write[2] = 0x00; //Number of load controllers
+
+        room * list = roomList;
+
+        if(devType[i] == 0x01)//If Smart Switch, set how many load controllers the room has
+        {
+            for(int j = 0; j < numRooms; j++)
+            {
+                if(list->smartSwitchID == devNum[i])
+                {
+                    write[2] = list->numLoadControllers;
+                    std::cout << "NUM LOAD CONTROLLERS = " << (int) write[2] << std::endl;
+                    j = numRooms;
+                }
+                list = list->next;
+            }
+        }
+
+        for(int j = 0; j < 3; j++)
+        {
+            checksum = checksum ^ ((write[i] & 0xF0) >> 4);
+            checksum = checksum ^ (write[i] & 0x0F);
+        }
+
+        write[3] = 0;
+        write[3] = checksum ^ ((write[3] & 0xF0) >> 4);
+
+        uartOut.sendData(write);
+        usleep(1000);
+    }
+}
+
+bool IOManager::addSmartSwitch(char devNum, char roomNum)
+{
+    room *list = roomList;
+
+    if(roomNum >= numRooms)
+        return false;
+
+    for(int i = 0; i < roomNum; i++)
+    {
+        list = list->next;
+    }
+
+    if(list->smartSwitchID == -1)
+    {
+        list->smartSwitchID = devNum;
+        return true;
     }
 
     return false;

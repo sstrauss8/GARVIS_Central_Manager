@@ -16,10 +16,16 @@ class BB_UART: public QThread
         BB_UART();
 
         bool sendData(char writeArr[]);
+        bool setDiscoveryMode(bool inDiscovery){
+            discoveryModeOn = inDiscovery;
+        }
+
         int myType;
         bool receivedMessage;
         bool receivedGloveData;
+        bool discoveryModeOn;
         char data[4];
+        char startup;
         char gloveData[100];
         bool sendDataGlove();
 
@@ -28,8 +34,8 @@ class BB_UART: public QThread
 
     private:
         BlackLib::BlackUART uart;
-        BlackLib::BlackGPIO rts;
-        BlackLib::BlackGPIO cts;
+        BlackLib::BlackGPIO driveEnable;
+        BlackLib::BlackGPIO readEnableNot;
 
         BlackLib::BlackUART gloveUART;
 

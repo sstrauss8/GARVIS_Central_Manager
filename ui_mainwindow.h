@@ -104,6 +104,7 @@ public:
     QTableWidget *tableWidget;
     QPushButton *pushButton_addDevice;
     QLabel *label_12;
+    QPushButton *pushButton_addDevice_2;
     QGroupBox *groupBox_3;
     QLabel *label_7;
     QComboBox *comboBox_selectRoom2;
@@ -268,7 +269,8 @@ public:
         dev1_slider = new QSlider(groupbox_dev1);
         dev1_slider->setObjectName(QString::fromUtf8("dev1_slider"));
         dev1_slider->setGeometry(QRect(10, 100, 141, 29));
-        dev1_slider->setMaximum(10);
+        dev1_slider->setMaximum(4);
+        dev1_slider->setPageStep(4);
         dev1_slider->setOrientation(Qt::Horizontal);
         off_label = new QLabel(groupbox_dev1);
         off_label->setObjectName(QString::fromUtf8("off_label"));
@@ -324,7 +326,8 @@ public:
         dev2_slider = new QSlider(groupbox_dev1_2);
         dev2_slider->setObjectName(QString::fromUtf8("dev2_slider"));
         dev2_slider->setGeometry(QRect(10, 100, 141, 29));
-        dev2_slider->setMaximum(10);
+        dev2_slider->setMaximum(4);
+        dev2_slider->setPageStep(4);
         dev2_slider->setOrientation(Qt::Horizontal);
         off_label_2 = new QLabel(groupbox_dev1_2);
         off_label_2->setObjectName(QString::fromUtf8("off_label_2"));
@@ -374,7 +377,8 @@ public:
         dev3_slider = new QSlider(groupbox_dev1_3);
         dev3_slider->setObjectName(QString::fromUtf8("dev3_slider"));
         dev3_slider->setGeometry(QRect(10, 100, 141, 29));
-        dev3_slider->setMaximum(10);
+        dev3_slider->setMaximum(4);
+        dev3_slider->setPageStep(4);
         dev3_slider->setOrientation(Qt::Horizontal);
         pushbutton_set3 = new QPushButton(groupbox_dev1_3);
         pushbutton_set3->setObjectName(QString::fromUtf8("pushbutton_set3"));
@@ -495,7 +499,7 @@ public:
         tab_setupconfig->setObjectName(QString::fromUtf8("tab_setupconfig"));
         groupBox_2 = new QGroupBox(tab_setupconfig);
         groupBox_2->setObjectName(QString::fromUtf8("groupBox_2"));
-        groupBox_2->setGeometry(QRect(10, 20, 261, 261));
+        groupBox_2->setGeometry(QRect(10, 10, 261, 281));
         QPalette palette21;
         palette21.setBrush(QPalette::Active, QPalette::WindowText, brush);
         palette21.setBrush(QPalette::Active, QPalette::Text, brush1);
@@ -509,11 +513,13 @@ public:
         comboBox_selectRoom1->setGeometry(QRect(100, 30, 151, 27));
         pushButton_4 = new QPushButton(groupBox_2);
         pushButton_4->setObjectName(QString::fromUtf8("pushButton_4"));
-        pushButton_4->setGeometry(QRect(20, 70, 99, 31));
+        pushButton_4->setGeometry(QRect(20, 60, 99, 31));
         progressBar = new QProgressBar(groupBox_2);
         progressBar->setObjectName(QString::fromUtf8("progressBar"));
-        progressBar->setGeometry(QRect(130, 70, 118, 31));
+        progressBar->setGeometry(QRect(130, 60, 118, 31));
+        progressBar->setMaximum(60);
         progressBar->setValue(0);
+        progressBar->setTextVisible(false);
         tableWidget = new QTableWidget(groupBox_2);
         if (tableWidget->columnCount() < 1)
             tableWidget->setColumnCount(1);
@@ -533,11 +539,11 @@ public:
         QTableWidgetItem *__qtablewidgetitem5 = new QTableWidgetItem();
         tableWidget->setItem(2, 0, __qtablewidgetitem5);
         tableWidget->setObjectName(QString::fromUtf8("tableWidget"));
-        tableWidget->setGeometry(QRect(30, 110, 231, 111));
+        tableWidget->setGeometry(QRect(10, 100, 231, 111));
         tableWidget->horizontalHeader()->setDefaultSectionSize(200);
         pushButton_addDevice = new QPushButton(groupBox_2);
         pushButton_addDevice->setObjectName(QString::fromUtf8("pushButton_addDevice"));
-        pushButton_addDevice->setGeometry(QRect(70, 230, 151, 27));
+        pushButton_addDevice->setGeometry(QRect(50, 220, 151, 27));
         label_12 = new QLabel(groupBox_2);
         label_12->setObjectName(QString::fromUtf8("label_12"));
         label_12->setGeometry(QRect(10, 30, 91, 17));
@@ -546,9 +552,12 @@ public:
         palette22.setBrush(QPalette::Inactive, QPalette::WindowText, brush);
         palette22.setBrush(QPalette::Disabled, QPalette::WindowText, brush2);
         label_12->setPalette(palette22);
+        pushButton_addDevice_2 = new QPushButton(groupBox_2);
+        pushButton_addDevice_2->setObjectName(QString::fromUtf8("pushButton_addDevice_2"));
+        pushButton_addDevice_2->setGeometry(QRect(40, 250, 171, 27));
         groupBox_3 = new QGroupBox(tab_setupconfig);
         groupBox_3->setObjectName(QString::fromUtf8("groupBox_3"));
-        groupBox_3->setGeometry(QRect(290, 20, 261, 261));
+        groupBox_3->setGeometry(QRect(290, 10, 261, 261));
         QPalette palette23;
         palette23.setBrush(QPalette::Active, QPalette::WindowText, brush);
         palette23.setBrush(QPalette::Active, QPalette::Text, brush1);
@@ -871,7 +880,7 @@ public:
         pushbutton_setThreshold3_2->setText(QApplication::translate("MainWindow", "Set Room Thresholds", 0, QApplication::UnicodeUTF8));
         label_room_2->setText(QApplication::translate("MainWindow", "Select Load Controller", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_roommgr), QApplication::translate("MainWindow", "Room Manager", 0, QApplication::UnicodeUTF8));
-        groupBox_2->setTitle(QApplication::translate("MainWindow", "Add New Device", 0, QApplication::UnicodeUTF8));
+        groupBox_2->setTitle(QApplication::translate("MainWindow", "Add Devices", 0, QApplication::UnicodeUTF8));
         pushButton_4->setText(QApplication::translate("MainWindow", "Detect", 0, QApplication::UnicodeUTF8));
         QTableWidgetItem *___qtablewidgetitem = tableWidget->horizontalHeaderItem(0);
         ___qtablewidgetitem->setText(QApplication::translate("MainWindow", "Devices", 0, QApplication::UnicodeUTF8));
@@ -888,6 +897,7 @@ public:
 
         pushButton_addDevice->setText(QApplication::translate("MainWindow", "Add Selected Device", 0, QApplication::UnicodeUTF8));
         label_12->setText(QApplication::translate("MainWindow", "Select Room", 0, QApplication::UnicodeUTF8));
+        pushButton_addDevice_2->setText(QApplication::translate("MainWindow", "Launch Device Startup", 0, QApplication::UnicodeUTF8));
         groupBox_3->setTitle(QApplication::translate("MainWindow", "Delete Device", 0, QApplication::UnicodeUTF8));
         label_7->setText(QApplication::translate("MainWindow", "Select Room", 0, QApplication::UnicodeUTF8));
         QTableWidgetItem *___qtablewidgetitem4 = tableWidget_2->horizontalHeaderItem(0);

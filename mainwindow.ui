@@ -548,7 +548,10 @@ color: rgb(255, 255, 255);</string>
         </rect>
        </property>
        <property name="maximum">
-        <number>10</number>
+        <number>4</number>
+       </property>
+       <property name="pageStep">
+        <number>4</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -867,7 +870,10 @@ color: rgb(255, 255, 255);</string>
         </rect>
        </property>
        <property name="maximum">
-        <number>10</number>
+        <number>4</number>
+       </property>
+       <property name="pageStep">
+        <number>4</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -1132,7 +1138,10 @@ color: rgb(255, 255, 255);</string>
         </rect>
        </property>
        <property name="maximum">
-        <number>10</number>
+        <number>4</number>
+       </property>
+       <property name="pageStep">
+        <number>4</number>
        </property>
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -1777,9 +1786,9 @@ color: rgb(255, 255, 255);</string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
+        <y>10</y>
         <width>261</width>
-        <height>261</height>
+        <height>281</height>
        </rect>
       </property>
       <property name="palette">
@@ -1847,7 +1856,7 @@ color: rgb(255, 255, 255);</string>
        </palette>
       </property>
       <property name="title">
-       <string>Add New Device</string>
+       <string>Add Devices</string>
       </property>
       <widget class="QComboBox" name="comboBox_selectRoom1">
        <property name="geometry">
@@ -1863,7 +1872,7 @@ color: rgb(255, 255, 255);</string>
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>70</y>
+         <y>60</y>
          <width>99</width>
          <height>31</height>
         </rect>
@@ -1876,20 +1885,26 @@ color: rgb(255, 255, 255);</string>
        <property name="geometry">
         <rect>
          <x>130</x>
-         <y>70</y>
+         <y>60</y>
          <width>118</width>
          <height>31</height>
         </rect>
        </property>
+       <property name="maximum">
+        <number>60</number>
+       </property>
        <property name="value">
         <number>0</number>
+       </property>
+       <property name="textVisible">
+        <bool>false</bool>
        </property>
       </widget>
       <widget class="QTableWidget" name="tableWidget">
        <property name="geometry">
         <rect>
-         <x>30</x>
-         <y>110</y>
+         <x>10</x>
+         <y>100</y>
          <width>231</width>
          <height>111</height>
         </rect>
@@ -1937,8 +1952,8 @@ color: rgb(255, 255, 255);</string>
       <widget class="QPushButton" name="pushButton_addDevice">
        <property name="geometry">
         <rect>
-         <x>70</x>
-         <y>230</y>
+         <x>50</x>
+         <y>220</y>
          <width>151</width>
          <height>27</height>
         </rect>
@@ -1997,12 +2012,25 @@ color: rgb(255, 255, 255);</string>
         <string>Select Room</string>
        </property>
       </widget>
+      <widget class="QPushButton" name="pushButton_addDevice_2">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>250</y>
+         <width>171</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Launch Device Startup</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_3">
       <property name="geometry">
        <rect>
         <x>290</x>
-        <y>20</y>
+        <y>10</y>
         <width>261</width>
         <height>261</height>
        </rect>

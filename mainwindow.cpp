@@ -179,19 +179,31 @@ void MainWindow::populateDevices(int roomIndex, int loadControllerIndex)
 
     QString temp = "";
 
-    temp.sprintf("SS %d", p_IOControl->getCurrentSmartSwitchID(roomIndex));
-    ui->smartSwitchID->setText(temp);
+    if(p_IOControl->getCurrentSmartSwitchID(roomIndex) == -1)
+    {
+        ui->smartSwitchID->setDisabled(true);
+        ui->smartSwitchHum->setDisabled(true);
+        ui->smartSwitchTemp->setDisabled(true);
+        ui->smartSwitchLighting->setDisabled(true);
+    }
+    else
+    {
+        ui->smartSwitchID->setDisabled(false);
+        ui->smartSwitchHum->setDisabled(false);
+        ui->smartSwitchTemp->setDisabled(false);
+        ui->smartSwitchLighting->setDisabled(false);
+        temp.sprintf("SS %d", p_IOControl->getCurrentSmartSwitchID(roomIndex));
+        ui->smartSwitchID->setText(temp);
 
-    temp.sprintf("%d RAW", p_IOControl->getCurrentHumidity(roomIndex));
-    ui->smartSwitchHum->setText(temp);
+        temp.sprintf("%d RAW", p_IOControl->getCurrentHumidity(roomIndex));
+        ui->smartSwitchHum->setText(temp);
 
-    temp.sprintf("%d RAW", p_IOControl->getCurrentTemperature(roomIndex));
-    ui->smartSwitchTemp->setText(temp);
+        temp.sprintf("%d RAW", p_IOControl->getCurrentTemperature(roomIndex));
+        ui->smartSwitchTemp->setText(temp);
 
-    temp.sprintf("%d RAW", p_IOControl->getCurrentLighting(roomIndex));
-    ui->smartSwitchLighting->setText(temp);
-
-
+        temp.sprintf("%d RAW", p_IOControl->getCurrentLighting(roomIndex));
+        ui->smartSwitchLighting->setText(temp);
+    }
 }
 
 void MainWindow::on_pushButton_addDevice_clicked()
@@ -199,11 +211,19 @@ void MainWindow::on_pushButton_addDevice_clicked()
     bool loadController = true;
     QString temp = "";
 
-    if(loadController)
+    int currentItem = ui->tableWidget->currentRow();
+
+    if(p_IOControl->devType[currentItem] == 0x02)//loadController
     {
-        fakeDeviceID++;
-        p_IOControl->addLoadController(fakeDeviceID, ui->comboBox_selectRoom1->currentIndex());
+        p_IOControl->addLoadController(p_IOControl->devNum[currentItem],
+                                       ui->comboBox_selectRoom1->currentIndex());
         p_IOControl->updateConfigFile();
+    }
+
+    if(p_IOControl->devType[currentItem] == 0x01)//smartSwitch
+    {
+        p_IOControl->addSmartSwitch(p_IOControl->devNum[currentItem],
+                                    ui->comboBox_selectRoom1->currentIndex());
     }
 
     ui->tableWidget->setItem(ui->tableWidget->currentColumn(),ui->tableWidget->currentRow(),new QTableWidgetItem(""));
@@ -213,30 +233,53 @@ void MainWindow::on_pushButton_4_clicked()
 {
     ui->tableWidget->clearContents();
 
-    ui->progressBar->setMinimum(0);
-    ui->progressBar->setMaximum(5);
+    p_IOControl->sendDeviceDetect();
 
-    ui->progressBar->setValue(0);
-    sleep(1);
+    usleep(100);
 
-    ui->progressBar->setValue(1);
-    sleep(1);
+    int currentPercent = 0;
+    bool add = true;
+    ui->progressBar->setValue(currentPercent);
 
-    ui->progressBar->setValue(2);
-    sleep(1);
+    while(p_IOControl->uartIn.discoveryModeOn)
+    {
+        usleep(100000);
 
-    ui->progressBar->setValue(3);
-    sleep(1);
+        ui->progressBar->setValue(currentPercent);
 
-    ui->progressBar->setValue(4);
-    sleep(1);
+        if(add)
+        {
+            if(currentPercent < 60)
+                currentPercent += 10;
+            else
+                add = false;
+        }
 
-    ui->progressBar->setValue(5);
-    sleep(1);
+        if(!add)
+        {
+            if(currentPercent > 0)
+                currentPercent -= 10;
+            else
+                add = true;
+        }
 
-    ui->tableWidget->setItem(1,-1,new QTableWidgetItem("Load Controller 1"));
-    ui->tableWidget->setItem(1,0,new QTableWidgetItem("Load Controller 2"));
-    ui->tableWidget->setItem(1,1,new QTableWidgetItem("Smart Switch 1"));
+    }
+
+    ui->progressBar->setValue(60);
+
+    QString tempVal = "";
+    for(int i = 0; i < p_IOControl->numStartUpDevices; i++)
+    {
+        if(p_IOControl->devType[i] == 0x01)//Smart Switch
+        {
+            tempVal.sprintf("Smart Switch ID %d", p_IOControl->devNum[i]);
+        }
+        if(p_IOControl->devType[i] == 0x02)//Load Controller
+        {
+            tempVal.sprintf("Load Controller ID %d", p_IOControl->devNum[i]);
+        }
+        ui->tableWidget->setItem(1,i-1, new QTableWidgetItem(tempVal));
+    }
 }
 
 //If the set threshold button is pressed, launch the threshold dialog
@@ -244,7 +287,7 @@ void MainWindow::triggerThresholdDialog(int smartControlID)
 {
     if(p_IOControl->numRooms != 0)
     {
-        if(smartDecisionMode)
+        if(1)//smartDecisionMode)
         {
             SetThresholds setThresholddialog;
             setThresholddialog.setModal(true);
@@ -342,6 +385,25 @@ void MainWindow::on_tabWidget_currentChanged(int index)
 {
     if(index == 1)
     {
+        ui->roomEdit->setText(ui->comboBox->currentText());
+
+        changeLoadControllers();
+
+        p_IOControl->setCurrentRoomManagerRoom(ui->comboBox->currentIndex());
+
+        if(ui->comboBox_loadController->count() == 0)
+        {
+            ui->groupbox_dev1->setDisabled(true);
+            ui->groupbox_dev1_2->setDisabled(true);
+            ui->groupbox_dev1_3->setDisabled(true);
+        }
+        else
+        {
+            ui->groupbox_dev1->setDisabled(false);
+            ui->groupbox_dev1_2->setDisabled(false);
+            ui->groupbox_dev1_3->setDisabled(false);
+        }
+
         changeLoadControllers();
         populateDevices(ui->comboBox->currentIndex(), ui->comboBox_loadController->currentText().toInt(0,10));
     }
@@ -398,5 +460,45 @@ void MainWindow::on_checkBox_5_clicked()
 
 void MainWindow::on_dateTimeEdit_editingFinished()
 {
+
+}
+
+//Send Device Startup Box
+void MainWindow::on_pushButton_addDevice_2_clicked()
+{
+    if(!p_IOControl->uartIn.discoveryModeOn && p_IOControl->uartOut.discoveryModeOn)
+    {
+        p_IOControl->sendDevStartup();
+        p_IOControl->uartOut.discoveryModeOn = false;
+    }
+}
+
+//Populate Delete Device Table
+void MainWindow::on_comboBox_selectRoom2_currentIndexChanged(int index)
+{
+
+    ui->tableWidget_2->clearContents();
+    QString tempVal = "";
+    int count = -1;
+
+    if(!(p_IOControl->getCurrentSmartSwitchID(index) <= 0))
+    {
+        tempVal.sprintf("Smart Switch ID %d", p_IOControl->getCurrentSmartSwitchID(index));
+        ui->tableWidget_2->setItem(1,count, new QTableWidgetItem(tempVal));
+        count++;
+    }
+
+    int loadControllers[5] = {-1,-1,-1,-1,-1};
+    p_IOControl->getLoadControllers(index, loadControllers);
+
+    for(int i = 0; i < 5; i++)
+    {
+        if(!(loadControllers[i] <= 0))
+        {
+            tempVal.sprintf("Load Controller ID %d", loadControllers[i]);
+            ui->tableWidget_2->setItem(1,count, new QTableWidgetItem(tempVal));
+            count++;
+        }
+    }
 
 }

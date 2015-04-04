@@ -53,6 +53,10 @@ private slots:
 
     void on_dateTimeEdit_editingFinished();
 
+    void on_pushButton_addDevice_2_clicked();
+
+    void on_comboBox_selectRoom2_currentIndexChanged(int index);
+
 private:
     Ui::MainWindow *ui;
 
