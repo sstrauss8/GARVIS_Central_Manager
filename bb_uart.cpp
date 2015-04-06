@@ -11,8 +11,12 @@ BB_UART::BB_UART(int type) :
 {
     uart.open( BlackLib::ReadWrite | BlackLib::NonBlock );
     gloveUART.open( BlackLib::ReadWrite | BlackLib::NonBlock);
+    gloveUART.flush( BlackLib::bothDirection );
     uart.flush( BlackLib::bothDirection );
-    uart.setReadBufferSize(100);
+    uart.setReadBufferSize(1000);
+    gloveUART.setReadBufferSize(340);
+
+    writeEnabled = false;
     myType = type;
     receivedMessage = false;
     receivedGloveData = false;
@@ -22,6 +26,7 @@ BB_UART::BB_UART(int type) :
 
 void BB_UART::run()
 {
+
     if(myType == 1)
     {
         /*while(1)
@@ -79,33 +84,37 @@ void BB_UART::run()
         }
     }
 
+    int flushCounter = 0;
     if(myType == 3)
     {
+        char tempData[34];
+        memset(tempData, 0x0, 34);
+
         std::cout << "Trying to read glove data" << std::endl;
         while(1)
         {
-            memset(gloveData,0,sizeof(gloveData));
+            memset(tempData,0,sizeof(tempData));
 
-            while(gloveData[0] == 0)
+            while(tempData[0] == 0)
             {
-                gloveUART.read(gloveData, 5);
-                usleep(10);
+                gloveUART.read(tempData, 34);
+                usleep(9900);
             }
+
+            if(++flushCounter > 10)
+            {
+                gloveUART.flush(BlackLib::bothDirection);
+                flushCounter = 0;
+            }
+
             receivedGloveData = true;
-            cout << "Received glove data" << endl;
+            //cout << "Received glove data" << endl;
 
-            /*for(int i = 0; i < 36; i++)
+            for(int i = 0; i < 34; i++)
             {
-                printf("%c ", gloveData[i]);
+                gloveData[i] = tempData[i];
+                //printf("%c ", gloveData[i]);
             }
-            printf("\n");
-            for(int i = 0; i < 36; i++)
-            {
-                printf("%d ", gloveData[i]);
-            }
-            printf("\n");
-            //cout << "START " << gloveData[0] << gloveData[1] << endl;
-            cout << "Received glove data" << endl;*/
         }
 
     }
@@ -113,27 +122,34 @@ void BB_UART::run()
     return;
 }
 
-bool BB_UART::sendData(char writeArr[])
+bool BB_UART::sendData(char writeArr[], bool statusControl)
 {
-    //readEnableNot.setValue(BlackLib::high);
-    //driveEnable.setValue(BlackLib::high);
-
-    uart.write(writeArr, sizeof(writeArr));
-
-    //readEnableNot.setValue(BlackLib::low);
-    //driveEnable.setValue(BlackLib::low);
-
-    printf("SENDING THIS: ");
-    for(int i = 0; i < 4; i++)
+    //Either it is the Central Manager's turn to send data as needed
+    //or the CM is sending the control message for another device
+    //to have a turn to write;
+    if(writeEnabled || statusControl)
     {
-        printf("%d ", writeArr[i]);
+        //readEnableNot.setValue(BlackLib::high);
+        //driveEnable.setValue(BlackLib::high);
+
+        uart.write(writeArr, sizeof(writeArr));
+
+        //readEnableNot.setValue(BlackLib::low);
+        //driveEnable.setValue(BlackLib::low);
+
+        printf("SENDING THIS: ");
+        for(int i = 0; i < 4; i++)
+        {
+            printf("%d ", writeArr[i]);
+        }
+        printf("\n");
+
+        uart.flush( BlackLib::output );
+
+        return true;
     }
-    printf("\n");
 
-    uart.flush( BlackLib::output );
-
-    return true;
-
+    return false;
 }
 
 bool BB_UART::sendDataGlove()

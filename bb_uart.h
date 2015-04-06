@@ -15,18 +15,19 @@ class BB_UART: public QThread
         BB_UART(int type);
         BB_UART();
 
-        bool sendData(char writeArr[]);
+        bool sendData(char writeArr[], bool statusControl);
         bool setDiscoveryMode(bool inDiscovery){
             discoveryModeOn = inDiscovery;
         }
 
         int myType;
+        bool writeEnabled;
         bool receivedMessage;
         bool receivedGloveData;
         bool discoveryModeOn;
         char data[4];
         char startup;
-        char gloveData[100];
+        char gloveData[34];
         bool sendDataGlove();
 
     protected:

@@ -5,6 +5,7 @@ GloveAPI::GloveAPI()
 {
     p_IOControl = IOManager::Instance();
 
+    numTimes = 0;
     currentStart = 0;
     currentEnd = 0;
     accelX = 0;
@@ -55,6 +56,8 @@ GloveAPI::GloveAPI()
     memset(yAccelHistory, 0, 5);
     memset(zAccelHistory, 0, 5);
 
+    memset(currentInput, 0, sizeof(currentInput));
+
     accelXConverted = 0.0;
     accelYConverted = 0.0;
     accelZConverted = 0.0;
@@ -81,9 +84,16 @@ void GloveAPI::useData(char data[])
 {
     /*QByteArray data = 0;// = serial->readAll();
     unsigned char* dataArray = (unsigned char*)data.data();*/
-    QString tempString = "";
 
-    for(int i = 0; i < 5; i++)
+    if(currentEnd >= 100)
+    {
+        currentEnd = 0;
+        memset(currentInput, 0, sizeof(currentInput));
+        std::cout << "Current end too large" << std::endl;
+    }
+
+    QString tempString = "";
+    for(int i = 0; i < 34; i++)
     {
         currentInput[currentEnd] = data[i];
         currentEnd++;
@@ -102,9 +112,26 @@ void GloveAPI::useData(char data[])
             }
             currentEnd--;
         }
+        else
+        {
+            //std::cout << "S IS THE FIRST ONE!" << std::endl;
+            //std::cout << "Current input 0,1,32,33 = " << currentInput[0] << " " << currentInput[1] << " " << currentInput[32] << " " << currentInput[33] << " " << std::endl;
+        }
+
+        if(currentEnd > 35)
+        {
+            currentEnd = 0;
+        }
 
         if(currentInput[0] == 'S' && currentInput[1] == 'T' && currentInput[32] == 'E' && currentInput[33] == 'N')
         {
+            numTimes++;
+            if(numTimes % 5000 == 0)
+                std::cout << "Read glove values correctly: " << numTimes << std::endl;
+            else if(numTimes > 100000)
+                numTimes = 0;
+            else
+                ;
             accelX =(signed short) (currentInput[2] + (currentInput[3]<<8));
             accelY = currentInput[4] + (currentInput[5]<<8);
             accelZ = currentInput[6] + (currentInput[7]<<8);
@@ -194,7 +221,7 @@ void GloveAPI::calibrationMode(short currState)
     }
 
     //useData();
-    xAccel[index] = (accelX + xAccel[index]) / 2;
+    /*xAccel[index] = (accelX + xAccel[index]) / 2;
     yAccel[index] = (accelY + yAccel[index]) / 2;
     zAccel[index] = (accelZ + zAccel[index]) / 2;
 
@@ -219,7 +246,7 @@ void GloveAPI::calibrationMode(short currState)
         flexMiddleCal = (flexMiddleCal*2 + flexMiddle) / 3;
         flexRingCal = (flexRingCal*2 + flexRing) / 3;
         flexPinkyCal = (flexPinkyCal*2 + flexPinky) / 3;
-    }
+    }*/
 
     if(currState == 3)
     {
@@ -251,6 +278,7 @@ void GloveAPI::ProcessSensorData()
     //Flex index edge is the point in which anything higher is considered to be flexed
     //and anything lower is considered to be unflexed
     int flexIndexEdge = flexIndexCal + 30;
+
     //Start powerpoint when not in mouse mode
     if(previousIndexFlex > flexIndexEdge && flexIndex < flexIndexEdge && !mouseMode)
     {
@@ -282,6 +310,7 @@ void GloveAPI::ProcessSensorData()
         mouseModeCounter = 0;
     }
 
+
     //If in mouse mode allow accelerometer data to control
     //mouse location and skip all other control.
     if(mouseMode)
@@ -295,9 +324,9 @@ void GloveAPI::ProcessSensorData()
         if(accelX > 200 && yCoord > 20)
             yCoord-=1;
 
-        myCursor.setPos(xCoord,yCoord);
+        //myCursor.setPos(xCoord,yCoord);
 
-        return;
+        //return;
     }
 
     for(int i = 1; i < 5; i++)
@@ -361,6 +390,8 @@ void GloveAPI::ProcessSensorData()
                 {
                     if(leftSlide)
                     {
+                        std::cout << "Left Slide" << std::endl;
+                        p_IOControl->sendSmartSwitchData(1);
 #ifdef _WIN32
                         keybd_event(VK_RIGHT, 0, KEYEVENTF_EXTENDEDKEY, 0);
                         keybd_event(VK_RIGHT, 0, KEYEVENTF_KEYUP, 0);
@@ -370,6 +401,8 @@ void GloveAPI::ProcessSensorData()
                     }
                     if(rightSlide)
                     {
+                            std::cout << "Right Slide" << std::endl;
+                        p_IOControl->sendSmartSwitchData(1);
 #ifdef _WIN32
                         keybd_event(VK_LEFT, 0, KEYEVENTF_EXTENDEDKEY, 0);
                         keybd_event(VK_LEFT, 0, KEYEVENTF_KEYUP, 0);
@@ -395,6 +428,7 @@ void GloveAPI::ProcessSensorData()
             }
         }
     }
+
 }
 
 void GloveAPI::run()
@@ -403,7 +437,7 @@ void GloveAPI::run()
     {
         if(p_IOControl->uartGlove.receivedGloveData)
         {
-            //useData(p_IOControl->uartGlove.gloveData);
+            useData(p_IOControl->uartGlove.gloveData);
             p_IOControl->uartGlove.receivedGloveData = false;
         }
         msleep(1);

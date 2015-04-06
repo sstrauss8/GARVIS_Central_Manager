@@ -3,6 +3,7 @@
 #include <QMessageBox>
 #include <QApplication>
 #include <QDateTime>
+#include <QProcess>
 #include <iostream>
 #include "setthresholds.h"
 #include "helpdialog.h"
@@ -16,6 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     p_IOControl = IOManager::Instance();
     m_CommandCreator.start();
+    m_StatusMonitor.start();
     m_GloveAPI.start();
 
     smartDecisionMode = false;
@@ -61,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow()
 {
     m_CommandCreator.exit();
+    m_StatusMonitor.exit();
     m_GloveAPI.exit();
     delete ui;
 }
@@ -383,6 +386,13 @@ void MainWindow::on_helpTutorial_button_clicked()
 
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
+    if(index == 0)
+    {
+        QString temp = "";
+        ui->lineEdit_avgtemp->setText(temp.sprintf("%d RAW", p_IOControl->tempData));
+        ui->lineEdit_avghum->setText(temp.sprintf("%d RAW", p_IOControl->humData));
+        ui->lineEdit_avglight->setText(temp.sprintf("%d RAW", p_IOControl->lightData));
+    }
     if(index == 1)
     {
         ui->roomEdit->setText(ui->comboBox->currentText());
@@ -444,15 +454,6 @@ void MainWindow::on_comboBox_loadController_currentIndexChanged(int index)
     populateDevices(ui->comboBox->currentIndex(), ui->comboBox_loadController->currentText().toInt(0,10));
 }
 
-void MainWindow::on_pushButton_2_clicked()
-{
-    QString temp = "";
-    ui->lineEdit_avgtemp->setText(temp.sprintf("%d RAW", p_IOControl->tempData));
-    ui->lineEdit_avghum->setText(temp.sprintf("%d RAW", p_IOControl->humData));
-    ui->lineEdit_avglight->setText(temp.sprintf("%d RAW", p_IOControl->lightData));
-
-}
-
 void MainWindow::on_checkBox_5_clicked()
 {
     smartDecisionMode = !smartDecisionMode;
@@ -500,5 +501,11 @@ void MainWindow::on_comboBox_selectRoom2_currentIndexChanged(int index)
             count++;
         }
     }
+
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    m_florence.start("florence");
 
 }

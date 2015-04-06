@@ -60,6 +60,7 @@ public:
     room *currentRoomManagerRoom;
     int humData, tempData, lightData;
     int numStartUpDevices;
+    int numSmartSwitches;
     char devNum[8];
     char devType[8];
 

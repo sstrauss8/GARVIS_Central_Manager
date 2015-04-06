@@ -31,7 +31,8 @@ SOURCES += main.cpp\
     setthresholds.cpp \
     helpdialog.cpp \
     gloveapi.cpp \
-    tutorialwizard.cpp
+    tutorialwizard.cpp \
+    seriallib/serialib.cpp
 
 HEADERS  += mainwindow.h \
     BlackLib/v2_0/BlackADC.h \
@@ -52,7 +53,8 @@ HEADERS  += mainwindow.h \
     setthresholds.h \
     helpdialog.h \
     gloveapi.h \
-    tutorialwizard.h
+    tutorialwizard.h \
+    seriallib/serialib.h
 
 FORMS    += mainwindow.ui \
     setthresholds.ui \

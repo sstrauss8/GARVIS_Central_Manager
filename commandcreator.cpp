@@ -51,7 +51,7 @@ void CommandCreator::run()
                 pollCounter = 0;
                 char pollData[4] = {0x23,0xFF,0x00,0x01};
                 std::cout << "Sending poll message" << std::endl;
-                p_IOControl->uartOut.sendData(pollData);
+                p_IOControl->uartOut.sendData(pollData, false);
             }
         }
     }
@@ -159,7 +159,9 @@ bool CommandCreator::processCapTouchData(char smartSwitchID, short rawData)
 
 bool CommandCreator::processHumidityData(char smartSwitchID, short rawData)
 {
-    p_IOControl->updateHumidityDisplay(smartSwitchID, rawData);
+    double numMilliVoltsPerBit = 3.226;
+    short humConverted =  (int)(((numMilliVoltsPerBit * rawData) - 750) / 30);
+    p_IOControl->updateHumidityDisplay(smartSwitchID, humConverted);
     return true;
 }
 
@@ -176,6 +178,10 @@ bool CommandCreator::processPIRData(char smartSwitchID, short rawData)
 
 bool CommandCreator::processTemperatureData(char smartSwitchID, short rawData)
 {
-    p_IOControl->updateTemperatureDisplay(smartSwitchID, rawData);
+    //Each 10 mV is one degree Celcius, starting from -50
+    double numMilliVoltsPerBit = 3.226;
+    short tempConverted =  (int)(((numMilliVoltsPerBit * rawData) / 10) - 50);
+
+    p_IOControl->updateTemperatureDisplay(smartSwitchID, tempConverted);
     return true;
 }

@@ -6,8 +6,10 @@
 #include "BlackLib/v2_0/BlackUART.h"
 #include <QMainWindow>
 #include "commandcreator.h"
+#include "statusmonitor.h"
 #include "iomanager.h"
 #include "gloveapi.h"
+#include <QProcess>
 
 namespace Ui {
 class MainWindow;
@@ -30,38 +32,28 @@ private slots:
     void populateDevices(int currentIndex, int loadControllerIndex);
 
     void on_pushButton_addDevice_clicked();
-
     void on_pushButton_4_clicked();
-
     void on_pushbutton_setThreshold3_2_clicked();
-
     void on_pushbutton_set1_clicked();
-
     void on_pushbutton_set2_clicked();
-
     void on_pushbutton_set3_clicked();
-
     void on_helpTutorial_button_clicked();
-
     void on_tabWidget_currentChanged(int index);
-
     void on_comboBox_loadController_currentIndexChanged(int index);
-
-    void on_pushButton_2_clicked();
-
     void on_checkBox_5_clicked();
-
     void on_dateTimeEdit_editingFinished();
-
     void on_pushButton_addDevice_2_clicked();
-
     void on_comboBox_selectRoom2_currentIndexChanged(int index);
+    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;
 
+    QProcess m_florence;
+
     IOManager * p_IOControl;
     CommandCreator m_CommandCreator;
+    StatusMonitor m_StatusMonitor;
     GloveAPI m_GloveAPI;
 
     QString output;

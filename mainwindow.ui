@@ -182,19 +182,6 @@ color: rgb(255, 255, 255);</string>
        </property>
       </widget>
      </widget>
-     <widget class="QPushButton" name="pushButton_2">
-      <property name="geometry">
-       <rect>
-        <x>90</x>
-        <y>80</y>
-        <width>141</width>
-        <height>27</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Display Data</string>
-      </property>
-     </widget>
     </widget>
     <widget class="QWidget" name="tab_roommgr">
      <attribute name="title">
@@ -2029,9 +2016,9 @@ color: rgb(255, 255, 255);</string>
      <widget class="QGroupBox" name="groupBox_3">
       <property name="geometry">
        <rect>
-        <x>290</x>
+        <x>280</x>
         <y>10</y>
-        <width>261</width>
+        <width>271</width>
         <height>261</height>
        </rect>
       </property>
@@ -2165,7 +2152,7 @@ color: rgb(255, 255, 255);</string>
       <widget class="QTableWidget" name="tableWidget_2">
        <property name="geometry">
         <rect>
-         <x>30</x>
+         <x>20</x>
          <y>110</y>
          <width>231</width>
          <height>111</height>
@@ -2214,7 +2201,7 @@ color: rgb(255, 255, 255);</string>
       <widget class="QPushButton" name="pushButton_7">
        <property name="geometry">
         <rect>
-         <x>60</x>
+         <x>50</x>
          <y>230</y>
          <width>171</width>
          <height>27</height>
@@ -3650,10 +3637,24 @@ p, li { white-space: pre-wrap; }
      <pixmap>jarvishead3.jpg</pixmap>
     </property>
    </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>20</y>
+      <width>181</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Launch Keyboard</string>
+    </property>
+   </widget>
    <zorder>label_6</zorder>
    <zorder>label</zorder>
    <zorder>label_11</zorder>
    <zorder>tabWidget</zorder>
+   <zorder>pushButton</zorder>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <widget class="QMenuBar" name="menuBar">

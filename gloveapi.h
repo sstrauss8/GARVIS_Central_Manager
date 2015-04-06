@@ -71,6 +71,9 @@ public:
 protected:
     void run();
 
+private:
+    int numTimes;
+
 };
 
 #endif // GLOVEAPI_H

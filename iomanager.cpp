@@ -25,6 +25,7 @@ IOManager::~IOManager()
 
 bool IOManager::initialize()
 {
+    numSmartSwitches = 0;
     roomList = new room;
     roomList->next = 0;
     roomList->roomName = "";
@@ -663,7 +664,8 @@ bool IOManager::sendSmartSwitchData(int smartSwitchID)
     smartSwitchData[3] = 0;
     smartSwitchData[3] = checksum ^ ((smartSwitchData[3] & 0xF0) >> 4);
 
-    return uartOut.sendData(smartSwitchData);
+    std::cout << "GOT GESTURE, SENDING POLL" << std::endl;
+    return uartOut.sendData(smartSwitchData, false);
 }
 
 bool IOManager::sendLoadControlData(int smartSwitchID, char devNum, char percentOn)
@@ -770,7 +772,7 @@ bool IOManager::sendLoadControlData(int smartSwitchID, char devNum, char percent
 
     printf("Load Controller Message = %d %d %d %d\n", loadControlData[0], loadControlData[1], loadControlData[2], loadControlData[3]);
 
-    return uartOut.sendData(loadControlData);
+    return uartOut.sendData(loadControlData, false);
 }
 
 bool IOManager::sendVentControlData(int ventControlID, bool onOff)
@@ -797,7 +799,7 @@ bool IOManager::sendVentControlData(int ventControlID, bool onOff)
     ventControlData[3] = 0;
     ventControlData[3] = checksum ^ ((ventControlData[3] & 0xF0) >> 4);
 
-    return uartOut.sendData(ventControlData);
+    return uartOut.sendData(ventControlData, false);
 }
 
 bool IOManager::setThresholds(int tempLow, int tempHigh, int humLow, int humHigh,
@@ -898,6 +900,17 @@ bool IOManager::updateLightDisplay(int smartSwitchID, short data)
         if(list->smartSwitchID == smartSwitchID)
         {
             list->smartSwitchLighting = data;
+
+            //Adaptive Control
+            if(list->smartSwitchLighting > list->maxLight)
+            {
+                //TODO: Send Load Control Message
+            }
+            else if(list->smartSwitchLighting < list->minLight)
+            {
+                //TODO: Send Load Controller Message
+            }
+
             lightData = data;
             return true;
         }
@@ -920,6 +933,17 @@ bool IOManager::updateTemperatureDisplay(int smartSwitchID, short data)
         if(list->smartSwitchID == smartSwitchID)
         {
             list->smartSwitchTemperature = data;
+
+            //Adaptive Control
+            if(list->smartSwitchTemperature > list->maxTemp)
+            {
+                //TODO: Send Load Control Message
+            }
+            else if(list->smartSwitchTemperature < list->minTemp)
+            {
+                //TODO: Send Load Controller Message
+            }
+
             tempData = data;
             return true;
         }
@@ -941,7 +965,18 @@ bool IOManager::updateHumidityDisplay(int smartSwitchID, short data)
     {
         if(list->smartSwitchID == smartSwitchID)
         {
-            list->smartSwitchLighting = data;
+            list->smartSwitchHumidity = data;
+
+            //Adaptive Control
+            if(list->smartSwitchHumidity > list->maxHum)
+            {
+                //TODO: Send Load Control Message
+            }
+            else if(list->smartSwitchHumidity < list->minHum)
+            {
+                //TODO: Send Load Controller Message
+            }
+
             humData = data;
             return true;
         }
@@ -958,7 +993,7 @@ bool IOManager::sendDeviceDetect()
 {
     std::cout << "Sending device detect " << std::endl;
     char write[4] = {0x12,0x34,0xAB,0xCD};
-    uartOut.sendData(write);
+    uartOut.sendData(write, false);
     uartOut.setDiscoveryMode(true);
     uartIn.setDiscoveryMode(true);
 }
@@ -1007,7 +1042,7 @@ bool IOManager::sendDevStartup()
         write[3] = 0;
         write[3] = checksum ^ ((write[3] & 0xF0) >> 4);
 
-        uartOut.sendData(write);
+        uartOut.sendData(write, false);
         usleep(1000);
     }
 }
@@ -1027,6 +1062,7 @@ bool IOManager::addSmartSwitch(char devNum, char roomNum)
     if(list->smartSwitchID == -1)
     {
         list->smartSwitchID = devNum;
+        numSmartSwitches++;
         return true;
     }
 

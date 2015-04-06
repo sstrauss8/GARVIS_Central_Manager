@@ -49,7 +49,6 @@ public:
     QLineEdit *lineEdit_avghum;
     QLineEdit *lineEdit_avgtemp;
     QLineEdit *lineEdit_avglight;
-    QPushButton *pushButton_2;
     QWidget *tab_roommgr;
     QLabel *label_room;
     QComboBox *comboBox;
@@ -135,6 +134,7 @@ public:
     QLabel *label;
     QLabel *label_11;
     QLabel *label_6;
+    QPushButton *pushButton;
     QStatusBar *statusBar;
     QMenuBar *menuBar;
 
@@ -200,9 +200,6 @@ public:
         lineEdit_avglight->setObjectName(QString::fromUtf8("lineEdit_avglight"));
         lineEdit_avglight->setGeometry(QRect(150, 110, 113, 27));
         lineEdit_avglight->setReadOnly(true);
-        pushButton_2 = new QPushButton(tab_home);
-        pushButton_2->setObjectName(QString::fromUtf8("pushButton_2"));
-        pushButton_2->setGeometry(QRect(90, 80, 141, 27));
         tabWidget->addTab(tab_home, QString());
         tab_roommgr = new QWidget();
         tab_roommgr->setObjectName(QString::fromUtf8("tab_roommgr"));
@@ -557,7 +554,7 @@ public:
         pushButton_addDevice_2->setGeometry(QRect(40, 250, 171, 27));
         groupBox_3 = new QGroupBox(tab_setupconfig);
         groupBox_3->setObjectName(QString::fromUtf8("groupBox_3"));
-        groupBox_3->setGeometry(QRect(290, 10, 261, 261));
+        groupBox_3->setGeometry(QRect(280, 10, 271, 261));
         QPalette palette23;
         palette23.setBrush(QPalette::Active, QPalette::WindowText, brush);
         palette23.setBrush(QPalette::Active, QPalette::Text, brush1);
@@ -596,11 +593,11 @@ public:
         QTableWidgetItem *__qtablewidgetitem11 = new QTableWidgetItem();
         tableWidget_2->setItem(2, 0, __qtablewidgetitem11);
         tableWidget_2->setObjectName(QString::fromUtf8("tableWidget_2"));
-        tableWidget_2->setGeometry(QRect(30, 110, 231, 111));
+        tableWidget_2->setGeometry(QRect(20, 110, 231, 111));
         tableWidget_2->horizontalHeader()->setDefaultSectionSize(200);
         pushButton_7 = new QPushButton(groupBox_3);
         pushButton_7->setObjectName(QString::fromUtf8("pushButton_7"));
-        pushButton_7->setGeometry(QRect(60, 230, 171, 27));
+        pushButton_7->setGeometry(QRect(50, 230, 171, 27));
         groupBox_4 = new QGroupBox(tab_setupconfig);
         groupBox_4->setObjectName(QString::fromUtf8("groupBox_4"));
         groupBox_4->setGeometry(QRect(560, 10, 171, 51));
@@ -819,11 +816,15 @@ public:
         label_6->setObjectName(QString::fromUtf8("label_6"));
         label_6->setGeometry(QRect(0, -330, 771, 851));
         label_6->setPixmap(QPixmap(QString::fromUtf8("jarvishead3.jpg")));
+        pushButton = new QPushButton(centralWidget);
+        pushButton->setObjectName(QString::fromUtf8("pushButton"));
+        pushButton->setGeometry(QRect(600, 20, 181, 61));
         MainWindow->setCentralWidget(centralWidget);
         label_6->raise();
         label->raise();
         label_11->raise();
         tabWidget->raise();
+        pushButton->raise();
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QString::fromUtf8("statusBar"));
         MainWindow->setStatusBar(statusBar);
@@ -848,7 +849,6 @@ public:
         label_10->setText(QApplication::translate("MainWindow", "Home Temperature", 0, QApplication::UnicodeUTF8));
         label_13->setText(QApplication::translate("MainWindow", "Home Humidity", 0, QApplication::UnicodeUTF8));
         label_14->setText(QApplication::translate("MainWindow", "Home Lighting", 0, QApplication::UnicodeUTF8));
-        pushButton_2->setText(QApplication::translate("MainWindow", "Display Data", 0, QApplication::UnicodeUTF8));
         tabWidget->setTabText(tabWidget->indexOf(tab_home), QApplication::translate("MainWindow", "Home", 0, QApplication::UnicodeUTF8));
         label_room->setText(QApplication::translate("MainWindow", "Select Room", 0, QApplication::UnicodeUTF8));
         roomEdit->setText(QApplication::translate("MainWindow", "Current Room", 0, QApplication::UnicodeUTF8));
@@ -942,6 +942,7 @@ public:
 "<p style=\" margin-top:12px; margin-bottom:12px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-family:'Ubuntu'; font-size:36pt; color:#000000;\">GARVIS</span></p></body></html>", 0, QApplication::UnicodeUTF8));
         label_11->setText(QApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-size:9pt;\">2015 G.A.R.V.I.S. Team 23</span></p></body></html>", 0, QApplication::UnicodeUTF8));
         label_6->setText(QString());
+        pushButton->setText(QApplication::translate("MainWindow", "Launch Keyboard", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 
 };
