@@ -313,7 +313,7 @@ background: rgb(63, 13, 14);
     <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
-    <string>lumens</string>
+    <string>lx</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_13">
@@ -329,7 +329,7 @@ background: rgb(63, 13, 14);
     <string notr="true">color: rgb(255, 255, 255);</string>
    </property>
    <property name="text">
-    <string>lumens</string>
+    <string>lx</string>
    </property>
   </widget>
   <widget class="QPushButton" name="Apply">

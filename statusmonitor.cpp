@@ -7,7 +7,7 @@ using namespace std;
 StatusMonitor::StatusMonitor()
 {
     p_IOControl = IOManager::Instance();
-    timerId = startTimer(1000); //Second
+    timerId = startTimer(500); // 1/2 second
     currentState = 0;
 }
 
@@ -26,12 +26,16 @@ void StatusMonitor::timerEvent(QTimerEvent *event)
     if(p_IOControl->numSmartSwitches == 0)
     {
         p_IOControl->uartOut.writeEnabled = true;
+        return;
     }
+
+    if(!p_IOControl->allowStatusMonitor)
+        return;
     else
     {
         if(currentState == p_IOControl->numSmartSwitches)
         {
-            cout << "Enabling write for Central Manager" << endl;
+            p_IOControl->uartOut.sendFIFOData();
             p_IOControl->uartOut.writeEnabled = true;
         }
         else if((currentState > p_IOControl->numSmartSwitches) &&
@@ -42,7 +46,6 @@ void StatusMonitor::timerEvent(QTimerEvent *event)
         else if(currentState >= (p_IOControl->numSmartSwitches + 3))
         {
             currentState = -1;
-            cout<< "Disabling write for Central Manager" << endl;
             p_IOControl->uartOut.writeEnabled = false;
         }
         else
@@ -54,7 +57,7 @@ void StatusMonitor::timerEvent(QTimerEvent *event)
                     char smartSwitchData[4];
                     char checksum = 0;
 
-                    smartSwitchData[0] = (1 << 5) + (((i+1) & 0x07) << 2) + (0x3);
+                    smartSwitchData[0] = (1 << 5) + (((p_IOControl->getCurrentSmartSwitchID(i)) & 0x07) << 2) + (0x3);
                     smartSwitchData[1] = 0xFF;
                     smartSwitchData[2] = 0XA5;
 
@@ -67,7 +70,6 @@ void StatusMonitor::timerEvent(QTimerEvent *event)
                     smartSwitchData[3] = 0;
                     smartSwitchData[3] = checksum ^ ((smartSwitchData[3] & 0xF0) >> 4);
 
-                    cout << "Sending message to let Smart Switch " << i << " go." << endl;
                     p_IOControl->uartOut.sendData(smartSwitchData, true);
                     break;
                 }

@@ -14,6 +14,7 @@ class BB_UART: public QThread
         char readArr[100];
         BB_UART(int type);
         BB_UART();
+        BlackLib::BlackGPIO gpio1_15;
 
         bool sendData(char writeArr[], bool statusControl);
         bool setDiscoveryMode(bool inDiscovery){
@@ -29,6 +30,7 @@ class BB_UART: public QThread
         char startup;
         char gloveData[34];
         bool sendDataGlove();
+        bool sendFIFOData();
 
     protected:
         void run();
@@ -39,6 +41,9 @@ class BB_UART: public QThread
         BlackLib::BlackGPIO readEnableNot;
 
         BlackLib::BlackUART gloveUART;
+
+        char writeFIFO[200];
+        int currentFIFOIndex;
 
 };
 

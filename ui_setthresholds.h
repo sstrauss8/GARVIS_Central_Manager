@@ -171,8 +171,8 @@ public:
         label_9->setText(QApplication::translate("SetThresholds", " \302\260F", 0, QApplication::UnicodeUTF8));
         label_10->setText(QApplication::translate("SetThresholds", "%", 0, QApplication::UnicodeUTF8));
         label_11->setText(QApplication::translate("SetThresholds", "%", 0, QApplication::UnicodeUTF8));
-        label_12->setText(QApplication::translate("SetThresholds", "lumens", 0, QApplication::UnicodeUTF8));
-        label_13->setText(QApplication::translate("SetThresholds", "lumens", 0, QApplication::UnicodeUTF8));
+        label_12->setText(QApplication::translate("SetThresholds", "lx", 0, QApplication::UnicodeUTF8));
+        label_13->setText(QApplication::translate("SetThresholds", "lx", 0, QApplication::UnicodeUTF8));
         Apply->setText(QApplication::translate("SetThresholds", "Apply", 0, QApplication::UnicodeUTF8));
     } // retranslateUi
 

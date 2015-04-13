@@ -6,8 +6,9 @@ using namespace std;
 BB_UART::BB_UART(int type) :
     gloveUART(BlackLib::UART1,BlackLib::Baud38400,BlackLib::ParityNo,BlackLib::StopOne,BlackLib::Char8),
     uart(BlackLib::UART4,BlackLib::Baud38400,BlackLib::ParityNo,BlackLib::StopOne,BlackLib::Char8),
-    readEnableNot(BlackLib::GPIO_7,BlackLib::bothDirection),
-    driveEnable(BlackLib::GPIO_3, BlackLib::bothDirection)
+    readEnableNot(BlackLib::GPIO_7,BlackLib::output, BlackLib::FastMode),
+    driveEnable(BlackLib::GPIO_27, BlackLib::output, BlackLib::FastMode),
+    gpio1_15(BlackLib::GPIO_47,BlackLib::output, BlackLib::FastMode)
 {
     uart.open( BlackLib::ReadWrite | BlackLib::NonBlock );
     gloveUART.open( BlackLib::ReadWrite | BlackLib::NonBlock);
@@ -15,6 +16,9 @@ BB_UART::BB_UART(int type) :
     uart.flush( BlackLib::bothDirection );
     uart.setReadBufferSize(1000);
     gloveUART.setReadBufferSize(340);
+
+    memset(writeFIFO,0,sizeof(writeFIFO));
+    currentFIFOIndex = 0;
 
     writeEnabled = false;
     myType = type;
@@ -44,13 +48,12 @@ void BB_UART::run()
     {
         while(1)
         {
-            std::cout << "Trying to read smart switch data" << std::endl;
             memset(readArr,0,sizeof(readArr));
 
             while(readArr[0] == 0)
             {
                 uart.read(readArr, sizeof(readArr));
-                msleep(10);
+                msleep(5);
             }
 
             if(discoveryModeOn)
@@ -90,7 +93,6 @@ void BB_UART::run()
         char tempData[34];
         memset(tempData, 0x0, 34);
 
-        std::cout << "Trying to read glove data" << std::endl;
         while(1)
         {
             memset(tempData,0,sizeof(tempData));
@@ -129,13 +131,17 @@ bool BB_UART::sendData(char writeArr[], bool statusControl)
     //to have a turn to write;
     if(writeEnabled || statusControl)
     {
-        //readEnableNot.setValue(BlackLib::high);
-        //driveEnable.setValue(BlackLib::high);
+        readEnableNot.setValue(BlackLib::high);
+        driveEnable.setValue(BlackLib::high);
 
-        uart.write(writeArr, sizeof(writeArr));
+        if(!uart.write(writeArr, sizeof(writeArr)))
+            std::cout << "write failed!" << std::endl;
+        
+        msleep(5);
 
-        //readEnableNot.setValue(BlackLib::low);
-        //driveEnable.setValue(BlackLib::low);
+        readEnableNot.setValue(BlackLib::low);
+
+        driveEnable.setValue(BlackLib::low);
 
         printf("SENDING THIS: ");
         for(int i = 0; i < 4; i++)
@@ -148,15 +154,72 @@ bool BB_UART::sendData(char writeArr[], bool statusControl)
 
         return true;
     }
+    //If it is not the Central Manager's turn to send data, buffer message
+    //to send once it is its turn
+    else
+    {
+        if(currentFIFOIndex <= 96)
+        {
+            for(int j = 0; j < 4 ; j++)
+            {
+                writeFIFO[currentFIFOIndex + j] = writeArr[j];
+            }
+
+            currentFIFOIndex +=4;
+        }
+        else
+            std::cout << "Fifo index is too high" << std::endl;
+    }
 
     return false;
 }
 
 bool BB_UART::sendDataGlove()
 {
+    gloveUART.write("TEST", 4);
+    std::cout << "Sending Data!" << std::endl;
+    return true;
+}
 
-            //gloveUART.write("TEST", 4);
-            return true;
+bool BB_UART::sendFIFOData()
+{
+    currentFIFOIndex = 0;
 
+    char writeArray[4] = {0,0,0,0};
+    int index = 0;
 
+    std::cout << "Sending buffered messages" << std::endl;
+    for(int i = 0; i <= currentFIFOIndex; i++)
+    {
+        if(i%4 == 0 && i != 0)
+        {
+            readEnableNot.setValue(BlackLib::high);
+            driveEnable.setValue(BlackLib::high);
+
+            if(!uart.write(writeArray, sizeof(writeArray)))
+                std::cout << "write failed!" << std::endl;
+
+            msleep(5);
+
+            readEnableNot.setValue(BlackLib::low);
+
+            driveEnable.setValue(BlackLib::low);
+
+            printf("SENDING THIS: ");
+            for(int i = 0; i < 4; i++)
+            {
+                printf("%d ", writeArray[i]);
+            }
+            printf("\n");
+
+            uart.flush( BlackLib::output );
+        }
+        else
+        {
+            index = i%4;
+            writeArray[index] = writeFIFO[i];
+        }
+
+    }
+    return true;
 }

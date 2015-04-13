@@ -26,6 +26,7 @@ public:
     void ConvertSensorData();
     void ProcessSensorData();
     void useData(char data[]);
+    void recognizeNumber(char state);
 
     enum AccelDirPalm { NONE = 0, DOWN = 1, UP = 2, LEFT = 3, RIGHT = 4, FORWARD = 5, BACKWARD = 6 };
 
@@ -73,6 +74,12 @@ protected:
 
 private:
     int numTimes;
+
+    bool measuredRoomNum;
+    bool measuredDevNum;
+
+    int currentRoomNum;
+    int currentDeviceNum;
 
 };
 

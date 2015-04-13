@@ -20,7 +20,7 @@ void CommandCreator::run()
         //responses
         if(p_IOControl->uartIn.discoveryModeOn)
         {
-            if(++timeout > 10000)
+            if(++timeout > 15000)
             {
                 cout << "Exiting discoverymode" << endl;
                 p_IOControl->uartIn.discoveryModeOn = false;
@@ -46,12 +46,36 @@ void CommandCreator::run()
             }
             msleep(1);
 
-            if(++pollCounter > 60000)
+            if(++pollCounter > 10000)
             {
                 pollCounter = 0;
-                char pollData[4] = {0x23,0xFF,0x00,0x01};
-                std::cout << "Sending poll message" << std::endl;
-                p_IOControl->uartOut.sendData(pollData, false);
+                char pollData[4] = {0x00,0xFF,0x00,0x00};
+                if(p_IOControl->allowStatusMonitor)
+                {
+                    for(int j = 0; j < p_IOControl->numRooms; j++)
+                    {
+                        int checksum = 0;
+                        int currentSmartSwitch = p_IOControl->getCurrentSmartSwitchID(j);
+                        if(currentSmartSwitch != 0)
+                        {
+                            pollData[0] = (1 << 5) + ((currentSmartSwitch & 0x07) << 2) + 0x03;
+
+                            for(int i = 0; i < 3; i++)
+                            {
+                                checksum = checksum ^ ((pollData[i] & 0xF0) >> 4);
+                                checksum = checksum ^ (pollData[i] & 0x0F);
+                            }
+
+                            pollData[3] = 0;
+                            pollData[3] = checksum ^ ((pollData[3] & 0xF0) >> 4);
+
+                            std::cout << "Sending poll message" << std::endl;
+                            p_IOControl->uartOut.sendData(pollData, false);
+                        }
+                        else
+                            ;
+                    }
+                }
             }
         }
     }
@@ -81,7 +105,6 @@ bool CommandCreator::processData(char data[])
     //Spare                8 Bits
     //Checksum             4 Bits
 
-    std::cout << "In Process Data" << std::endl;
     char checksum = 0;
     for(int i = 0; i < 4; i++)
     {
@@ -167,7 +190,9 @@ bool CommandCreator::processHumidityData(char smartSwitchID, short rawData)
 
 bool CommandCreator::processLightData(char smartSwitchID, short rawData)
 {
-    p_IOControl->updateLightDisplay(smartSwitchID, rawData);
+    double numMilliVoltsPerBit = 3.226;
+    short lightConverted = numMilliVoltsPerBit * rawData * 2;
+    p_IOControl->updateLightDisplay(smartSwitchID, lightConverted);
     return true;
 }
 
@@ -180,8 +205,9 @@ bool CommandCreator::processTemperatureData(char smartSwitchID, short rawData)
 {
     //Each 10 mV is one degree Celcius, starting from -50
     double numMilliVoltsPerBit = 3.226;
-    short tempConverted =  (int)(((numMilliVoltsPerBit * rawData) / 10) - 50);
+    short tempCelcius =  (int)(((numMilliVoltsPerBit * rawData) / 10) - 50);
+    short tempFarenheit = int (tempCelcius * 9.0 / 5 + 32);
 
-    p_IOControl->updateTemperatureDisplay(smartSwitchID, tempConverted);
+    p_IOControl->updateTemperatureDisplay(smartSwitchID, tempFarenheit);
     return true;
 }

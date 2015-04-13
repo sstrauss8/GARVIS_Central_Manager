@@ -10,6 +10,7 @@
 #include "iomanager.h"
 #include "gloveapi.h"
 #include <QProcess>
+#include <QTimer>
 
 namespace Ui {
 class MainWindow;
@@ -22,6 +23,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+protected:
+    void timerEvent(QTimerEvent *event);
 
 private slots:
     void on_comboBox_currentIndexChanged(const QString &arg1);
@@ -40,11 +44,21 @@ private slots:
     void on_helpTutorial_button_clicked();
     void on_tabWidget_currentChanged(int index);
     void on_comboBox_loadController_currentIndexChanged(int index);
-    void on_checkBox_5_clicked();
-    void on_dateTimeEdit_editingFinished();
     void on_pushButton_addDevice_2_clicked();
     void on_comboBox_selectRoom2_currentIndexChanged(int index);
     void on_pushButton_clicked();
+
+    void on_checkBox_smartDM_clicked();
+
+    void on_checkBox_clicked(bool checked);
+
+    void on_checkBox_2_clicked(bool checked);
+
+    void on_checkBox_3_clicked(bool checked);
+
+    void on_checkBox_4_clicked(bool checked);
+
+    void on_pushButton_2_clicked();
 
 private:
     Ui::MainWindow *ui;
@@ -63,6 +77,14 @@ private:
 
     void triggerThresholdDialog(int smartSwitchID);
     void changeLoadControllers();
+
+    int timerId;
+    int timerCounter;
+
+    BlackLib::BlackGPIO gpio1_2;
+    BlackLib::BlackGPIO gpio1_6;
+    BlackLib::BlackGPIO gpio1_13;
+    BlackLib::BlackGPIO gpio1_15;
 
 };
 

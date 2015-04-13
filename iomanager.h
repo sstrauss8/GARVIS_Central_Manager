@@ -34,7 +34,6 @@ struct room {
 
 class IOManager
 {
-
 private:
     IOManager();
     ~IOManager();
@@ -49,11 +48,14 @@ private:
     int currentHumidity;
     bool previousConfig;
 
+    bool gpio1On;
+
 public:
     static IOManager* Instance();
     BB_UART uartIn;
     BB_UART uartOut;
     BB_UART uartGlove;
+
     int numRooms;
     room *roomList;
     room *lastRoom;
@@ -61,6 +63,7 @@ public:
     int humData, tempData, lightData;
     int numStartUpDevices;
     int numSmartSwitches;
+    bool allowStatusMonitor;
     char devNum[8];
     char devType[8];
 
@@ -109,6 +112,7 @@ public:
 
     bool setIncremental(bool setIncr, int devID, int index, int loadControllerID, QString devName);
 
+    bool changeRelayOne(bool onOff);
 
     bool setCurrentPIR();
     int getCurrentPIR(int roomIndex);

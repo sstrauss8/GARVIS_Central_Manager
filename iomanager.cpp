@@ -12,8 +12,13 @@ IOManager::IOManager():
     uartIn(2),
     uartOut(1)
 {
+    humData = 0;
+    tempData = 0;
+    lightData = 0;
     numRooms = 0;
+    gpio1On = false;
     initialize();
+    allowStatusMonitor = false;
 }
 
 IOManager::~IOManager()
@@ -51,10 +56,6 @@ bool IOManager::initialize()
     memset(devNum, 0, sizeof(devNum));
     memset(devType, 0, sizeof(devNum));
     numStartUpDevices = 0;
-
-    humData = 0;
-    tempData = 0;
-    lightData = 0;
 
 
     currentRoomManagerRoom = NULL;
@@ -786,7 +787,7 @@ bool IOManager::sendVentControlData(int ventControlID, bool onOff)
     char ventControlData[4];
     char checksum = 0;
 
-    ventControlData[0] = (3 << 5) + ((ventControlID & 0x07) << 2) + (onOff << 1);
+    ventControlData[0] = (3 << 5) + ((ventControlID & 0x07) << 2) + (onOff);
     ventControlData[1] = 0;
     ventControlData[2] = 0;
 
@@ -937,12 +938,22 @@ bool IOManager::updateTemperatureDisplay(int smartSwitchID, short data)
             //Adaptive Control
             if(list->smartSwitchTemperature > list->maxTemp)
             {
-                //TODO: Send Load Control Message
+                //TODO: Send Load Controller Message
+                std::cout << "It's too hot in here! Turn down the temperature!" << std::endl;
+                changeRelayOne(false);
+            }
+            else if(list->smartSwitchTemperature <= list->maxTemp &&
+                    list->smartSwitchTemperature >= list->minTemp)
+            {
+                changeRelayOne(true);
             }
             else if(list->smartSwitchTemperature < list->minTemp)
             {
-                //TODO: Send Load Controller Message
+                //TODO: Send Load Controller Message to turn on heat
+                std::cout << "It's too cold in here! Turn up the temperature!" << std::endl;
+                changeRelayOne(true);
             }
+
 
             tempData = data;
             return true;
@@ -970,11 +981,13 @@ bool IOManager::updateHumidityDisplay(int smartSwitchID, short data)
             //Adaptive Control
             if(list->smartSwitchHumidity > list->maxHum)
             {
-                //TODO: Send Load Control Message
+                //TODO: Send Load Controller Message
+                std::cout << "It's too humid in here!" << std::endl;
             }
             else if(list->smartSwitchHumidity < list->minHum)
             {
                 //TODO: Send Load Controller Message
+                std::cout << "It's too dry in here!" << std::endl;
             }
 
             humData = data;
@@ -992,8 +1005,10 @@ bool IOManager::updateHumidityDisplay(int smartSwitchID, short data)
 bool IOManager::sendDeviceDetect()
 {
     std::cout << "Sending device detect " << std::endl;
-    char write[4] = {0x12,0x34,0xAB,0xCD};
+
+    char write[4] = {0x12,0x34,0xAB,0xCD}; //Smart Switches
     uartOut.sendData(write, false);
+
     uartOut.setDiscoveryMode(true);
     uartIn.setDiscoveryMode(true);
 }
@@ -1026,7 +1041,6 @@ bool IOManager::sendDevStartup()
                 if(list->smartSwitchID == devNum[i])
                 {
                     write[2] = list->numLoadControllers;
-                    std::cout << "NUM LOAD CONTROLLERS = " << (int) write[2] << std::endl;
                     j = numRooms;
                 }
                 list = list->next;
@@ -1067,4 +1081,23 @@ bool IOManager::addSmartSwitch(char devNum, char roomNum)
     }
 
     return false;
+}
+
+bool IOManager::changeRelayOne(bool onOff)
+{
+    if(onOff)
+    {
+        if(uartGlove.gpio1_15.setValue(BlackLib::high))
+            std::cout << "Successfully wrote high to gpio1_15" << std::endl;
+        else
+            std::cout << "Failed to write high to gpio1_15" << std::endl;
+    }
+
+    else
+    {
+        if(uartGlove.gpio1_15.setValue(BlackLib::low))
+            std::cout << "Successfully wrote low to gpio1_15" << std::endl;
+        else
+            std::cout << "Failed to low high to gpio1_15" << std::endl;
+    }
 }

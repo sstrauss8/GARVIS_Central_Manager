@@ -12,6 +12,10 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
+    gpio1_2(BlackLib::GPIO_34,BlackLib::output, BlackLib::FastMode),
+    gpio1_6(BlackLib::GPIO_38,BlackLib::output, BlackLib::FastMode),
+    gpio1_13(BlackLib::GPIO_45,BlackLib::output, BlackLib::FastMode),
+    gpio1_15(BlackLib::GPIO_47,BlackLib::output, BlackLib::FastMode),
     m_CommandCreator(),
     m_GloveAPI()
 {
@@ -21,6 +25,8 @@ MainWindow::MainWindow(QWidget *parent) :
     m_GloveAPI.start();
 
     smartDecisionMode = false;
+    timerId = startTimer(125); // 1/8 second
+    timerCounter = 0;
     fakeDeviceID = 0;
 
     QMessageBox msgBox;
@@ -65,7 +71,27 @@ MainWindow::~MainWindow()
     m_CommandCreator.exit();
     m_StatusMonitor.exit();
     m_GloveAPI.exit();
+    killTimer(timerId);
     delete ui;
+}
+
+void MainWindow::timerEvent(QTimerEvent *event)
+{
+    if(timerCounter++ < 40)
+        return;
+
+    if(ui->tabWidget->currentIndex() == 0)
+    {
+        QString temp = "";
+        ui->lineEdit_avgtemp->setText(temp.sprintf("%d%cF", p_IOControl->tempData, 176));
+        ui->lineEdit_avghum->setText(temp.sprintf("%d%", p_IOControl->humData));
+        ui->lineEdit_avglight->setText(temp.sprintf("%dlx", p_IOControl->lightData));
+    }
+
+    if(ui->tabWidget->currentIndex() == 1)
+    {
+        populateDevices(ui->comboBox->currentIndex(), ui->comboBox_loadController->currentText().toInt(0,10));
+    }
 }
 
 void MainWindow::on_comboBox_currentIndexChanged(const QString &arg1)
@@ -198,13 +224,13 @@ void MainWindow::populateDevices(int roomIndex, int loadControllerIndex)
         temp.sprintf("SS %d", p_IOControl->getCurrentSmartSwitchID(roomIndex));
         ui->smartSwitchID->setText(temp);
 
-        temp.sprintf("%d RAW", p_IOControl->getCurrentHumidity(roomIndex));
+        temp.sprintf("%d%", p_IOControl->getCurrentHumidity(roomIndex));
         ui->smartSwitchHum->setText(temp);
 
-        temp.sprintf("%d RAW", p_IOControl->getCurrentTemperature(roomIndex));
+        temp.sprintf("%d%cF", p_IOControl->getCurrentTemperature(roomIndex), 176);
         ui->smartSwitchTemp->setText(temp);
 
-        temp.sprintf("%d RAW", p_IOControl->getCurrentLighting(roomIndex));
+        temp.sprintf("%dlx", p_IOControl->getCurrentLighting(roomIndex));
         ui->smartSwitchLighting->setText(temp);
     }
 }
@@ -216,7 +242,7 @@ void MainWindow::on_pushButton_addDevice_clicked()
 
     int currentItem = ui->tableWidget->currentRow();
 
-    if(p_IOControl->devType[currentItem] == 0x02)//loadController
+    if(p_IOControl->devType[currentItem] == 0x03)//ventController
     {
         p_IOControl->addLoadController(p_IOControl->devNum[currentItem],
                                        ui->comboBox_selectRoom1->currentIndex());
@@ -281,6 +307,10 @@ void MainWindow::on_pushButton_4_clicked()
         {
             tempVal.sprintf("Load Controller ID %d", p_IOControl->devNum[i]);
         }
+        if(p_IOControl->devType[i] == 0x03)//Vent Controller
+        {
+            tempVal.sprintf("Vent Controller ID %d", p_IOControl->devNum[i]);
+        }
         ui->tableWidget->setItem(1,i-1, new QTableWidgetItem(tempVal));
     }
 }
@@ -290,7 +320,7 @@ void MainWindow::triggerThresholdDialog(int smartControlID)
 {
     if(p_IOControl->numRooms != 0)
     {
-        if(1)//smartDecisionMode)
+        if(smartDecisionMode)
         {
             SetThresholds setThresholddialog;
             setThresholddialog.setModal(true);
@@ -389,9 +419,9 @@ void MainWindow::on_tabWidget_currentChanged(int index)
     if(index == 0)
     {
         QString temp = "";
-        ui->lineEdit_avgtemp->setText(temp.sprintf("%d RAW", p_IOControl->tempData));
-        ui->lineEdit_avghum->setText(temp.sprintf("%d RAW", p_IOControl->humData));
-        ui->lineEdit_avglight->setText(temp.sprintf("%d RAW", p_IOControl->lightData));
+        ui->lineEdit_avgtemp->setText(temp.sprintf("%d%cF", p_IOControl->tempData, 176));
+        ui->lineEdit_avghum->setText(temp.sprintf("%d%", p_IOControl->humData));
+        ui->lineEdit_avglight->setText(temp.sprintf("%dlx", p_IOControl->lightData));
     }
     if(index == 1)
     {
@@ -454,24 +484,17 @@ void MainWindow::on_comboBox_loadController_currentIndexChanged(int index)
     populateDevices(ui->comboBox->currentIndex(), ui->comboBox_loadController->currentText().toInt(0,10));
 }
 
-void MainWindow::on_checkBox_5_clicked()
-{
-    smartDecisionMode = !smartDecisionMode;
-}
-
-void MainWindow::on_dateTimeEdit_editingFinished()
-{
-
-}
-
 //Send Device Startup Box
 void MainWindow::on_pushButton_addDevice_2_clicked()
 {
     if(!p_IOControl->uartIn.discoveryModeOn && p_IOControl->uartOut.discoveryModeOn)
     {
+        p_IOControl->allowStatusMonitor =true;
         p_IOControl->sendDevStartup();
         p_IOControl->uartOut.discoveryModeOn = false;
     }
+
+    ui->progressBar->setValue(0);
 }
 
 //Populate Delete Device Table
@@ -508,4 +531,105 @@ void MainWindow::on_pushButton_clicked()
 {
     m_florence.start("florence");
 
+}
+
+void MainWindow::on_checkBox_smartDM_clicked()
+{
+    QPalette palette = ui->smartDecMode->palette();
+
+    smartDecisionMode = !smartDecisionMode;
+    if(smartDecisionMode)
+    {
+        palette.setColor(QPalette::Base, QColor(0,255,0)); //Green
+        ui->smartDecMode->setText("Enabled");
+    }
+    else
+    {
+        palette.setColor(QPalette::Base, QColor(255,0,0)); //Red
+        ui->smartDecMode->setText("Disabled");
+    }
+
+    ui->smartDecMode->setPalette(palette);
+}
+
+
+void MainWindow::on_checkBox_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(gpio1_2.setValue(BlackLib::high))
+            std::cout << "Successfully wrote high to gpio1_2" << std::endl;
+        else
+            std::cout << "Failed to write high to gpio1_2" << std::endl;
+    }
+
+    else
+    {
+        if(gpio1_2.setValue(BlackLib::low))
+            std::cout << "Successfully wrote low to gpio1_2" << std::endl;
+        else
+            std::cout << "Failed to low high to gpio1_2" << std::endl;
+    }
+}
+
+void MainWindow::on_checkBox_2_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(gpio1_13.setValue(BlackLib::high))
+            std::cout << "Successfully wrote high to gpio1_13" << std::endl;
+        else
+            std::cout << "Failed to write high to gpio1_13" << std::endl;
+    }
+
+    else
+    {
+        if(gpio1_13.setValue(BlackLib::low))
+            std::cout << "Successfully wrote low to gpio1_13" << std::endl;
+        else
+            std::cout << "Failed to low high to gpio1_13" << std::endl;
+    }
+}
+
+void MainWindow::on_checkBox_3_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(gpio1_15.setValue(BlackLib::high))
+            std::cout << "Successfully wrote high to gpio1_15" << std::endl;
+        else
+            std::cout << "Failed to write high to gpio1_15" << std::endl;
+    }
+
+    else
+    {
+        if(gpio1_15.setValue(BlackLib::low))
+            std::cout << "Successfully wrote low to gpio1_15" << std::endl;
+        else
+            std::cout << "Failed to low high to gpio1_15" << std::endl;
+    }
+}
+
+void MainWindow::on_checkBox_4_clicked(bool checked)
+{
+    if(checked)
+    {
+        if(gpio1_6.setValue(BlackLib::high))
+            std::cout << "Successfully wrote high to gpio1_6" << std::endl;
+        else
+            std::cout << "Failed to write high to gpio1_6" << std::endl;
+    }
+
+    else
+    {
+        if(gpio1_6.setValue(BlackLib::low))
+            std::cout << "Successfully wrote low to gpio1_6" << std::endl;
+        else
+            std::cout << "Failed to low high to gpio1_6" << std::endl;
+    }
+}
+
+void MainWindow::on_pushButton_2_clicked()
+{
+    showNormal();
 }
