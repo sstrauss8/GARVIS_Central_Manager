@@ -31,6 +31,8 @@ class BB_UART: public QThread
         char gloveData[34];
         bool sendDataGlove();
         bool sendFIFOData();
+        bool disableSending;
+
 
     protected:
         void run();

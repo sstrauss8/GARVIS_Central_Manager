@@ -22,7 +22,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      23,   14, // methods
+      24,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -34,25 +34,26 @@ static const uint qt_meta_data_MainWindow[] = {
       58,   11,   11,   11, 0x08,
       86,   11,   11,   11, 0x08,
      117,   11,   11,   11, 0x08,
-     170,  137,   11,   11, 0x08,
-     195,   11,   11,   11, 0x08,
-     229,   11,   11,   11, 0x08,
-     255,   11,   11,   11, 0x08,
-     295,   11,   11,   11, 0x08,
-     324,   11,   11,   11, 0x08,
-     353,   11,   11,   11, 0x08,
-     382,   11,   11,   11, 0x08,
-     421,  415,   11,   11, 0x08,
-     454,  415,   11,   11, 0x08,
-     506,   11,   11,   11, 0x08,
-     542,  415,   11,   11, 0x08,
-     591,   11,   11,   11, 0x08,
-     615,   11,   11,   11, 0x08,
-     653,  645,   11,   11, 0x08,
-     679,  645,   11,   11, 0x08,
-     707,  645,   11,   11, 0x08,
-     735,  645,   11,   11, 0x08,
-     763,   11,   11,   11, 0x08,
+     186,  137,   11,   11, 0x08,
+     216,   11,   11,   11, 0x08,
+     250,   11,   11,   11, 0x08,
+     276,   11,   11,   11, 0x08,
+     316,   11,   11,   11, 0x08,
+     345,   11,   11,   11, 0x08,
+     374,   11,   11,   11, 0x08,
+     403,   11,   11,   11, 0x08,
+     442,  436,   11,   11, 0x08,
+     475,  436,   11,   11, 0x08,
+     527,   11,   11,   11, 0x08,
+     563,  436,   11,   11, 0x08,
+     612,   11,   11,   11, 0x08,
+     636,   11,   11,   11, 0x08,
+     674,  666,   11,   11, 0x08,
+     700,  666,   11,   11, 0x08,
+     728,  666,   11,   11, 0x08,
+     756,  666,   11,   11, 0x08,
+     784,   11,   11,   11, 0x08,
+     810,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -63,8 +64,8 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "on_button_NewRoom_clicked()\0"
     "on_button_deleteRoom_clicked()\0"
     "populateRoomNames()\0"
-    "currentIndex,loadControllerIndex\0"
-    "populateDevices(int,int)\0"
+    "currentIndex,loadControllerIndex,partialPopulate\0"
+    "populateDevices(int,int,bool)\0"
     "on_pushButton_addDevice_clicked()\0"
     "on_pushButton_4_clicked()\0"
     "on_pushbutton_setThreshold3_2_clicked()\0"
@@ -83,6 +84,7 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "on_checkBox_3_clicked(bool)\0"
     "on_checkBox_4_clicked(bool)\0"
     "on_pushButton_2_clicked()\0"
+    "on_pushButton_7_clicked()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -95,7 +97,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 1: _t->on_button_NewRoom_clicked(); break;
         case 2: _t->on_button_deleteRoom_clicked(); break;
         case 3: _t->populateRoomNames(); break;
-        case 4: _t->populateDevices((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2]))); break;
+        case 4: _t->populateDevices((*reinterpret_cast< int(*)>(_a[1])),(*reinterpret_cast< int(*)>(_a[2])),(*reinterpret_cast< bool(*)>(_a[3]))); break;
         case 5: _t->on_pushButton_addDevice_clicked(); break;
         case 6: _t->on_pushButton_4_clicked(); break;
         case 7: _t->on_pushbutton_setThreshold3_2_clicked(); break;
@@ -114,6 +116,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 20: _t->on_checkBox_3_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 21: _t->on_checkBox_4_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
         case 22: _t->on_pushButton_2_clicked(); break;
+        case 23: _t->on_pushButton_7_clicked(); break;
         default: ;
         }
     }
@@ -151,9 +154,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 23)
+        if (_id < 24)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 23;
+        _id -= 24;
     }
     return _id;
 }

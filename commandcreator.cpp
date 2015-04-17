@@ -20,7 +20,7 @@ void CommandCreator::run()
         //responses
         if(p_IOControl->uartIn.discoveryModeOn)
         {
-            if(++timeout > 15000)
+            if(++timeout > 5000)
             {
                 cout << "Exiting discoverymode" << endl;
                 p_IOControl->uartIn.discoveryModeOn = false;
@@ -46,7 +46,7 @@ void CommandCreator::run()
             }
             msleep(1);
 
-            if(++pollCounter > 10000)
+            /*if(++pollCounter > 100)
             {
                 pollCounter = 0;
                 char pollData[4] = {0x00,0xFF,0x00,0x00};
@@ -71,12 +71,18 @@ void CommandCreator::run()
 
                             std::cout << "Sending poll message" << std::endl;
                             p_IOControl->uartOut.sendData(pollData, false);
+
+                            p_IOControl->uartOut.disableSending = true;
+                            msleep(100);
+                            p_IOControl->uartOut.disableSending = false;
                         }
                         else
                             ;
                     }
                 }
             }
+
+            p_IOControl->uartOut.sendFIFOData();*/
         }
     }
 }
@@ -115,7 +121,7 @@ bool CommandCreator::processData(char data[])
     //Throw out messages with invalid checksums
     if(checksum != 0)
     {
-        std::cout << "INVALID CHECKSUM" << std::endl;
+        //std::cout << "INVALID CHECKSUM" << std::endl;
         return false;
     }
 
@@ -139,7 +145,7 @@ bool CommandCreator::processData(char data[])
 
     short rawData = ((data[1] & 0x3F) << 4) + ((data[2] & 0xF0) >> 4);
 
-    std::cout << "Data Type " << dataType << std::endl;
+    //std::cout << "Data Type " << dataType << std::endl;
 
     switch(dataType)
     {
@@ -153,7 +159,7 @@ bool CommandCreator::processData(char data[])
             processLightData(smartSwitchNum, rawData);
             break;
         case 3:        //PIR
-            processPIRData(smartSwitchNum, rawData);
+            processPIRData(smartSwitchNum, data[1]);
             break;
         case 4:        //Capacitive Touch
             processCapTouchData(smartSwitchNum, rawData);
@@ -168,15 +174,21 @@ bool CommandCreator::processData(char data[])
 
 bool CommandCreator::processCapTouchData(char smartSwitchID, short rawData)
 {
-    int deviceSelected;
+    int deviceSelected = 0;
     int event = 0;
 
-    deviceSelected = (rawData & 0x3800) >> 7;
-    event = (rawData & 0x0070) >> 4;
+    deviceSelected = (rawData & 0x380) >> 7;
+    event = (rawData & 0x070) >> 4;
 
-    std::cout << "Raw data = " << rawData << std::endl;
-    std::cout << "Event = " << event << std::endl;
-    p_IOControl->sendLoadControlData(smartSwitchID, deviceSelected, (char)event);
+    //std::cout << "Raw data = " << rawData << std::endl;
+    //std::cout << "Event = " << event << std::endl;
+    if(event != 3)
+    {
+        std::cout << "Raw data = " << rawData << std::endl;
+        std::cout << "Device selected = " << deviceSelected << std::endl;
+        std::cout << "Sending a load controll message from smart switch " << (int)smartSwitchID << std::endl;
+        p_IOControl->sendLoadControlData(smartSwitchID, deviceSelected, (char)event, true);
+    }
     return true;
 }
 
@@ -191,13 +203,24 @@ bool CommandCreator::processHumidityData(char smartSwitchID, short rawData)
 bool CommandCreator::processLightData(char smartSwitchID, short rawData)
 {
     double numMilliVoltsPerBit = 3.226;
-    short lightConverted = numMilliVoltsPerBit * rawData * 2;
+    short lightConverted = numMilliVoltsPerBit * rawData * 8;
     p_IOControl->updateLightDisplay(smartSwitchID, lightConverted);
     return true;
 }
 
 bool CommandCreator::processPIRData(char smartSwitchID, short rawData)
 {
+    bool val = false;
+    short bit = rawData & 0x01;
+    if(bit)
+    {
+        val = true;
+    }
+    else
+    {
+    }
+
+    p_IOControl->updatePIRDisplay(smartSwitchID,val);
     return true;
 }
 

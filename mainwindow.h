@@ -11,6 +11,7 @@
 #include "gloveapi.h"
 #include <QProcess>
 #include <QTimer>
+#include <QPalette>
 
 namespace Ui {
 class MainWindow;
@@ -33,7 +34,7 @@ private slots:
 
     void on_button_deleteRoom_clicked();
     void populateRoomNames();
-    void populateDevices(int currentIndex, int loadControllerIndex);
+    void populateDevices(int currentIndex, int loadControllerIndex, bool partialPopulate);
 
     void on_pushButton_addDevice_clicked();
     void on_pushButton_4_clicked();
@@ -60,10 +61,14 @@ private slots:
 
     void on_pushButton_2_clicked();
 
+    void on_pushButton_7_clicked();
+
 private:
     Ui::MainWindow *ui;
 
     QProcess m_florence;
+
+    QPalette palette;
 
     IOManager * p_IOControl;
     CommandCreator m_CommandCreator;
@@ -72,6 +77,7 @@ private:
 
     QString output;
     int counter;
+    bool firstPopulation;
     int fakeDeviceID;
     bool smartDecisionMode;
 

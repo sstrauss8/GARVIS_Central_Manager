@@ -29,7 +29,7 @@ background: rgb(63, 13, 14);
       <x>10</x>
       <y>80</y>
       <width>781</width>
-      <height>351</height>
+      <height>361</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -213,97 +213,10 @@ color: rgb(255, 255, 255);</string>
      <attribute name="title">
       <string>Room Manager</string>
      </attribute>
-     <widget class="QLabel" name="label_room">
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>50</y>
-        <width>91</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="WindowText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Text">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="WindowText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Text">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="WindowText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>159</red>
-            <green>158</green>
-            <blue>158</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Text">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>159</red>
-            <green>158</green>
-            <blue>158</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="text">
-       <string>Select Room</string>
-      </property>
-     </widget>
-     <widget class="QComboBox" name="comboBox">
-      <property name="geometry">
-       <rect>
-        <x>180</x>
-        <y>50</y>
-        <width>191</width>
-        <height>27</height>
-       </rect>
-      </property>
-     </widget>
      <widget class="QLineEdit" name="roomEdit">
       <property name="geometry">
        <rect>
-        <x>172</x>
+        <x>280</x>
         <y>10</y>
         <width>221</width>
         <height>31</height>
@@ -321,11 +234,11 @@ color: rgb(255, 255, 255);</string>
        <bool>true</bool>
       </property>
      </widget>
-     <widget class="QGroupBox" name="groupbox_dev1">
+     <widget class="QGroupBox" name="groupbox_dev1_3">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>110</y>
+        <x>380</x>
+        <y>130</y>
         <width>171</width>
         <height>181</height>
        </rect>
@@ -334,15 +247,6 @@ color: rgb(255, 255, 255);</string>
        <palette>
         <active>
          <colorrole role="WindowText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Text">
           <brush brushstyle="SolidPattern">
            <color alpha="255">
             <red>0</red>
@@ -362,27 +266,9 @@ color: rgb(255, 255, 255);</string>
            </color>
           </brush>
          </colorrole>
-         <colorrole role="Text">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
         </inactive>
         <disabled>
          <colorrole role="WindowText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>159</red>
-            <green>158</green>
-            <blue>158</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Text">
           <brush brushstyle="SolidPattern">
            <color alpha="255">
             <red>159</red>
@@ -395,9 +281,35 @@ color: rgb(255, 255, 255);</string>
        </palette>
       </property>
       <property name="title">
-       <string>Device 1</string>
+       <string>Vent</string>
       </property>
-      <widget class="QLabel" name="dev1_name">
+      <widget class="QPushButton" name="pushbutton_set3">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>150</y>
+         <width>111</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Set</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="device3ID">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>20</y>
+         <width>101</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="readOnly">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QLabel" name="dev1_id_4">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -418,15 +330,6 @@ color: rgb(255, 255, 255);</string>
             </color>
            </brush>
           </colorrole>
-          <colorrole role="Text">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
          </active>
          <inactive>
           <colorrole role="WindowText">
@@ -438,104 +341,9 @@ color: rgb(255, 255, 255);</string>
             </color>
            </brush>
           </colorrole>
-          <colorrole role="Text">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
          </inactive>
          <disabled>
           <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>159</red>
-             <green>158</green>
-             <blue>158</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Text">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>159</red>
-             <green>158</green>
-             <blue>158</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </disabled>
-        </palette>
-       </property>
-       <property name="text">
-        <string>Name</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="dev1_id">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>60</y>
-         <width>41</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="palette">
-        <palette>
-         <active>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>0</red>
-             <green>0</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Text">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </active>
-         <inactive>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>0</red>
-             <green>0</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Text">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </inactive>
-         <disabled>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>159</red>
-             <green>158</green>
-             <blue>158</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Text">
            <brush brushstyle="SolidPattern">
             <color alpha="255">
              <red>159</red>
@@ -551,17 +359,17 @@ color: rgb(255, 255, 255);</string>
         <string>ID</string>
        </property>
       </widget>
-      <widget class="QSlider" name="dev1_slider">
+      <widget class="QSlider" name="dev3_slider">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>20</x>
          <y>100</y>
          <width>141</width>
          <height>29</height>
         </rect>
        </property>
        <property name="maximum">
-        <number>4</number>
+        <number>1</number>
        </property>
        <property name="pageStep">
         <number>4</number>
@@ -570,10 +378,10 @@ color: rgb(255, 255, 255);</string>
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
-      <widget class="QLabel" name="off_label">
+      <widget class="QLabel" name="off_label_3">
        <property name="geometry">
         <rect>
-         <x>10</x>
+         <x>20</x>
          <y>130</y>
          <width>151</width>
          <height>20</height>
@@ -585,15 +393,6 @@ color: rgb(255, 255, 255);</string>
           <colorrole role="WindowText">
            <brush brushstyle="SolidPattern">
             <color alpha="255">
-             <red>0</red>
-             <green>0</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Text">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
              <red>255</red>
              <green>255</green>
              <blue>255</blue>
@@ -603,15 +402,6 @@ color: rgb(255, 255, 255);</string>
          </active>
          <inactive>
           <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>0</red>
-             <green>0</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="Text">
            <brush brushstyle="SolidPattern">
             <color alpha="255">
              <red>255</red>
@@ -631,7 +421,138 @@ color: rgb(255, 255, 255);</string>
             </color>
            </brush>
           </colorrole>
-          <colorrole role="Text">
+         </disabled>
+        </palette>
+       </property>
+       <property name="text">
+        <string>Off                           On</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="Line" name="line">
+      <property name="geometry">
+       <rect>
+        <x>550</x>
+        <y>50</y>
+        <width>20</width>
+        <height>281</height>
+       </rect>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+     </widget>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="geometry">
+       <rect>
+        <x>570</x>
+        <y>50</y>
+        <width>201</width>
+        <height>251</height>
+       </rect>
+      </property>
+      <property name="palette">
+       <palette>
+        <active>
+         <colorrole role="Text">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </active>
+        <inactive>
+         <colorrole role="Text">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>255</red>
+            <green>255</green>
+            <blue>255</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </inactive>
+        <disabled>
+         <colorrole role="Text">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>159</red>
+            <green>158</green>
+            <blue>158</blue>
+           </color>
+          </brush>
+         </colorrole>
+        </disabled>
+       </palette>
+      </property>
+      <property name="title">
+       <string>Smart Switch</string>
+      </property>
+      <widget class="QLabel" name="label_2">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>40</y>
+         <width>21</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="palette">
+        <palette>
+         <active>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="ButtonText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="ButtonText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>159</red>
+             <green>158</green>
+             <blue>158</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="ButtonText">
            <brush brushstyle="SolidPattern">
             <color alpha="255">
              <red>159</red>
@@ -644,56 +565,223 @@ color: rgb(255, 255, 255);</string>
         </palette>
        </property>
        <property name="text">
-        <string>Off                           On</string>
+        <string>ID</string>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushbutton_set1">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>150</y>
-         <width>111</width>
-         <height>27</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Set</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="device1Name">
-       <property name="geometry">
-        <rect>
-         <x>60</x>
-         <y>20</y>
-         <width>101</width>
-         <height>27</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="device1ID">
-       <property name="geometry">
-        <rect>
-         <x>60</x>
-         <y>50</y>
-         <width>101</width>
-         <height>27</height>
-        </rect>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QCheckBox" name="checkBox_dev1">
+      <widget class="QLabel" name="label_3">
        <property name="geometry">
         <rect>
          <x>10</x>
-         <y>80</y>
-         <width>121</width>
-         <height>22</height>
+         <y>70</y>
+         <width>91</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="palette">
+        <palette>
+         <active>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>159</red>
+             <green>158</green>
+             <blue>158</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <property name="text">
+        <string>Temperature</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_4">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>100</y>
+         <width>67</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="palette">
+        <palette>
+         <active>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>159</red>
+             <green>158</green>
+             <blue>158</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <property name="text">
+        <string>Humidity</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_5">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>130</y>
+         <width>67</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="palette">
+        <palette>
+         <active>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>159</red>
+             <green>158</green>
+             <blue>158</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <property name="text">
+        <string>Lighting</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="smartSwitchID">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>30</y>
+         <width>71</width>
+         <height>27</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="smartSwitchTemp">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>60</y>
+         <width>71</width>
+         <height>27</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="smartSwitchHum">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>90</y>
+         <width>71</width>
+         <height>27</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="pushbutton_setThreshold3_2">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>160</y>
+         <width>161</width>
+         <height>27</height>
         </rect>
        </property>
        <property name="text">
-        <string>Incremental</string>
+        <string>Set Room Thresholds</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="smartSwitchLighting">
+       <property name="geometry">
+        <rect>
+         <x>100</x>
+         <y>120</y>
+         <width>71</width>
+         <height>27</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="smartSwitchMotion">
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>200</y>
+         <width>61</width>
+         <height>27</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Motion</string>
        </property>
       </widget>
      </widget>
@@ -701,7 +789,7 @@ color: rgb(255, 255, 255);</string>
       <property name="geometry">
        <rect>
         <x>200</x>
-        <y>110</y>
+        <y>130</y>
         <width>171</width>
         <height>181</height>
        </rect>
@@ -1092,11 +1180,11 @@ color: rgb(255, 255, 255);</string>
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="groupbox_dev1_3">
+     <widget class="QGroupBox" name="groupbox_dev1">
       <property name="geometry">
        <rect>
-        <x>380</x>
-        <y>110</y>
+        <x>10</x>
+        <y>130</y>
         <width>171</width>
         <height>181</height>
        </rect>
@@ -1105,6 +1193,15 @@ color: rgb(255, 255, 255);</string>
        <palette>
         <active>
          <colorrole role="WindowText">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Text">
           <brush brushstyle="SolidPattern">
            <color alpha="255">
             <red>0</red>
@@ -1124,9 +1221,27 @@ color: rgb(255, 255, 255);</string>
            </color>
           </brush>
          </colorrole>
+         <colorrole role="Text">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+           </color>
+          </brush>
+         </colorrole>
         </inactive>
         <disabled>
          <colorrole role="WindowText">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>159</red>
+            <green>158</green>
+            <blue>158</blue>
+           </color>
+          </brush>
+         </colorrole>
+         <colorrole role="Text">
           <brush brushstyle="SolidPattern">
            <color alpha="255">
             <red>159</red>
@@ -1139,9 +1254,163 @@ color: rgb(255, 255, 255);</string>
        </palette>
       </property>
       <property name="title">
-       <string>Device 3</string>
+       <string>Device 1</string>
       </property>
-      <widget class="QSlider" name="dev3_slider">
+      <widget class="QLabel" name="dev1_name">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>30</y>
+         <width>41</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="palette">
+        <palette>
+         <active>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Text">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Text">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>159</red>
+             <green>158</green>
+             <blue>158</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Text">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>159</red>
+             <green>158</green>
+             <blue>158</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <property name="text">
+        <string>Name</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="dev1_id">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>60</y>
+         <width>41</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="palette">
+        <palette>
+         <active>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Text">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </active>
+         <inactive>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Text">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>255</red>
+             <green>255</green>
+             <blue>255</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </inactive>
+         <disabled>
+          <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>159</red>
+             <green>158</green>
+             <blue>158</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Text">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>159</red>
+             <green>158</green>
+             <blue>158</blue>
+            </color>
+           </brush>
+          </colorrole>
+         </disabled>
+        </palette>
+       </property>
+       <property name="text">
+        <string>ID</string>
+       </property>
+      </widget>
+      <widget class="QSlider" name="dev1_slider">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -1160,43 +1429,7 @@ color: rgb(255, 255, 255);</string>
         <enum>Qt::Horizontal</enum>
        </property>
       </widget>
-      <widget class="QPushButton" name="pushbutton_set3">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>150</y>
-         <width>111</width>
-         <height>27</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Set</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="device3Name">
-       <property name="geometry">
-        <rect>
-         <x>60</x>
-         <y>20</y>
-         <width>101</width>
-         <height>27</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="device3ID">
-       <property name="geometry">
-        <rect>
-         <x>60</x>
-         <y>50</y>
-         <width>101</width>
-         <height>27</height>
-        </rect>
-       </property>
-       <property name="readOnly">
-        <bool>true</bool>
-       </property>
-      </widget>
-      <widget class="QLabel" name="off_label_3">
+      <widget class="QLabel" name="off_label">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -1211,6 +1444,15 @@ color: rgb(255, 255, 255);</string>
           <colorrole role="WindowText">
            <brush brushstyle="SolidPattern">
             <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Text">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
              <red>255</red>
              <green>255</green>
              <blue>255</blue>
@@ -1222,6 +1464,15 @@ color: rgb(255, 255, 255);</string>
           <colorrole role="WindowText">
            <brush brushstyle="SolidPattern">
             <color alpha="255">
+             <red>0</red>
+             <green>0</green>
+             <blue>0</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Text">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
              <red>255</red>
              <green>255</green>
              <blue>255</blue>
@@ -1231,6 +1482,15 @@ color: rgb(255, 255, 255);</string>
          </inactive>
          <disabled>
           <colorrole role="WindowText">
+           <brush brushstyle="SolidPattern">
+            <color alpha="255">
+             <red>159</red>
+             <green>158</green>
+             <blue>158</blue>
+            </color>
+           </brush>
+          </colorrole>
+          <colorrole role="Text">
            <brush brushstyle="SolidPattern">
             <color alpha="255">
              <red>159</red>
@@ -1246,107 +1506,43 @@ color: rgb(255, 255, 255);</string>
         <string>Off                           On</string>
        </property>
       </widget>
-      <widget class="QLabel" name="dev1_name_4">
+      <widget class="QPushButton" name="pushbutton_set1">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>41</width>
-         <height>17</height>
+         <x>30</x>
+         <y>150</y>
+         <width>111</width>
+         <height>27</height>
         </rect>
        </property>
-       <property name="palette">
-        <palette>
-         <active>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>0</red>
-             <green>0</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </active>
-         <inactive>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>0</red>
-             <green>0</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </inactive>
-         <disabled>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>159</red>
-             <green>158</green>
-             <blue>158</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </disabled>
-        </palette>
-       </property>
        <property name="text">
-        <string>Name</string>
+        <string>Set</string>
        </property>
       </widget>
-      <widget class="QLabel" name="dev1_id_4">
+      <widget class="QLineEdit" name="device1Name">
        <property name="geometry">
         <rect>
-         <x>10</x>
-         <y>60</y>
-         <width>41</width>
-         <height>17</height>
+         <x>60</x>
+         <y>20</y>
+         <width>101</width>
+         <height>27</height>
         </rect>
        </property>
-       <property name="palette">
-        <palette>
-         <active>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>0</red>
-             <green>0</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </active>
-         <inactive>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>0</red>
-             <green>0</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </inactive>
-         <disabled>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>159</red>
-             <green>158</green>
-             <blue>158</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </disabled>
-        </palette>
+      </widget>
+      <widget class="QLineEdit" name="device1ID">
+       <property name="geometry">
+        <rect>
+         <x>60</x>
+         <y>50</y>
+         <width>101</width>
+         <height>27</height>
+        </rect>
        </property>
-       <property name="text">
-        <string>ID</string>
+       <property name="readOnly">
+        <bool>true</bool>
        </property>
       </widget>
-      <widget class="QCheckBox" name="checkBox_dev3">
+      <widget class="QCheckBox" name="checkBox_dev1">
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -1360,31 +1556,27 @@ color: rgb(255, 255, 255);</string>
        </property>
       </widget>
      </widget>
-     <widget class="Line" name="line">
+     <widget class="QLabel" name="label_room">
       <property name="geometry">
        <rect>
-        <x>550</x>
-        <y>0</y>
-        <width>20</width>
-        <height>311</height>
-       </rect>
-      </property>
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
-      </property>
-     </widget>
-     <widget class="QGroupBox" name="groupBox">
-      <property name="geometry">
-       <rect>
-        <x>570</x>
-        <y>50</y>
-        <width>201</width>
-        <height>191</height>
+        <x>80</x>
+        <y>60</y>
+        <width>91</width>
+        <height>17</height>
        </rect>
       </property>
       <property name="palette">
        <palette>
         <active>
+         <colorrole role="WindowText">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+           </color>
+          </brush>
+         </colorrole>
          <colorrole role="Text">
           <brush brushstyle="SolidPattern">
            <color alpha="255">
@@ -1396,6 +1588,15 @@ color: rgb(255, 255, 255);</string>
          </colorrole>
         </active>
         <inactive>
+         <colorrole role="WindowText">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>0</red>
+            <green>0</green>
+            <blue>0</blue>
+           </color>
+          </brush>
+         </colorrole>
          <colorrole role="Text">
           <brush brushstyle="SolidPattern">
            <color alpha="255">
@@ -1407,6 +1608,15 @@ color: rgb(255, 255, 255);</string>
          </colorrole>
         </inactive>
         <disabled>
+         <colorrole role="WindowText">
+          <brush brushstyle="SolidPattern">
+           <color alpha="255">
+            <red>159</red>
+            <green>158</green>
+            <blue>158</blue>
+           </color>
+          </brush>
+         </colorrole>
          <colorrole role="Text">
           <brush brushstyle="SolidPattern">
            <color alpha="255">
@@ -1419,295 +1629,15 @@ color: rgb(255, 255, 255);</string>
         </disabled>
        </palette>
       </property>
-      <property name="title">
-       <string>Smart Switch</string>
+      <property name="text">
+       <string>Select Room</string>
       </property>
-      <widget class="QLabel" name="label_2">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>40</y>
-         <width>21</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="palette">
-        <palette>
-         <active>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="ButtonText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </active>
-         <inactive>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="ButtonText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </inactive>
-         <disabled>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>159</red>
-             <green>158</green>
-             <blue>158</blue>
-            </color>
-           </brush>
-          </colorrole>
-          <colorrole role="ButtonText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>159</red>
-             <green>158</green>
-             <blue>158</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </disabled>
-        </palette>
-       </property>
-       <property name="text">
-        <string>ID</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_3">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>70</y>
-         <width>91</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="palette">
-        <palette>
-         <active>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </active>
-         <inactive>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </inactive>
-         <disabled>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>159</red>
-             <green>158</green>
-             <blue>158</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </disabled>
-        </palette>
-       </property>
-       <property name="text">
-        <string>Temperature</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_4">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>100</y>
-         <width>67</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="palette">
-        <palette>
-         <active>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </active>
-         <inactive>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </inactive>
-         <disabled>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>159</red>
-             <green>158</green>
-             <blue>158</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </disabled>
-        </palette>
-       </property>
-       <property name="text">
-        <string>Humidity</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_5">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>130</y>
-         <width>67</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="palette">
-        <palette>
-         <active>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </active>
-         <inactive>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>255</red>
-             <green>255</green>
-             <blue>255</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </inactive>
-         <disabled>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>159</red>
-             <green>158</green>
-             <blue>158</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </disabled>
-        </palette>
-       </property>
-       <property name="text">
-        <string>Lighting</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="smartSwitchID">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>30</y>
-         <width>71</width>
-         <height>27</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="smartSwitchTemp">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>60</y>
-         <width>71</width>
-         <height>27</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="smartSwitchHum">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>90</y>
-         <width>71</width>
-         <height>27</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QPushButton" name="pushbutton_setThreshold3_2">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>160</y>
-         <width>161</width>
-         <height>27</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Set Room Thresholds</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="smartSwitchLighting">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>120</y>
-         <width>71</width>
-         <height>27</height>
-        </rect>
-       </property>
-      </widget>
      </widget>
      <widget class="QLabel" name="label_room_2">
       <property name="geometry">
        <rect>
-        <x>20</x>
-        <y>80</y>
+        <x>80</x>
+        <y>90</y>
         <width>161</width>
         <height>17</height>
        </rect>
@@ -1780,11 +1710,21 @@ color: rgb(255, 255, 255);</string>
        <string>Select Load Controller</string>
       </property>
      </widget>
+     <widget class="QComboBox" name="comboBox">
+      <property name="geometry">
+       <rect>
+        <x>250</x>
+        <y>60</y>
+        <width>191</width>
+        <height>27</height>
+       </rect>
+      </property>
+     </widget>
      <widget class="QComboBox" name="comboBox_loadController">
       <property name="geometry">
        <rect>
-        <x>180</x>
-        <y>80</y>
+        <x>250</x>
+        <y>90</y>
         <width>191</width>
         <height>27</height>
        </rect>
@@ -1913,55 +1853,6 @@ color: rgb(255, 255, 255);</string>
         <bool>false</bool>
        </property>
       </widget>
-      <widget class="QTableWidget" name="tableWidget">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>100</y>
-         <width>231</width>
-         <height>111</height>
-        </rect>
-       </property>
-       <attribute name="horizontalHeaderDefaultSectionSize">
-        <number>200</number>
-       </attribute>
-       <row>
-        <property name="text">
-         <string>1</string>
-        </property>
-       </row>
-       <row>
-        <property name="text">
-         <string>2</string>
-        </property>
-       </row>
-       <row>
-        <property name="text">
-         <string>3</string>
-        </property>
-       </row>
-       <column>
-        <property name="text">
-         <string>Devices</string>
-        </property>
-       </column>
-       <item row="0" column="0">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="toolTip">
-         <string/>
-        </property>
-        <property name="flags">
-         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
-        </property>
-       </item>
-       <item row="2" column="0">
-        <property name="text">
-         <string/>
-        </property>
-       </item>
-      </widget>
       <widget class="QPushButton" name="pushButton_addDevice">
        <property name="geometry">
         <rect>
@@ -2038,6 +1929,27 @@ color: rgb(255, 255, 255);</string>
         <string>Launch Device Startup</string>
        </property>
       </widget>
+      <widget class="QTableWidget" name="tableWidget_3">
+       <property name="geometry">
+        <rect>
+         <x>20</x>
+         <y>100</y>
+         <width>231</width>
+         <height>111</height>
+        </rect>
+       </property>
+       <property name="rowCount">
+        <number>0</number>
+       </property>
+       <attribute name="horizontalHeaderDefaultSectionSize">
+        <number>200</number>
+       </attribute>
+       <column>
+        <property name="text">
+         <string>Devices</string>
+        </property>
+       </column>
+      </widget>
      </widget>
      <widget class="QGroupBox" name="groupBox_3">
       <property name="geometry">
@@ -2045,7 +1957,7 @@ color: rgb(255, 255, 255);</string>
         <x>280</x>
         <y>10</y>
         <width>271</width>
-        <height>261</height>
+        <height>281</height>
        </rect>
       </property>
       <property name="palette">
@@ -2179,7 +2091,7 @@ color: rgb(255, 255, 255);</string>
        <property name="geometry">
         <rect>
          <x>20</x>
-         <y>110</y>
+         <y>100</y>
          <width>231</width>
          <height>111</height>
         </rect>
@@ -2228,7 +2140,7 @@ color: rgb(255, 255, 255);</string>
        <property name="geometry">
         <rect>
          <x>50</x>
-         <y>230</y>
+         <y>220</y>
          <width>171</width>
          <height>27</height>
         </rect>
@@ -2243,7 +2155,7 @@ color: rgb(255, 255, 255);</string>
        <rect>
         <x>560</x>
         <y>10</y>
-        <width>171</width>
+        <width>191</width>
         <height>51</height>
        </rect>
       </property>
@@ -2371,7 +2283,7 @@ color: rgb(255, 255, 255);</string>
       <widget class="QCheckBox" name="checkBox_smartDM">
        <property name="geometry">
         <rect>
-         <x>90</x>
+         <x>110</x>
          <y>20</y>
          <width>21</width>
          <height>22</height>
@@ -2384,7 +2296,7 @@ color: rgb(255, 255, 255);</string>
       <widget class="QLabel" name="label_8">
        <property name="geometry">
         <rect>
-         <x>30</x>
+         <x>50</x>
          <y>20</y>
          <width>61</width>
          <height>20</height>
@@ -4242,7 +4154,7 @@ font: 11pt &quot;Ubuntu&quot;;</string>
        </rect>
       </property>
       <property name="text">
-       <string>GPIO1_2</string>
+       <string>GPIO3_21</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="checkBox_3">
@@ -4268,7 +4180,7 @@ font: 11pt &quot;Ubuntu&quot;;</string>
        </rect>
       </property>
       <property name="text">
-       <string>GPIO1_6</string>
+       <string>GPIO1_0</string>
       </property>
      </widget>
      <widget class="QCheckBox" name="checkBox_2">
@@ -4310,7 +4222,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>630</x>
-      <y>430</y>
+      <y>440</y>
       <width>161</width>
       <height>20</height>
      </rect>

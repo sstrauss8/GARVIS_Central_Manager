@@ -163,6 +163,11 @@ void GloveAPI::useData(char data[])
                alreadyCalibrated = false;
             }
 
+            if(state < 3 || (state > 4 && state < 8))
+            {
+                std::cout << "State = " << state << std::endl;
+            }
+
             if(state == 0 || alreadyCalibrated)
                 ;
             else if(state < 3)//If calibration mode state, go through cal mode
@@ -411,8 +416,8 @@ void GloveAPI::ProcessSensorData()
                     if(leftSlide)
                     {
                         std::cout << "Left Slide" << std::endl;
-                        p_IOControl->changeRelayOne(true);
-                        p_IOControl->sendVentControlData(1, true);
+                        p_IOControl->changeFanRelay(true);
+                        p_IOControl->sendVentControlData(1, true, 0);
                         //p_IOControl->sendSmartSwitchData(1);
 #ifdef _WIN32
                         keybd_event(VK_RIGHT, 0, KEYEVENTF_EXTENDEDKEY, 0);
@@ -424,8 +429,8 @@ void GloveAPI::ProcessSensorData()
                     if(rightSlide)
                     {
                         std::cout << "Right Slide" << std::endl;
-                        p_IOControl->changeRelayOne(false);
-                        p_IOControl->sendVentControlData(1, false);
+                        p_IOControl->changeFanRelay(false);
+                        p_IOControl->sendVentControlData(1, false, 0);
                         //p_IOControl->sendSmartSwitchData(1);
 #ifdef _WIN32
                         keybd_event(VK_LEFT, 0, KEYEVENTF_EXTENDEDKEY, 0);
@@ -470,11 +475,11 @@ void GloveAPI::run()
 
 void GloveAPI::recognizeNumber(char state)
 {
-    int flexThumbEdge = flexThumbCal + 30;
-    int flexIndexEdge = flexIndexCal + 30;
-    int flexMiddleEdge = flexMiddleCal + 30;
-    int flexRingEdge = flexRingCal + 30;
-    int flexPinkyEdge = flexPinkyCal + 30;
+    int flexThumbEdge = flexThumbCal + 20;
+    int flexIndexEdge = flexIndexCal + 20;
+    int flexMiddleEdge = flexMiddleCal + 20;
+    int flexRingEdge = flexRingCal + 20;
+    int flexPinkyEdge = flexPinkyCal + 20;
 
     int currentRunningValue = -1;
 
@@ -483,13 +488,18 @@ void GloveAPI::recognizeNumber(char state)
     else if(state == 6)
         currentDeviceNum = -1;
 
-    if(flexIndex > flexIndexEdge)//If index finger is not bent
+    std::cout << "IN REC NUM Flex thumb cal = " << flexThumbCal << ", index = " << flexIndexCal << ", middle = " <<
+                 flexMiddleCal << ", ring = " << flexRingCal <<  ", pinky = " << flexPinkyCal << std::endl;
+
+
+    if(flexIndex < flexIndexEdge)//If index finger is not bent
     {
-        if(flexMiddle > flexMiddleEdge)//If middle finger is not bent
+        std::cout << "Index finger is straight" << std::endl;
+        if(flexMiddle < flexMiddleEdge)//If middle finger is not bent
         {
-            if(flexRing > flexRingEdge)//If ring finger is not bent
+            if(flexRing < flexRingEdge)//If ring finger is not bent
             {
-                if(flexPinky > flexPinkyEdge)//If pinky is not bent
+                if(flexPinky < flexPinkyEdge)//If pinky is not bent
                 {
                     currentRunningValue = 4;
                 }
@@ -500,7 +510,7 @@ void GloveAPI::recognizeNumber(char state)
             }
             else //Ring finger is bent
             {
-                if(flexPinky > flexPinkyEdge)//If pinky is not bent, invalid
+                if(flexPinky < flexPinkyEdge)//If pinky is not bent, invalid
                 {
                     currentRunningValue = -1;
                 }
@@ -512,13 +522,13 @@ void GloveAPI::recognizeNumber(char state)
         }
         else
         {
-            if(flexRing > flexRingEdge)//If ring finger is not bent, invalid
+            if(flexRing < flexRingEdge)//If ring finger is not bent, invalid
             {
                 currentRunningValue = -1;
             }
             else
             {
-                if(flexPinky > flexPinkyEdge)//If pinky is not bent, invalid
+                if(flexPinky < flexPinkyEdge)//If pinky is not bent, invalid
                 {
                     currentRunningValue = -1;
                 }

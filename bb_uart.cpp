@@ -6,8 +6,8 @@ using namespace std;
 BB_UART::BB_UART(int type) :
     gloveUART(BlackLib::UART1,BlackLib::Baud38400,BlackLib::ParityNo,BlackLib::StopOne,BlackLib::Char8),
     uart(BlackLib::UART4,BlackLib::Baud38400,BlackLib::ParityNo,BlackLib::StopOne,BlackLib::Char8),
-    readEnableNot(BlackLib::GPIO_7,BlackLib::output, BlackLib::FastMode),
-    driveEnable(BlackLib::GPIO_27, BlackLib::output, BlackLib::FastMode),
+    readEnableNot(BlackLib::GPIO_117,BlackLib::output, BlackLib::FastMode),
+    driveEnable(BlackLib::GPIO_115, BlackLib::output, BlackLib::FastMode),
     gpio1_15(BlackLib::GPIO_47,BlackLib::output, BlackLib::FastMode)
 {
     uart.open( BlackLib::ReadWrite | BlackLib::NonBlock );
@@ -26,6 +26,7 @@ BB_UART::BB_UART(int type) :
     receivedGloveData = false;
     output = "";
     startup = 0;
+    disableSending = false;
 }
 
 void BB_UART::run()
@@ -64,7 +65,7 @@ void BB_UART::run()
             }
             else
             {
-                cout << "Received smart switch data" << endl;
+//                cout << "Received smart switch data" << endl;
 
                 QString tempString = "";
                 tempString.sprintf("%s", readArr);
@@ -78,9 +79,9 @@ void BB_UART::run()
 
                 for(int i = 0; i < 4; i++)
                 {
-                    printf("%d ", data[i]);
+//                    printf("%d ", data[i]);
                 }
-                printf("\n");
+//                printf("\n");
             }
 
             usleep(2);
@@ -129,7 +130,7 @@ bool BB_UART::sendData(char writeArr[], bool statusControl)
     //Either it is the Central Manager's turn to send data as needed
     //or the CM is sending the control message for another device
     //to have a turn to write;
-    if(writeEnabled || statusControl)
+    if(!disableSending|| statusControl)
     {
         readEnableNot.setValue(BlackLib::high);
         driveEnable.setValue(BlackLib::high);
@@ -143,12 +144,12 @@ bool BB_UART::sendData(char writeArr[], bool statusControl)
 
         driveEnable.setValue(BlackLib::low);
 
-        printf("SENDING THIS: ");
+        //printf("SENDING THIS: ");
         for(int i = 0; i < 4; i++)
         {
-            printf("%d ", writeArr[i]);
+            //printf("%d ", writeArr[i]);
         }
-        printf("\n");
+        //printf("\n");
 
         uart.flush( BlackLib::output );
 
@@ -164,6 +165,13 @@ bool BB_UART::sendData(char writeArr[], bool statusControl)
             {
                 writeFIFO[currentFIFOIndex + j] = writeArr[j];
             }
+
+            printf("BUFFERING THIS: ");
+            for(int i = 0; i < 4; i++)
+            {
+                printf("%d ", writeArr[i]);
+            }
+            printf("\n");
 
             currentFIFOIndex +=4;
         }
@@ -183,14 +191,19 @@ bool BB_UART::sendDataGlove()
 
 bool BB_UART::sendFIFOData()
 {
-    currentFIFOIndex = 0;
 
     char writeArray[4] = {0,0,0,0};
     int index = 0;
 
-    std::cout << "Sending buffered messages" << std::endl;
     for(int i = 0; i <= currentFIFOIndex; i++)
     {
+        //std::cout << "Sending buffered messages" << std::endl;
+        if(disableSending)
+        {
+            std::cout << "Threw out messages" << std::endl;
+            return false;
+        }
+
         if(i%4 == 0 && i != 0)
         {
             readEnableNot.setValue(BlackLib::high);
@@ -205,7 +218,7 @@ bool BB_UART::sendFIFOData()
 
             driveEnable.setValue(BlackLib::low);
 
-            printf("SENDING THIS: ");
+            printf("SENDING THIS: (Buffered)");
             for(int i = 0; i < 4; i++)
             {
                 printf("%d ", writeArray[i]);
@@ -221,5 +234,6 @@ bool BB_UART::sendFIFOData()
         }
 
     }
+    currentFIFOIndex = 0;
     return true;
 }

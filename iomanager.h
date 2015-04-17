@@ -2,6 +2,7 @@
 #define IOMANAGER_H
 
 #include "bb_uart.h"
+#include <QElapsedTimer>
 
 struct device {
     QString deviceName;
@@ -24,8 +25,12 @@ struct room {
   int smartSwitchTemperature;
   int smartSwitchHumidity;
   int smartSwitchLighting;
+  bool smartSwitchPIR;
   room *next;
   device *devices;
+  bool ventControlConnected;
+  bool ventControlStatus;
+  int ventControlID;
   int numLoadControllers;
   int numDevices;
   int loadControllers[5];
@@ -49,6 +54,11 @@ private:
     bool previousConfig;
 
     bool gpio1On;
+
+    QElapsedTimer coolDownTimer;
+    QElapsedTimer warmUpTimer;
+    QElapsedTimer fanTimer;
+
 
 public:
     static IOManager* Instance();
@@ -79,13 +89,18 @@ public:
 
     void setCurrentRoomManagerRoom(int roomIndex);
     int getNumRooms();
+    void setRoomClear();
     QString getRoom(int index);
 
-    bool addDevice(int devID, int index, int loadControllerID, QString devName);
+    bool addDevice(int devID, int index, int loadControllerID, QString devName, bool vc);
     bool removeDevice(int devID, int index);
 
     bool addLoadController(int loadControllerID, int index);
+    bool addVentController(int ventControllerID, int index);
     bool getLoadControllers(int roomID, int lc[]);
+    int getVentControllerID(int roomNum);
+    bool getVentControllerStatus(int roomNum);
+    void setVentControllerStatus(int roomNum, bool status);
 
     QString getDevice(int currRoomIndex, int deviceIndex, int lc);
     QString getDeviceName(int currRoomIndex, int deviceIndex, int lc);
@@ -94,11 +109,13 @@ public:
     bool updateTemperatureDisplay(int smartSwitchID, short data);
     bool updateHumidityDisplay(int smartSwitchID, short data);
     bool updateLightDisplay(int smartSwitchID, short data);
+    bool updatePIRDisplay(int smartSwitchID, bool data);
+
 
     int receiveSmartSwitchData();
     bool sendSmartSwitchData(int smartSwitchID);
-    bool sendLoadControlData(int smartSwitchID, char devType, char percentOn);
-    bool sendVentControlData(int ventControlID, bool onOff);
+    bool sendLoadControlData(int smartSwitchID, char devType, char percentOn, bool fromSS);
+    bool sendVentControlData(int ventControlID, bool onOff, int roomNum);
 
 
     bool sendDevStartup();
@@ -112,17 +129,18 @@ public:
 
     bool setIncremental(bool setIncr, int devID, int index, int loadControllerID, QString devName);
 
-    bool changeRelayOne(bool onOff);
+    bool changeFanRelay(bool onOff);
+    bool changeColdRelay(bool onOff);
+    bool changeHotRelay(bool onOff);
 
     bool setCurrentPIR();
-    int getCurrentPIR(int roomIndex);
 
     bool setCurrentTemperature();
     int getCurrentTemperature(int roomIndex);
 
     bool setCurrentHumidity();
     int getCurrentHumidity(int roomIndex);
-
+    bool getCurrentPIR(int roomIndex);
     int getCurrentLighting(int roomIndex);
 
     int getCurrentSmartSwitchID(int roomIndex);
