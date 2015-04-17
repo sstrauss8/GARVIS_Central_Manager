@@ -22,7 +22,7 @@ static const uint qt_meta_data_MainWindow[] = {
        6,       // revision
        0,       // classname
        0,    0, // classinfo
-      24,   14, // methods
+      22,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -45,15 +45,13 @@ static const uint qt_meta_data_MainWindow[] = {
      442,  436,   11,   11, 0x08,
      475,  436,   11,   11, 0x08,
      527,   11,   11,   11, 0x08,
-     563,  436,   11,   11, 0x08,
-     612,   11,   11,   11, 0x08,
-     636,   11,   11,   11, 0x08,
-     674,  666,   11,   11, 0x08,
-     700,  666,   11,   11, 0x08,
-     728,  666,   11,   11, 0x08,
-     756,  666,   11,   11, 0x08,
-     784,   11,   11,   11, 0x08,
-     810,   11,   11,   11, 0x08,
+     563,   11,   11,   11, 0x08,
+     587,   11,   11,   11, 0x08,
+     625,  617,   11,   11, 0x08,
+     651,  617,   11,   11, 0x08,
+     679,  617,   11,   11, 0x08,
+     707,  617,   11,   11, 0x08,
+     735,   11,   11,   11, 0x08,
 
        0        // eod
 };
@@ -76,7 +74,6 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "on_tabWidget_currentChanged(int)\0"
     "on_comboBox_loadController_currentIndexChanged(int)\0"
     "on_pushButton_addDevice_2_clicked()\0"
-    "on_comboBox_selectRoom2_currentIndexChanged(int)\0"
     "on_pushButton_clicked()\0"
     "on_checkBox_smartDM_clicked()\0checked\0"
     "on_checkBox_clicked(bool)\0"
@@ -84,7 +81,6 @@ static const char qt_meta_stringdata_MainWindow[] = {
     "on_checkBox_3_clicked(bool)\0"
     "on_checkBox_4_clicked(bool)\0"
     "on_pushButton_2_clicked()\0"
-    "on_pushButton_7_clicked()\0"
 };
 
 void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void **_a)
@@ -108,15 +104,13 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 12: _t->on_tabWidget_currentChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 13: _t->on_comboBox_loadController_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
         case 14: _t->on_pushButton_addDevice_2_clicked(); break;
-        case 15: _t->on_comboBox_selectRoom2_currentIndexChanged((*reinterpret_cast< int(*)>(_a[1]))); break;
-        case 16: _t->on_pushButton_clicked(); break;
-        case 17: _t->on_checkBox_smartDM_clicked(); break;
-        case 18: _t->on_checkBox_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 19: _t->on_checkBox_2_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 20: _t->on_checkBox_3_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 21: _t->on_checkBox_4_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
-        case 22: _t->on_pushButton_2_clicked(); break;
-        case 23: _t->on_pushButton_7_clicked(); break;
+        case 15: _t->on_pushButton_clicked(); break;
+        case 16: _t->on_checkBox_smartDM_clicked(); break;
+        case 17: _t->on_checkBox_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 18: _t->on_checkBox_2_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 19: _t->on_checkBox_3_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 20: _t->on_checkBox_4_clicked((*reinterpret_cast< bool(*)>(_a[1]))); break;
+        case 21: _t->on_pushButton_2_clicked(); break;
         default: ;
         }
     }
@@ -154,9 +148,9 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 24)
+        if (_id < 22)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 24;
+        _id -= 22;
     }
     return _id;
 }

@@ -29,7 +29,7 @@ background: rgb(63, 13, 14);
       <x>10</x>
       <y>80</y>
       <width>781</width>
-      <height>361</height>
+      <height>371</height>
      </rect>
     </property>
     <property name="styleSheet">
@@ -1738,10 +1738,10 @@ color: rgb(255, 255, 255);</string>
      <widget class="QGroupBox" name="groupBox_2">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>100</x>
         <y>10</y>
         <width>261</width>
-        <height>281</height>
+        <height>291</height>
        </rect>
       </property>
       <property name="palette">
@@ -1951,210 +1951,11 @@ color: rgb(255, 255, 255);</string>
        </column>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="groupBox_3">
-      <property name="geometry">
-       <rect>
-        <x>280</x>
-        <y>10</y>
-        <width>271</width>
-        <height>281</height>
-       </rect>
-      </property>
-      <property name="palette">
-       <palette>
-        <active>
-         <colorrole role="WindowText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Text">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </active>
-        <inactive>
-         <colorrole role="WindowText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>0</red>
-            <green>0</green>
-            <blue>0</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Text">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>255</red>
-            <green>255</green>
-            <blue>255</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </inactive>
-        <disabled>
-         <colorrole role="WindowText">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>159</red>
-            <green>158</green>
-            <blue>158</blue>
-           </color>
-          </brush>
-         </colorrole>
-         <colorrole role="Text">
-          <brush brushstyle="SolidPattern">
-           <color alpha="255">
-            <red>159</red>
-            <green>158</green>
-            <blue>158</blue>
-           </color>
-          </brush>
-         </colorrole>
-        </disabled>
-       </palette>
-      </property>
-      <property name="title">
-       <string>Delete Device</string>
-      </property>
-      <widget class="QLabel" name="label_7">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>30</y>
-         <width>91</width>
-         <height>17</height>
-        </rect>
-       </property>
-       <property name="palette">
-        <palette>
-         <active>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>0</red>
-             <green>0</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </active>
-         <inactive>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>0</red>
-             <green>0</green>
-             <blue>0</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </inactive>
-         <disabled>
-          <colorrole role="WindowText">
-           <brush brushstyle="SolidPattern">
-            <color alpha="255">
-             <red>159</red>
-             <green>158</green>
-             <blue>158</blue>
-            </color>
-           </brush>
-          </colorrole>
-         </disabled>
-        </palette>
-       </property>
-       <property name="text">
-        <string>Select Room</string>
-       </property>
-      </widget>
-      <widget class="QComboBox" name="comboBox_selectRoom2">
-       <property name="geometry">
-        <rect>
-         <x>100</x>
-         <y>30</y>
-         <width>151</width>
-         <height>27</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QTableWidget" name="tableWidget_2">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>100</y>
-         <width>231</width>
-         <height>111</height>
-        </rect>
-       </property>
-       <attribute name="horizontalHeaderDefaultSectionSize">
-        <number>200</number>
-       </attribute>
-       <row>
-        <property name="text">
-         <string>1</string>
-        </property>
-       </row>
-       <row>
-        <property name="text">
-         <string>2</string>
-        </property>
-       </row>
-       <row>
-        <property name="text">
-         <string>3</string>
-        </property>
-       </row>
-       <column>
-        <property name="text">
-         <string>Devices</string>
-        </property>
-       </column>
-       <item row="0" column="0">
-        <property name="text">
-         <string/>
-        </property>
-        <property name="toolTip">
-         <string/>
-        </property>
-        <property name="flags">
-         <set>ItemIsSelectable|ItemIsUserCheckable|ItemIsEnabled</set>
-        </property>
-       </item>
-       <item row="2" column="0">
-        <property name="text">
-         <string/>
-        </property>
-       </item>
-      </widget>
-      <widget class="QPushButton" name="pushButton_7">
-       <property name="geometry">
-        <rect>
-         <x>50</x>
-         <y>220</y>
-         <width>171</width>
-         <height>27</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Delete Selected Device</string>
-       </property>
-      </widget>
-     </widget>
      <widget class="QGroupBox" name="groupBox_4">
       <property name="geometry">
        <rect>
-        <x>560</x>
-        <y>10</y>
+        <x>410</x>
+        <y>250</y>
         <width>191</width>
         <height>51</height>
        </rect>
@@ -2374,8 +2175,8 @@ color: rgb(255, 255, 255);</string>
      <widget class="QGroupBox" name="groupBox_5">
       <property name="geometry">
        <rect>
-        <x>560</x>
-        <y>70</y>
+        <x>410</x>
+        <y>20</y>
         <width>191</width>
         <height>81</height>
        </rect>
@@ -2477,8 +2278,8 @@ color: rgb(255, 255, 255);</string>
      <widget class="QGroupBox" name="groupBox_6">
       <property name="geometry">
        <rect>
-        <x>560</x>
-        <y>160</y>
+        <x>410</x>
+        <y>130</y>
         <width>191</width>
         <height>81</height>
        </rect>
@@ -2577,8 +2378,8 @@ color: rgb(255, 255, 255);</string>
      <widget class="QDateEdit" name="dateEdit">
       <property name="geometry">
        <rect>
-        <x>650</x>
-        <y>260</y>
+        <x>660</x>
+        <y>300</y>
         <width>110</width>
         <height>27</height>
        </rect>
@@ -2588,7 +2389,7 @@ color: rgb(255, 255, 255);</string>
       <property name="geometry">
        <rect>
         <x>580</x>
-        <y>260</y>
+        <y>310</y>
         <width>91</width>
         <height>17</height>
        </rect>
@@ -2644,7 +2445,7 @@ color: rgb(255, 255, 255);</string>
        <rect>
         <x>10</x>
         <y>30</y>
-        <width>331</width>
+        <width>361</width>
         <height>261</height>
        </rect>
       </property>
@@ -2800,7 +2601,7 @@ color: rgb(255, 255, 255);</string>
         <rect>
          <x>20</x>
          <y>60</y>
-         <width>281</width>
+         <width>301</width>
          <height>17</height>
         </rect>
        </property>
@@ -2877,7 +2678,7 @@ color: rgb(255, 255, 255);</string>
         <rect>
          <x>10</x>
          <y>90</y>
-         <width>301</width>
+         <width>311</width>
          <height>17</height>
         </rect>
        </property>
@@ -3031,7 +2832,7 @@ color: rgb(255, 255, 255);</string>
         <rect>
          <x>10</x>
          <y>140</y>
-         <width>311</width>
+         <width>341</width>
          <height>17</height>
         </rect>
        </property>
@@ -3185,7 +2986,7 @@ color: rgb(255, 255, 255);</string>
         <rect>
          <x>10</x>
          <y>190</y>
-         <width>311</width>
+         <width>321</width>
          <height>17</height>
         </rect>
        </property>
@@ -3262,7 +3063,7 @@ color: rgb(255, 255, 255);</string>
         <rect>
          <x>10</x>
          <y>220</y>
-         <width>321</width>
+         <width>341</width>
          <height>17</height>
         </rect>
        </property>
@@ -3415,9 +3216,9 @@ color: rgb(255, 255, 255);</string>
      <widget class="QGroupBox" name="groupBox_8">
       <property name="geometry">
        <rect>
-        <x>360</x>
+        <x>390</x>
         <y>30</y>
-        <width>401</width>
+        <width>371</width>
         <height>261</height>
        </rect>
       </property>
@@ -4144,58 +3945,6 @@ font: 11pt &quot;Ubuntu&quot;;</string>
        </property>
       </widget>
      </widget>
-     <widget class="QCheckBox" name="checkBox">
-      <property name="geometry">
-       <rect>
-        <x>250</x>
-        <y>0</y>
-        <width>98</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>GPIO3_21</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="checkBox_3">
-      <property name="geometry">
-       <rect>
-        <x>590</x>
-        <y>0</y>
-        <width>98</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>GPIO1_15</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="checkBox_4">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>0</y>
-        <width>98</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>GPIO1_0</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="checkBox_2">
-      <property name="geometry">
-       <rect>
-        <x>470</x>
-        <y>0</y>
-        <width>98</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>GPIO1_13</string>
-      </property>
-     </widget>
     </widget>
    </widget>
    <widget class="QLabel" name="label">
@@ -4222,7 +3971,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>630</x>
-      <y>440</y>
+      <y>450</y>
       <width>161</width>
       <height>20</height>
      </rect>

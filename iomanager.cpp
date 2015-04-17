@@ -563,7 +563,7 @@ bool IOManager::setIncremental(bool setIncr, int devID, int index, int loadContr
 
     while(flag)
     {
-        if(devList->next == NULL)
+        if(devList->next == NULL || devList->deviceID == devID)
             flag = false;
         else
             devList = devList->next;

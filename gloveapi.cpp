@@ -72,6 +72,7 @@ GloveAPI::GloveAPI()
     yCoord = 200;
 
     numErrors = 0;
+    inGestureDetectMode = false;
 
     slideFlag1 = false;
     slideFlag2 = false;
@@ -184,23 +185,6 @@ void GloveAPI::useData(char data[])
                 recognizeNumber(6);                //we haven't already detected
             else;
 
-
-            /*ui->lineEdit->setText(tempString.sprintf("%4.3f m/s2",accelXConverted));
-            ui->lineEdit_2->setText(tempString.sprintf("%4.3f m/s2",accelYConverted));
-            ui->lineEdit_3->setText(tempString.sprintf("%4.3f m/s2",accelZConverted));
-            ui->lineEdit_4->setText(tempString.sprintf("%7.3f degree/s",gyroXConverted));
-            ui->lineEdit_5->setText(tempString.sprintf("%7.3f degree/s",gyroYConverted));
-            ui->lineEdit_6->setText(tempString.sprintf("%7.3f degree/s",gyroZConverted));
-            ui->lineEdit_7->setText(tempString.sprintf("%4.3f mGauss",magnetXConverted));
-            ui->lineEdit_8->setText(tempString.sprintf("%4.3f mGauss",magnetYConverted));
-            ui->lineEdit_15->setText(tempString.sprintf("%4.3f mGauss",magnetZConverted));
-
-            ui->lineEdit_9->setText(tempString.sprintf("%u",flexThumb));
-            ui->lineEdit_10->setText(tempString.sprintf("%u",flexIndex));
-            ui->lineEdit_11->setText(tempString.sprintf("%u",flexMiddle));
-            ui->lineEdit_12->setText(tempString.sprintf("%u",flexRing));
-            ui->lineEdit_13->setText(tempString.sprintf("%u",flexPinky));*/
-
             //Flush out end sync word
             currentInput[32] = 0;
             currentInput[33] = 0;
@@ -209,7 +193,10 @@ void GloveAPI::useData(char data[])
     }
     //serial->flush();
 
-    ProcessSensorData();
+    if(currentRoomNum >= 0 && currentDeviceNum >= 0)
+    {
+        ProcessSensorData();
+    }
 }
 
 //Calibration mode will conduct 3 readings of each state and average them
@@ -415,10 +402,14 @@ void GloveAPI::ProcessSensorData()
                 {
                     if(leftSlide)
                     {
-                        std::cout << "Left Slide" << std::endl;
-                        p_IOControl->changeFanRelay(true);
-                        p_IOControl->sendVentControlData(1, true, 0);
-                        //p_IOControl->sendSmartSwitchData(1);
+                        std::cout << "Left Slide for room "<< currentRoomNum << ", dev " << currentDeviceNum << std::endl;
+                        int smartSwitchID = p_IOControl->getCurrentSmartSwitchID(currentRoomNum - 1);
+
+                        p_IOControl->sendLoadControlData(smartSwitchID, (char)currentDeviceNum - 1 , 4, false);
+                        //p_IOControl->changeFanRelay(true);
+                        //p_IOControl->sendVentControlData(1, true, 0);
+                        currentRoomNum = -1;
+                        currentDeviceNum = -1;
 #ifdef _WIN32
                         keybd_event(VK_RIGHT, 0, KEYEVENTF_EXTENDEDKEY, 0);
                         keybd_event(VK_RIGHT, 0, KEYEVENTF_KEYUP, 0);
@@ -428,10 +419,14 @@ void GloveAPI::ProcessSensorData()
                     }
                     if(rightSlide)
                     {
-                        std::cout << "Right Slide" << std::endl;
-                        p_IOControl->changeFanRelay(false);
-                        p_IOControl->sendVentControlData(1, false, 0);
-                        //p_IOControl->sendSmartSwitchData(1);
+                        std::cout << "Right Slide for room "<< currentRoomNum << ", dev " << currentDeviceNum << std::endl;
+                        int smartSwitchID = p_IOControl->getCurrentSmartSwitchID(currentRoomNum - 1);
+
+                        p_IOControl->sendLoadControlData(smartSwitchID, (char)currentDeviceNum - 1, 0, false);
+                        //p_IOControl->changeFanRelay(false);
+                        //p_IOControl->sendVentControlData(1, false, 0);
+                        currentRoomNum = -1;
+                        currentDeviceNum = -1;
 #ifdef _WIN32
                         keybd_event(VK_LEFT, 0, KEYEVENTF_EXTENDEDKEY, 0);
                         keybd_event(VK_LEFT, 0, KEYEVENTF_KEYUP, 0);
@@ -475,7 +470,6 @@ void GloveAPI::run()
 
 void GloveAPI::recognizeNumber(char state)
 {
-    int flexThumbEdge = flexThumbCal + 20;
     int flexIndexEdge = flexIndexCal + 20;
     int flexMiddleEdge = flexMiddleCal + 20;
     int flexRingEdge = flexRingCal + 20;
@@ -491,32 +485,36 @@ void GloveAPI::recognizeNumber(char state)
     std::cout << "IN REC NUM Flex thumb cal = " << flexThumbCal << ", index = " << flexIndexCal << ", middle = " <<
                  flexMiddleCal << ", ring = " << flexRingCal <<  ", pinky = " << flexPinkyCal << std::endl;
 
+    std::cout << "IN REC NUM Flex thumb = " << flexThumb << ", index = " << flexIndex << ", middle = " <<
+                 flexMiddle << ", ring = " << flexRing <<  ", pinky = " << flexPinky << std::endl;
+
 
     if(flexIndex < flexIndexEdge)//If index finger is not bent
     {
-        std::cout << "Index finger is straight" << std::endl;
         if(flexMiddle < flexMiddleEdge)//If middle finger is not bent
         {
             if(flexRing < flexRingEdge)//If ring finger is not bent
             {
+                currentRunningValue = 3;
                 if(flexPinky < flexPinkyEdge)//If pinky is not bent
                 {
-                    currentRunningValue = 4;
+                    //currentRunningValue = 4;
                 }
                 else//Index, middle, and ring are straight, pinky bent
                 {
-                    currentRunningValue = 3;
+                    //currentRunningValue = 3;
                 }
             }
             else //Ring finger is bent
             {
+                currentRunningValue = 2;
                 if(flexPinky < flexPinkyEdge)//If pinky is not bent, invalid
                 {
-                    currentRunningValue = -1;
+                    //currentRunningValue = -1;
                 }
                 else//Index and middle straight, pinky and ring bent
                 {
-                    currentRunningValue = 2;
+                    //currentRunningValue = 2;
                 }
             }
         }
@@ -528,13 +526,14 @@ void GloveAPI::recognizeNumber(char state)
             }
             else
             {
+                currentRunningValue = 1;
                 if(flexPinky < flexPinkyEdge)//If pinky is not bent, invalid
                 {
-                    currentRunningValue = -1;
+                    //currentRunningValue = -1;
                 }
                 else//Only pointer is straight, meaning a one was detected
                 {
-                    currentRunningValue = 1;
+                    //currentRunningValue = 1;
                 }
             }
         }
@@ -554,7 +553,7 @@ void GloveAPI::recognizeNumber(char state)
     else if(state == 6)
     {
         currentDeviceNum = currentRunningValue;
-        measuredRoomNum = true;
+        measuredDevNum = true;
         printf("state 6 run through");
     }
 

@@ -183,7 +183,6 @@ void MainWindow::populateRoomNames()
 
     ui->comboBox->clear();
     ui->comboBox_selectRoom1->clear();
-    ui->comboBox_selectRoom2->clear();
     ui->comboBox_deleteroomlist->clear();
 
     int numberRooms = p_IOControl->getNumRooms();
@@ -193,7 +192,6 @@ void MainWindow::populateRoomNames()
         std::cout << "Populating rooms" << std::endl;
         ui->comboBox->addItem(p_IOControl->getRoom(i));
         ui->comboBox_selectRoom1->addItem(p_IOControl->getRoom(i));
-        ui->comboBox_selectRoom2->addItem(p_IOControl->getRoom(i));
         ui->comboBox_deleteroomlist->addItem(p_IOControl->getRoom(i));
     }
 }
@@ -445,7 +443,7 @@ void MainWindow::on_pushbutton_set2_clicked()
                                 ui->device2Name->text());
 
     p_IOControl->sendLoadControlData(ui->smartSwitchID->text().toInt(0,10), 1, ui->dev2_slider->value(), false);
-    ui->device1ID->setText(p_IOControl->getDevice(ui->comboBox->currentIndex(), 1,
+    ui->device2ID->setText(p_IOControl->getDevice(ui->comboBox->currentIndex(), 1,
                                                   ui->comboBox_loadController->currentText().toInt(0,10)));
 }
 
@@ -562,43 +560,6 @@ void MainWindow::on_pushButton_addDevice_2_clicked()
     ui->progressBar->setValue(0);
 }
 
-//Populate Delete Device Table
-void MainWindow::on_comboBox_selectRoom2_currentIndexChanged(int index)
-{
-
-    ui->tableWidget_2->clearContents();
-    QString tempVal = "";
-    int count = -1;
-
-    if(!(p_IOControl->getCurrentSmartSwitchID(index) <= 0))
-    {
-        tempVal.sprintf("Smart Switch ID %d", p_IOControl->getCurrentSmartSwitchID(index));
-        ui->tableWidget_2->setItem(1,count, new QTableWidgetItem(tempVal));
-        count++;
-
-        if(!(p_IOControl->getVentControllerID(index) < 0))
-        {
-            tempVal.sprintf("Vent Control ID %d", p_IOControl->getVentControllerID(index));
-            ui->tableWidget_2->setItem(1,count, new QTableWidgetItem(tempVal));
-            count++;
-        }
-    }
-
-    int loadControllers[5] = {-1,-1,-1,-1,-1};
-    p_IOControl->getLoadControllers(index, loadControllers);
-
-    for(int i = 0; i < 5; i++)
-    {
-        if(!(loadControllers[i] <= 0))
-        {
-            tempVal.sprintf("Load Controller ID %d", loadControllers[i]);
-            ui->tableWidget_2->setItem(1,count, new QTableWidgetItem(tempVal));
-            count++;
-        }
-    }
-
-}
-
 void MainWindow::on_pushButton_clicked()
 {
     m_florence.start("florence");
@@ -706,8 +667,3 @@ void MainWindow::on_pushButton_2_clicked()
     showNormal();
 }
 
-void MainWindow::on_pushButton_7_clicked()
-{
-    ui->tableWidget_2->setItem(ui->tableWidget_2->currentColumn(),ui->tableWidget_2>currentRow(),new QTableWidgetItem(""));
-    //p_IOControl->
-}

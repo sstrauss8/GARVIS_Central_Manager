@@ -46,22 +46,14 @@ private slots:
     void on_tabWidget_currentChanged(int index);
     void on_comboBox_loadController_currentIndexChanged(int index);
     void on_pushButton_addDevice_2_clicked();
-    void on_comboBox_selectRoom2_currentIndexChanged(int index);
     void on_pushButton_clicked();
-
     void on_checkBox_smartDM_clicked();
-
     void on_checkBox_clicked(bool checked);
-
     void on_checkBox_2_clicked(bool checked);
-
     void on_checkBox_3_clicked(bool checked);
-
     void on_checkBox_4_clicked(bool checked);
-
     void on_pushButton_2_clicked();
 
-    void on_pushButton_7_clicked();
 
 private:
     Ui::MainWindow *ui;

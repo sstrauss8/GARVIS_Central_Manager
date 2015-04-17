@@ -43,6 +43,8 @@ public:
     int previousIndexFlex;
     bool mouseMode;
 
+    bool inGestureDetectMode;
+
     short * xAccel;
     short * yAccel;
     short * zAccel;
